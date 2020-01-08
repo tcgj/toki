@@ -1,47 +1,47 @@
 #ifndef IO_IMAGE_HPP
 #define IO_IMAGE_HPP
 
-typedef unsigned char u_char;
+typedef unsigned char uChar;
 
-namespace ioimage {
+namespace IoImage {
 
     // Frees image data from file read.
-    void release_data(u_char** imageData);
+    void releaseData(uChar** imageData);
 
     // Reads an image given the filename. Returns 1 if file is read, and 0
     // otherwise.
     //
-    // Resulting image data is pointed to by image_data, width pointed to by
-    // image_width, height pointed to by image_height, and the number of
-    // components pointed to by num_components.
+    // Resulting image data is pointed to by imageData, width pointed to by
+    // imageWidth, height pointed to by imageHeight, and the number of
+    // components pointed to by numComponents.
     //
     // Image data begins from bottom-left of image.
-    int read_from_file(const char* filename, u_char** image_data,
-                       int* image_width, int* image_height,
-                       int* num_components);
+    int readFromFile(const char* filename, uChar** imageData,
+                       int* imageWidth, int* imageHeight,
+                       int* numComponents);
 
     // Writes an image to file given the filename, in the PNG format. Returns 1
     // if file is written, and 0 otherwise.
     //
-    // Image data should be provided in image_data, width in image_width, height
-    // in image_height, and the number of components in num_components.
+    // Image data should be provided in imageData, width in imageWidth, height
+    // in imageHeight, and the number of components in numComponents.
     //
     // Image data should begin from bottom-left of image.
-    int write_to_png_file(const char* filename, const u_char* image_data,
-                          int image_width, int image_height,
-                          int num_components);
+    int writeToPngFile(const char* filename, const uChar* imageData,
+                          int imageWidth, int imageHeight,
+                          int numComponents);
 
     // Writes an image to file given the filename, in the JPG format. Returns 1
     // if file is written, and 0 otherwise.
     //
-    // Image data should be provided in image_data, width in image_width, height
-    // in image_height, and the number of components in num_components.
+    // Image data should be provided in imageData, width in imageWidth, height
+    // in imageHeight, and the number of components in numComponents.
     // Quality is an integer from 0 to 100.
     //
     // Image data should begin from bottom-left of image.
-    int write_to_jpg_file(const char* filename, const u_char* image_data,
-                          int image_width, int image_height, int num_components,
+    int writeToJpgFile(const char* filename, const uChar* imageData,
+                          int imageWidth, int imageHeight, int numComponents,
                           int quality);
-}  // namespace ioimage
+}  // namespace IoImage
 
 #endif  // IO_IMAGE_HPP

@@ -6,40 +6,40 @@
 
 #include "ioimage.hpp"
 
-namespace ioimage {
+namespace IoImage {
 
-    void release_data(u_char** image_data) {
-        stbi_image_free(*image_data);
-        *image_data = nullptr;
+    void releaseData(uChar** imageData) {
+        stbi_image_free(*imageData);
+        *imageData = nullptr;
     }
 
-    int read_from_file(const char* filename, u_char** image_data,
-                       int* image_width, int* image_height,
-                       int* num_components) {
+    int readFromFile(const char* filename, uChar** imageData,
+                       int* imageWidth, int* imageHeight,
+                       int* numComponents) {
         stbi_set_flip_vertically_on_load(true);
 
         int w, h, t;
-        u_char* data = stbi_load(filename, &w, &h, &t, 0);
+        uChar* data = stbi_load(filename, &w, &h, &t, 0);
 
         if (data == nullptr) {
             fprintf(stderr, "Error: Image file cannot be read: %s\n", filename);
             return 0;
         }
 
-        *image_data = data;
-        *image_width = w;
-        *image_height = h;
-        *num_components = t;
+        *imageData = data;
+        *imageWidth = w;
+        *imageHeight = h;
+        *numComponents = t;
         return 1;
     }
 
-    int write_to_png_file(const char* filename, const u_char* image_data,
-                          int image_width, int image_height,
-                          int num_components) {
+    int writeToPngFile(const char* filename, const uChar* imageData,
+                          int imageWidth, int imageHeight,
+                          int numComponents) {
         stbi_flip_vertically_on_write(true);
 
-        int result = stbi_write_png(filename, image_width, image_height,
-                                    num_components, image_data, 0);
+        int result = stbi_write_png(filename, imageWidth, imageHeight,
+                                    numComponents, imageData, 0);
 
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n",
@@ -48,13 +48,13 @@ namespace ioimage {
         return result;
     }
 
-    int write_to_jpg_file(const char* filename, const u_char* image_data,
-                          int image_width, int image_height, int num_components,
+    int writeToJpgFile(const char* filename, const uChar* imageData,
+                          int imageWidth, int imageHeight, int numComponents,
                           int quality) {
         stbi_flip_vertically_on_write(true);
 
-        int result = stbi_write_jpg(filename, image_width, image_height,
-                                    num_components, image_data, quality);
+        int result = stbi_write_jpg(filename, imageWidth, imageHeight,
+                                    numComponents, imageData, quality);
 
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n",
@@ -62,4 +62,4 @@ namespace ioimage {
         }
         return result;
     }
-}  // namespace ioimage
+}  // namespace IoImage
