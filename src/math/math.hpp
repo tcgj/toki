@@ -1,27 +1,26 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+class Vector3;
+class Point3;
+
 #include "math/vec3.hpp"
 #include "math/point3.hpp"
 
-inline Point3& Point3::operator+=(const Vec3& v) {
-    x += v.x;
-    y += v.y;
-    z += v.z;
-    return *this;
-}
-inline Point3& Point3::operator-=(const Vec3& v) {
-    x -= v.x;
-    y -= v.y;
-    z -= v.z;
-    return *this;
+// Point-Vector operations
+Vec3::operator Point3() const {
+    return Point3(x, y, z);
 }
 
-inline Point3 operator+(const Point3& p, const Vec3& v) {
+Point3::operator Vec3() const {
+    return Vec3(x, y, z);
+}
+
+Point3 operator+(const Point3& p, const Vec3& v) {
     return Point3(p.x + v.x, p.y + v.y, p.z + v.z);
 }
 
-inline Point3 operator-(const Point3& p, const Vec3& v) {
+Point3 operator-(const Point3& p, const Vec3& v) {
     return Point3(p.x - v.x, p.y - v.y, p.z - v.z);
 }
 

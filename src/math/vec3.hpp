@@ -12,32 +12,26 @@ public:
     Vec3(const Vec3& v) : x(v.x), y(v.y), z(v.z) {}
 
     // Unary/subscript operators
-    inline const Vec3& operator+() const { return *this; }
-    inline Vec3 operator-() const { return Vec3(-x, -y, -z); }
-    inline float operator[](int i) const { return data[i]; }
-    inline float& operator[](int i) { return data[i]; }
+    const Vec3& operator+() const;
+    Vec3 operator-() const;
+    float operator[](int i) const;
+    float& operator[](int i);
 
     // Assignment operators
-    inline Vec3& operator=(const Vec3& v);
-    inline Vec3& operator+=(const Vec3& v);
-    inline Vec3& operator-=(const Vec3& v);
-    inline Vec3& operator*=(const Vec3& v);
-    inline Vec3& operator*=(const float s);
-    inline Vec3& operator/=(const Vec3& v);
-    inline Vec3& operator/=(const float s);
+    Vec3& operator=(const Vec3& v);
+    Vec3& operator+=(const Vec3& v);
+    Vec3& operator-=(const Vec3& v);
+    Vec3& operator*=(const Vec3& v);
+    Vec3& operator*=(const float s);
+    Vec3& operator/=(const Vec3& v);
+    Vec3& operator/=(const float s);
 
-    inline float magnitude() const { return sqrtf(x * x + y * y + z * z); }
-    inline float squaredMagnitude() const { return x * x + y * y + z * z; }
-    inline Vec3& normalize() {
-        float sm = squaredMagnitude();
-        if (sm > 0) {
-            *this /= sqrtf(sm);
-        }
-        return *this;
-    }
+    float magnitude() const;
+    float squaredMagnitude() const;
+    Vec3& normalize();
 
     // Explicit cast
-    // inline explicit operator Point3() const { return Point3(x, y, z); };
+    explicit operator Point3() const;
 
     union {
         struct { float x, y, z; };
@@ -55,6 +49,19 @@ const Vec3 Vec3::zero = Vec3(0.0f);
 const Vec3 Vec3::one = Vec3(1.0f);
 const Vec3 Vec3::right = Vec3(1.0f, 0.0f, 0.0f);
 const Vec3 Vec3::forward = Vec3(0.0f, 0.0f, 1.0f);
+
+inline const Vec3& Vec3::operator+() const {
+    return *this;
+}
+inline Vec3 Vec3::operator-() const {
+    return Vec3(-x, -y, -z);
+}
+inline float Vec3::operator[](int i) const {
+    return data[i];
+}
+inline float& Vec3::operator[](int i) {
+    return data[i];
+}
 
 inline Vec3& Vec3::operator=(const Vec3& v) {
     x = v.x;
@@ -100,6 +107,21 @@ inline Vec3& Vec3::operator/=(float s) {
     return *this;
 }
 
+inline float Vec3::magnitude() const {
+    return sqrtf(x * x + y * y + z * z);
+}
+inline float Vec3::squaredMagnitude() const {
+    return x * x + y * y + z * z;
+}
+inline Vec3& Vec3::normalize() {
+    float sm = squaredMagnitude();
+    if (sm > 0) {
+        *this /= sqrtf(sm);
+    }
+    return *this;
+}
+
+// Additional operations
 inline Vec3 operator+(const Vec3& v1, const Vec3& v2) {
     return Vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
@@ -133,17 +155,14 @@ inline Vec3 operator/(const Vec3& v, float s) {
 inline float dot(const Vec3& v1, const Vec3& v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
-
 inline Vec3 cross(const Vec3& v1, const Vec3& v2) {
     return Vec3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z,
                 v1.x * v2.y - v1.y * v2.x);
 }
-
 inline float angleBetween(const Vec3& v1, const Vec3& v2) {
     float cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
     return acosf(cosTheta);
 }
-
 inline Vec3 unitVectorOf(const Vec3& v) {
     float sm = v.squaredMagnitude();
     if (sm > 0) {
