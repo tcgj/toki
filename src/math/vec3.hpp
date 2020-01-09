@@ -45,10 +45,10 @@ public:
     static const Vec3 forward;
 };
 
-const Vec3 Vec3::zero = Vec3(0.0f);
-const Vec3 Vec3::one = Vec3(1.0f);
-const Vec3 Vec3::right = Vec3(1.0f, 0.0f, 0.0f);
-const Vec3 Vec3::forward = Vec3(0.0f, 0.0f, 1.0f);
+inline const Vec3 Vec3::zero = Vec3(0.0f);
+inline const Vec3 Vec3::one = Vec3(1.0f);
+inline const Vec3 Vec3::right = Vec3(1.0f, 0.0f, 0.0f);
+inline const Vec3 Vec3::forward = Vec3(0.0f, 0.0f, 1.0f);
 
 inline const Vec3& Vec3::operator+() const {
     return *this;

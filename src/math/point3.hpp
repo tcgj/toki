@@ -31,7 +31,7 @@ public:
     static const Point3 zero;
 };
 
-const Point3 Point3::zero = Point3(0.0f);
+inline const Point3 Point3::zero = Point3(0.0f);
 
 inline const Point3& Point3::operator+() const {
     return *this;
