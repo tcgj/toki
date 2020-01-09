@@ -3,10 +3,8 @@
 
 #include <random>
 
-namespace Random {
-    static std::mt19937 gen;
-    static std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-
+class Random {
+public:
     static void seed(uint_fast32_t val) {
         gen = std::mt19937(val);
     }
@@ -15,6 +13,10 @@ namespace Random {
         return dist(gen);
     }
 
-} // namespace Random
+private:
+    Random() {}
+    static std::mt19937 gen;
+    static std::uniform_real_distribution<float> dist;
+};
 
 #endif // RANDOM_HPP

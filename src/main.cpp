@@ -2,12 +2,13 @@
 #include "camera/camera.hpp"
 #include "primitive/sphere.hpp"
 #include "primitive/intersectablelist.hpp"
-#include "random/random.hpp"
+#include "sampling/sampling.hpp"
 
-Vec3 color(const Ray& r, Intersectable& world) {
+Vec3 color(const Ray& r, Intersectable& world, int num) {
     RayInteraction ri;
-    if (world.intersects(r, 0.0, MAXFLOAT, ri)) {
-        return 0.5f * (ri.normal + Vec3::one);
+    if (world.intersects(r, 0.001f, MAXFLOAT, ri) && num > 0) {
+        Point3 target = ri.point + ri.normal + unitSphereUniform();
+        return 0.5f * color(Ray(ri.point, target - ri.point), world, num - 1);
     }
 
     Vec3 unit_dir = unitVectorOf(r.direction);
@@ -42,9 +43,10 @@ int main() {
                 float u = float(i + Random::nextFloat()) / float(width);
                 float v = float(j + Random::nextFloat()) / float(height);
                 Ray r = camera.raycastTo(u, v);
-                col += color(r, world);
+                col += color(r, world, 5);
             }
             col /= float(numSamples);
+            col = Vec3(sqrtf(col.r), sqrtf(col.g), sqrtf(col.b));
             int ir = int(255.99f * col[0]);
             int ig = int(255.99f * col[1]);
             int ib = int(255.99f * col[2]);
