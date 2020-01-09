@@ -1,6 +1,8 @@
 #include "ioimage.hpp"
+#include "camera/camera.hpp"
 #include "primitive/sphere.hpp"
 #include "primitive/intersectablelist.hpp"
+#include "random/random.hpp"
 
 Vec3 color(const Ray& r, Intersectable& world) {
     RayInteraction ri;
@@ -14,28 +16,35 @@ Vec3 color(const Ray& r, Intersectable& world) {
 }
 
 int main() {
+    Random::seed(0);
     int width = 200;
     int height = 100;
+    int numSamples = 100;
     int numComponents = 3;
     uChar* imageData = new uChar[width * height * numComponents];
-    Vec3 lowerLeftCorner(-2.0f, -1.0f, -1.0f);
-    Vec3 horizontal(4.0f, 0.0f, 0.0f);
-    Vec3 vertical(0.0f, 2.0f, 0.0f);
+
+    Vec3 up(0.0f, 1.0f, 0.0f);
     Point3 origin(0.0f, 0.0f, 0.0f);
+    Point3 lookat(0.0f, 0.0f, -1.0f);
 
     Intersectable* list[] = {
         new Sphere(Point3(0, 0, -1), 0.5f),
         new Sphere(Point3(0, -100.5f, -1), 100)
     };
     IntersectableList world(list, 2);
+    Camera camera(origin, lookat, up, 90.0f, float(width) / height, 1.0f);
 
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
             int index = (j * width + i) * numComponents;
-            float u = float(i) / float(width);
-            float v = float(j) / float(height);
-            Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical);
-            Vec3 col = color(r, world);
+            Vec3 col(0, 0, 0);
+            for (int s = 0; s < numSamples; s++) {
+                float u = float(i + Random::nextFloat()) / float(width);
+                float v = float(j + Random::nextFloat()) / float(height);
+                Ray r = camera.raycastTo(u, v);
+                col += color(r, world);
+            }
+            col /= float(numSamples);
             int ir = int(255.99f * col[0]);
             int ig = int(255.99f * col[1]);
             int ib = int(255.99f * col[2]);
