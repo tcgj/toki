@@ -25,5 +25,6 @@ bool Sphere::intersects(const Ray& r, float tMin, float tMax, RayInteraction& ri
     ri.t = t;
     ri.point = r(t);
     ri.normal = (ri.point - center) / radius;
+    ri.matPtr = matPtr;
     return true;
 }

@@ -172,6 +172,10 @@ inline Vec3 unitVectorOf(const Vec3& v) {
     }
 }
 
+inline Vec3 reflect(const Vec3& v, const Vec3& n) {
+    return v - 2 * dot(v, n) * n;
+}
+
 // IO stream operators
 inline std::istream& operator>>(std::istream& is, Vec3& v) {
     is >> v.x >> v.y >> v.z;

@@ -3,10 +3,13 @@
 
 #include "ray.hpp"
 
+class Material;
+
 struct RayInteraction {
     float t;
     Point3 point;
     Vec3 normal;
+    Material* matPtr;
 };
 
 class Intersectable {

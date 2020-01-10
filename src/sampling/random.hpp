@@ -5,13 +5,8 @@
 
 class Random {
 public:
-    static void seed(uint_fast32_t val) {
-        gen = std::mt19937(val);
-    }
-
-    static float nextFloat() {
-        return dist(gen);
-    }
+    static void seed(uint_fast32_t val);
+    static float nextFloat();
 
 private:
     Random() {}

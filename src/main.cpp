@@ -1,14 +1,20 @@
-#include "ioimage.hpp"
 #include "camera/camera.hpp"
-#include "primitive/sphere.hpp"
+#include "ioimage.hpp"
+#include "material/lambertian.hpp"
+#include "material/metal.hpp"
 #include "primitive/intersectablelist.hpp"
-#include "sampling/sampling.hpp"
+#include "primitive/sphere.hpp"
 
-Vec3 color(const Ray& r, Intersectable& world, int num) {
+Vec3 color(const Ray& r, Intersectable& world, int depth) {
     RayInteraction ri;
-    if (world.intersects(r, 0.001f, MAXFLOAT, ri) && num > 0) {
-        Point3 target = ri.point + ri.normal + unitSphereUniform();
-        return 0.5f * color(Ray(ri.point, target - ri.point), world, num - 1);
+    if (world.intersects(r, 0.001f, MAXFLOAT, ri)) {
+        Ray scattered;
+        Vec3 attn;
+        if (depth < 50 && ri.matPtr->computeScattering(r, ri, attn, scattered)) {
+            return attn * color(scattered, world, depth + 1);
+        } else {
+            return Vec3::zero;
+        }
     }
 
     Vec3 unit_dir = unitVectorOf(r.direction);
@@ -18,22 +24,49 @@ Vec3 color(const Ray& r, Intersectable& world, int num) {
 
 int main() {
     Random::seed(0);
-    int width = 200;
-    int height = 100;
-    int numSamples = 100;
+    int width = 1280;
+    int height = 768;
+    int numSamples = 20;
     int numComponents = 3;
     uChar* imageData = new uChar[width * height * numComponents];
 
     Vec3 up(0.0f, 1.0f, 0.0f);
-    Point3 origin(0.0f, 0.0f, 0.0f);
-    Point3 lookat(0.0f, 0.0f, -1.0f);
+    Point3 origin(13.0f, 2.0f, 3.0f);
+    Point3 lookat(0.0f, 0.0f, 0.0f);
 
-    Intersectable* list[] = {
-        new Sphere(Point3(0, 0, -1), 0.5f),
-        new Sphere(Point3(0, -100.5f, -1), 100)
-    };
-    IntersectableList world(list, 2);
-    Camera camera(origin, lookat, up, 90.0f, float(width) / height, 1.0f);
+    int n = 30;
+    Intersectable** list = new Intersectable*[n + 1];
+    list[0] = new Sphere(Point3(0, -1000, 0), 1000,
+                         new Lambertian(Vec3(0.5f, 0.5f, 0.5f)));
+    int i = 1;
+    for (int a = 0; a < 5; a++) {
+        for (int b = 0; b < 5; b++) {
+            float chooseMat = Random::nextFloat();
+            Point3 center(a + 0.9f * Random::nextFloat(), 0.2f,
+                        b + 0.9f * Random::nextFloat());
+            if ((center - Point3(4, 0.2f, 0)).magnitude() > 0.9f) {
+                if (chooseMat < 0.8f) {  // diffuse
+                    list[i++] = new Sphere(
+                        center, 0.2,
+                        new Lambertian(
+                            Vec3(Random::nextFloat() * Random::nextFloat(),
+                                 Random::nextFloat() * Random::nextFloat(),
+                                 Random::nextFloat() * Random::nextFloat())));
+                } else {  // metal
+                    list[i++] = new Sphere(
+                        center, 0.2,
+                        new Metal(Vec3(0.5f * (1 + Random::nextFloat()),
+                                       0.5f * (1 + Random::nextFloat()),
+                                       0.5f * (1 + Random::nextFloat())),
+                                  0.5f * Random::nextFloat()));
+                }
+            }
+        }
+    }
+    list[i++] = new Sphere(Point3(0, 1, 0), 1.0f, new Lambertian(Vec3(0.4f, 0.2f, 0.1f)));
+    list[i++] = new Sphere(Point3(4, 1, 0), 1.0f, new Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f));
+    IntersectableList world(list, i);
+    Camera camera(origin, lookat, up, 20.0f, float(width) / height, 10);
 
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
@@ -43,7 +76,7 @@ int main() {
                 float u = float(i + Random::nextFloat()) / float(width);
                 float v = float(j + Random::nextFloat()) / float(height);
                 Ray r = camera.raycastTo(u, v);
-                col += color(r, world, 5);
+                col += color(r, world, 0);
             }
             col /= float(numSamples);
             col = Vec3(sqrtf(col.r), sqrtf(col.g), sqrtf(col.b));
@@ -55,8 +88,8 @@ int main() {
             imageData[index + 2] = ib;
         }
     }
-    int result = IoImage::writeToPngFile("out.png", imageData, width,
-                                            height, numComponents);
+    int result = IoImage::writeToPngFile("out.png", imageData, width, height,
+                                         numComponents);
     delete[] imageData;
 
     return 0;
