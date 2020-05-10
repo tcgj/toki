@@ -1,7 +1,7 @@
 #include "sphere.hpp"
 
-bool Sphere::intersects(const Ray& r, float tMin, float tMax, RayInteraction& ri) const {
-    Vec3 c_o = r.origin - center;
+bool Sphere::intersects(const Ray& r, tkFloat tMin, tkFloat tMax, RayInteraction& ri) const {
+    tkVec3 c_o = r.origin - center;
     float a = dot(r.direction, r.direction);
     float b = dot(r.direction, c_o); // Removed redundant factor of 2
     float c = dot(c_o, c_o) - radius * radius;

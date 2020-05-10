@@ -1,27 +1,38 @@
-#ifndef MATH_HPP
-#define MATH_HPP
+#pragma once
 
-class Vector3;
-class Point3;
+#include "types.hpp"
 
-#include "math/vec3.hpp"
-#include "math/point3.hpp"
+#include "vec3.hpp"
+#include "point3.hpp"
 
-// Point-Vector operations
-inline Vec3::operator Point3() const {
-    return Point3(x, y, z);
-}
+namespace TK {
+    // Constants
+    static constexpr tkFloat MaxFloat = std::numeric_limits<tkFloat>::max();
+    static constexpr tkFloat Infinity = std::numeric_limits<tkFloat>::infinity();
 
-inline Point3::operator Vec3() const {
-    return Vec3(x, y, z);
-}
+    // Explicit casts
+    template <typename T>
+    inline Vec3<T>::operator Point3<T>() const {
+        return Point3<T>(x, y, z);
+    }
+    template <typename T>
+    inline Point3<T>::operator Vec3<T>() const {
+        return Vec3<T>(x, y, z);
+    }
 
-inline Point3 operator+(const Point3& p, const Vec3& v) {
-    return Point3(p.x + v.x, p.y + v.y, p.z + v.z);
-}
+    // Vector-Point operations
+    template <typename T>
+    inline Point3<T> operator+(const Point3<T>& p, const Vec3<T>& v) {
+        return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
+    }
+    template <typename T>
+    inline Point3<T> operator-(const Point3<T>& p, const Vec3<T>& v) {
+        return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
+    }
 
-inline Point3 operator-(const Point3& p, const Vec3& v) {
-    return Point3(p.x - v.x, p.y - v.y, p.z - v.z);
-}
-
-#endif // MATH_HPP
+    // Others
+    template <typename T, typename U>
+    inline T lerp(T a, T b, U t) {
+        return (static_cast<U>(1) - t) * a + t * b;
+    }
+} // namespace TK

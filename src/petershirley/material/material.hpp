@@ -1,13 +1,10 @@
-#ifndef MATERIAL_HPP
-#define MATERIAL_HPP
+#pragma once
 
-#include "ray.hpp"
-#include "primitive/intersectable.hpp"
+#include "petershirley/primitive/intersectable.hpp"
+#include "ray/ray.hpp"
 
 class Material {
 public:
     virtual bool computeScattering(const Ray& rIn, const RayInteraction& ri,
                                    Vec3& attenuation, Ray& scattered) const = 0;
 };
-
-#endif // MATERIAL_HPP

@@ -1,8 +1,8 @@
 #include "intersectablelist.hpp"
 
-bool IntersectableList::intersects(const Ray& r, float tMin, float tMax, RayInteraction& ri) const {
-    bool anyIntersection = false;
-    float nearestT = tMax;
+bool IntersectableList::intersects(const Ray& r, tkFloat tMin, tkFloat tMax, RayInteraction& ri) const {
+    tkBool anyIntersection = false;
+    tkFloat nearestT = tMax;
     RayInteraction curr;
 
     for (int i = 0; i < size; i++) {
