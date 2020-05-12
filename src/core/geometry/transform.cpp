@@ -2,10 +2,8 @@
 
 namespace TK {
     template <typename T>
-    Point3<T> Transform::operator()(const Point3<T>& p) const {
-        T px = p.x;
-        T py = p.y;
-        T pz = p.z;
+    Point3<T> Transform::operator()(const Point3<T> &p) const {
+        T px = p.x, py = p.y, pz = p.z;
         T x = m.data[0] * px + m.data[1] * py + m.data[2] * pz + m.data[3];
         T y = m.data[4] * px + m.data[5] * py + m.data[6] * pz + m.data[7];
         T z = m.data[8] * px + m.data[9] * py + m.data[10] * pz + m.data[11];
@@ -16,10 +14,8 @@ namespace TK {
             return Point3<T>(x, y, z) / w;
     }
     template <typename T>
-    Vec3<T> Transform::operator()(const Vec3<T>& v, bool isNormal = false) const {
-        T vx = v.x;
-        T vy = v.y;
-        T vz = v.z;
+    Vec3<T> Transform::operator()(const Vec3<T> &v, bool isNormal = false) const {
+        T vx = v.x, vy = v.y, vz = v.z;
 
         if (isNormal) {
             return Vec3<T>(
@@ -34,15 +30,15 @@ namespace TK {
         }
     }
     template <typename T>
-    AABB<T> Transform::operator()(const AABB<T>& bb) const {
-        const Transform& mat = *this;
+    AABB<T> Transform::operator()(const AABB<T> &bb) const {
+        const Transform &mat = *this;
         AABB<T> out(mat(bb.corner(0)));
         for (tkInt i = 1; i < 8; ++i) {
             out = bbUnion(out, mat(bb.corner(i)));
         }
         return out;
     }
-    Ray Transform::operator()(const Ray& r) const {
+    Ray Transform::operator()(const Ray &r) const {
         tkVec3f originError;
         tkPoint3f o = (*this)(r.o, &originError);
         tkVec3f d = (*this)(r.d);
@@ -60,11 +56,9 @@ namespace TK {
     }
 
     template <typename T>
-    Point3<T> Transform::operator()(const Point3<T>& p, Vec3<T>* absError) const {
+    Point3<T> Transform::operator()(const Point3<T> &p, Vec3<T> *absError) const {
         Point3<T> out = (*this)(p);
-        T px = p.x;
-        T py = p.y;
-        T pz = p.z;
+        T px = p.x, py = p.y, pz = p.z;
         T absX = std::abs(m.data[0] * px) + std::abs(m.data[1] * py) +
                     std::abs(m.data[2] * pz) + std::abs(m.data[3]);
         T absY = std::abs(m.data[4] * px) + std::abs(m.data[5] * py) +
@@ -91,15 +85,15 @@ namespace TK {
                 m.data[8] == 0.0f && m.data[9] == 0.0f && m.data[10] == 1.0f && m.data[11] == 0.0f &&
                 m.data[12] == 0.0f && m.data[13] == 0.0f && m.data[14] == 0.0f && m.data[15] == 1.0f);
     }
-    const Matrix44& Transform::getMatrix() const {
+    const Matrix44 &Transform::getMatrix() const {
         return m;
     }
-    const Matrix44& Transform::getInverse() const {
+    const Matrix44 &Transform::getInverse() const {
         return mInv;
     }
 
     // Transform operations
-    Transform translate(const tkVec3f& offset) {
+    Transform translate(const tkVec3f &offset) {
         Matrix44 translationMatrix(1, 0, 0, offset.x,
                                    0, 1, 0, offset.y,
                                    0, 0, 1, offset.z,
@@ -121,7 +115,7 @@ namespace TK {
                            0, 0, 0, 1);
         return Transform(scalingMatrix, invMatrix);
     }
-    Transform rotate(const tkVec3f& axis, tkFloat theta) {
+    Transform rotate(const tkVec3f &axis, tkFloat theta) {
         tkVec3f a = normalize(axis);
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
@@ -169,7 +163,7 @@ namespace TK {
         return Transform(m, transpose(m));
     }
     // View Transform
-    Transform lookAt(const tkPoint3f& eye, const tkPoint3f& at, const tkVec3f& up) {
+    Transform lookAt(const tkPoint3f &eye, const tkPoint3f &at, const tkVec3f &up) {
         Matrix44 viewMatrix;
         tkVec3f eyeVec = tkVec3f(eye);
         tkVec3f camZ = normalize(eye - at);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "system/types.hpp"
 
 #include "vec3.hpp"
 #include "point3.hpp"
@@ -22,11 +22,11 @@ namespace TK {
 
     // Vector-Point operations
     template <typename T>
-    inline Point3<T> operator+(const Point3<T>& p, const Vec3<T>& v) {
+    inline Point3<T> operator+(const Point3<T> &p, const Vec3<T> &v) {
         return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
     }
     template <typename T>
-    inline Point3<T> operator-(const Point3<T>& p, const Vec3<T>& v) {
+    inline Point3<T> operator-(const Point3<T> &p, const Vec3<T> &v) {
         return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
     }
 

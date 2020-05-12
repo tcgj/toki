@@ -8,18 +8,18 @@
 
 namespace TK {
     namespace IoImage {
-        void releaseData(uChar** imageData) {
+        void releaseData(uChar **imageData) {
             stbi_image_free(*imageData);
             *imageData = nullptr;
         }
 
-        int readFromFile(const char* filename, uChar** imageData,
-                        int* imageWidth, int* imageHeight,
-                        int* numComponents) {
+        int readFromFile(const char *filename, uChar **imageData,
+                        int *imageWidth, int *imageHeight,
+                        int *numComponents) {
             stbi_set_flip_vertically_on_load(true);
 
             int w, h, t;
-            uChar* data = stbi_load(filename, &w, &h, &t, 0);
+            uChar *data = stbi_load(filename, &w, &h, &t, 0);
 
             if (data == nullptr) {
                 fprintf(stderr, "Error: Image file cannot be read: %s\n", filename);
@@ -33,7 +33,7 @@ namespace TK {
             return 1;
         }
 
-        int writeToPngFile(const char* filename, const uChar* imageData,
+        int writeToPngFile(const char *filename, const uChar *imageData,
                             int imageWidth, int imageHeight,
                             int numComponents) {
             stbi_flip_vertically_on_write(true);
@@ -48,7 +48,7 @@ namespace TK {
             return result;
         }
 
-        int writeToJpgFile(const char* filename, const uChar* imageData,
+        int writeToJpgFile(const char *filename, const uChar *imageData,
                             int imageWidth, int imageHeight, int numComponents,
                             int quality) {
             stbi_flip_vertically_on_write(true);

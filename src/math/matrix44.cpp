@@ -35,7 +35,7 @@ namespace TK {
         data[15] = f33;
     }
 
-    Matrix44& Matrix44::operator*=(const Matrix44& m) {
+    Matrix44 &Matrix44::operator*=(const Matrix44 &m) {
         for (tkInt i = 0; i < 4; i++) {
             for (tkInt j = 0; j < 4; j++) {
                 data[i * 4 + j] = data[i * 4] * m.data[j] +
@@ -46,19 +46,19 @@ namespace TK {
         }
         return *this;
     }
-    bool Matrix44::operator==(const Matrix44& m) const {
+    bool Matrix44::operator==(const Matrix44 &m) const {
         for (tkInt i = 0; i < 16; ++i)
             if (data[i] != m.data[i]) return false;
         return true;
     }
-    bool Matrix44::operator!=(const Matrix44& m) const {
+    bool Matrix44::operator!=(const Matrix44 &m) const {
         for (tkInt i = 0; i < 16; ++i)
             if (data[i] != m.data[i]) return true;
         return false;
     }
 
     // Binary operators
-    Matrix44 operator*(const Matrix44& m1, const Matrix44& m2) {
+    Matrix44 operator*(const Matrix44 &m1, const Matrix44 &m2) {
         Matrix44 m;
         for (tkInt i = 0; i < 4; i++) {
             for (tkInt j = 0; j < 4; j++) {
@@ -86,13 +86,13 @@ namespace TK {
                 (data[8] * data[13] - data[9] * data[12]);
     }
 
-    Matrix44 transpose(const Matrix44& m) {
+    Matrix44 transpose(const Matrix44 &m) {
         return Matrix44(m.data[0], m.data[4], m.data[8], m.data[12],
                         m.data[1], m.data[5], m.data[9], m.data[13],
                         m.data[2], m.data[6], m.data[10], m.data[14],
                         m.data[3], m.data[7], m.data[11], m.data[15]);
     }
-    Matrix44 inverse(const Matrix44& m) {
+    Matrix44 inverse(const Matrix44 &m) {
         tkFloat d = m.determinant();
         if (std::abs(d) < TK_EPSILON) return Matrix44();
 
@@ -168,7 +168,7 @@ namespace TK {
     }
 
     // IO stream operators
-    std::ostream& operator<<(std::ostream& os, const Matrix44& m) {
+    std::ostream &operator<<(std::ostream &os, const Matrix44 &m) {
         os << "[ [ " << m.data[0] << " " << m.data[1] << " " << m.data[2] << " " << m.data[3] << " ]\n"
            << "  [ " << m.data[4] << " " << m.data[5] << " " << m.data[6] << " " << m.data[7] << " ]\n"
            << "  [ " << m.data[8] << " " << m.data[9] << " " << m.data[10] << " " << m.data[11] << " ]\n"

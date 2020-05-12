@@ -5,6 +5,6 @@
 namespace TK {
     class SurfaceInteraction : public Interaction {
     public:
-        // const Shape* shape = nullptr;
+        // const Shape *shape = nullptr;
     };
 } // namespace TK

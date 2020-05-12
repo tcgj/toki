@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "system/types.hpp"
 
 namespace TK {
     struct Matrix44 {
@@ -12,20 +12,20 @@ namespace TK {
                 tkFloat f33);
 
         //  Assignment operators
-        Matrix44& operator*=(const Matrix44& m);
+        Matrix44 &operator*=(const Matrix44 &m);
 
         // Equality
-        bool operator==(const Matrix44& m) const;
-        bool operator!=(const Matrix44& m) const;
+        bool operator==(const Matrix44 &m) const;
+        bool operator!=(const Matrix44 &m) const;
 
         tkFloat determinant() const;
 
-        friend Matrix44 transpose(const Matrix44& m);
-        friend Matrix44 inverse(const Matrix44& m);
+        friend Matrix44 transpose(const Matrix44 &m);
+        friend Matrix44 inverse(const Matrix44 &m);
 
         tkFloat data[16];
     };
 
-    Matrix44 operator*(const Matrix44& m1, const Matrix44& m2);
-    std::ostream& operator<<(std::ostream& os, const Matrix44& m);
+    Matrix44 operator*(const Matrix44 &m1, const Matrix44 &m2);
+    std::ostream &operator<<(std::ostream &os, const Matrix44 &m);
 } // namespace TK

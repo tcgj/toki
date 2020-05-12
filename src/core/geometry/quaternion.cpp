@@ -2,10 +2,10 @@
 
 // All implementations here follow the right-hand coordinate system
 namespace TK {
-    Quaternion::Quaternion(const Transform& t) {
+    Quaternion::Quaternion(const Transform &t) {
         // constructor derived from pbrt
         // Working backwards given quaternion to rotation matrix formula
-        const Matrix44& m = t.getMatrix();
+        const Matrix44 &m = t.getMatrix();
         tkFloat trace = m.data[0] + m.data[5] + m.data[10];
         if (trace > 0.0f) {
             // compute w from trace, then xyz
@@ -58,7 +58,7 @@ namespace TK {
     }
 
     // Assumes that both q1 and q2 are unit quaternions
-    Quaternion slerp(tkFloat t, const Quaternion& q1, const Quaternion& q2) {
+    Quaternion slerp(tkFloat t, const Quaternion &q1, const Quaternion &q2) {
         tkFloat cosTheta = dot(q1, q2);
 
         // dot product threshold of 0.9995
