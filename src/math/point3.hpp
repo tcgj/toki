@@ -121,7 +121,7 @@ namespace TK {
         return (p2 - p1).squaredMagnitude();
     }
     template <typename T>
-    inline Point3<T> swizzle(const Point3<T> &p, int x, int y, int z) {
+    inline Point3<T> swizzle(const Point3<T> &p, tkInt x, tkInt y, tkInt z) {
         return Point3<T>(p[x], p[y], p[z]);
     }
 } // namespace TK

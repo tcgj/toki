@@ -222,7 +222,7 @@ namespace TK {
         return v;
     }
     template <typename T>
-    inline Vec3<T> swizzle(const Vec3<T> &v, int x, int y, int z) {
+    inline Vec3<T> swizzle(const Vec3<T> &v, tkInt x, tkInt y, tkInt z) {
         return Vec3<T>(v[x], v[y], v[z]);
     }
     template <typename T>

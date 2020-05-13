@@ -1,7 +1,8 @@
 #pragma once
 
-#include "system/types.hpp"
+#include <vector>
 
+#include "system/types.hpp"
 #include "vec3.hpp"
 #include "point3.hpp"
 

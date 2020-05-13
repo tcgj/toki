@@ -9,7 +9,6 @@ namespace TK {
     class Ray;
     class Shape;
 
-    typedef bool tkBool;
     typedef unsigned char tkUChar;
     typedef char tkChar;
     typedef int tkInt;

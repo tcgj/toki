@@ -1,8 +1,8 @@
 #include "sphere.hpp"
 
 namespace TK {
-    tkAABBf Sphere::boundingVolume() const {
-        return (*worldTransform)(tkAABBf(tkPoint3f(-radius), tkPoint3f(radius)));
+    tkAABBf Sphere::objectBoundingBox() const {
+        return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
     }
 
     bool Sphere::intersect(const Ray &r, tkFloat *tHit,

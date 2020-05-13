@@ -10,9 +10,9 @@ namespace TK {
                 bool invertNormals = false)
             : Shape(worldTransform, invertNormals), radius(radius) {}
 
-        tkAABBf boundingVolume() const override;
+        tkAABBf objectBoundingBox() const override;
         bool intersect(const Ray &r, tkFloat *tHit,
-                        SurfaceInteraction *interaction) const override;
+                       SurfaceInteraction *interaction) const override;
         bool hasIntersect(const Ray &r) const override;
 
     private:

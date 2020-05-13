@@ -32,7 +32,7 @@ namespace TK {
     template <typename T>
     bool hasIntersect(const AABB<T> &b, const Ray &r) {
         tkFloat tmin = 0, tmax = r.tMax;
-        for (int i = 0; i < 3; ++i) {
+        for (tkInt i = 0; i < 3; ++i) {
             // component-wise computation
             // p = o + t*d -----> t = (p - o) * 1/d
             tkFloat invD = (tkFloat)1 / r.d[i];

@@ -17,13 +17,13 @@ namespace TK {
             xyz.y = (m.data[8] - m.data[2]) * s;
             xyz.z = (m.data[1] - m.data[4]) * s;
         } else {
-            const int next[3] = {1, 2, 0};
+            const tkInt next[3] = {1, 2, 0};
             tkFloat q[3];
-            int i = 0;
+            tkInt i = 0;
             if (m.data[5] > m.data[0]) i = 1;
             if (m.data[10] > m.data[5]) i = 2;
-            int j = next[i];
-            int k = next[j];
+            tkInt j = next[i];
+            tkInt k = next[j];
             tkFloat s = sqrt(1.0f + m.data[i * 4 + i] - m.data[j * 4 + j] - m.data[k * 4 + k]);
             q[i] = s * 0.5f;
             if (s != 0.0f) s = 0.5f / s; // Should never be zero
