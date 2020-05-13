@@ -23,8 +23,6 @@ namespace TK {
         template <typename T> Vec3<T> operator()(const Vec3<T> &v, bool isNormal = false) const;
         template <typename T> AABB<T> operator()(const AABB<T> &bb) const;
         Ray operator()(const Ray &r) const;
-        // (With FPE handling)
-        template <typename T> Point3<T> operator()(const Point3<T> &p, Vec3<T> *absError) const;
 
         // Equality
         bool operator==(const Transform &t) const;

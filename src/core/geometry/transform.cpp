@@ -39,35 +39,10 @@ namespace TK {
         return out;
     }
     Ray Transform::operator()(const Ray &r) const {
-        tkVec3f originError;
-        tkPoint3f o = (*this)(r.o, &originError);
+        tkPoint3f o = (*this)(r.o);
         tkVec3f d = (*this)(r.d);
 
-        // Floating point error handling
-        tkFloat sqrLength = d.squaredMagnitude();
-        tkFloat tMax = r.tMax;
-        if (sqrLength > 0) {
-            tkFloat dt = dot(abs(d), originError) / sqrLength;
-            o += d * dt;
-            tMax -= dt;
-        }
-
-        return Ray(o, d, tMax/*, r.time, r.medium*/);
-    }
-
-    template <typename T>
-    Point3<T> Transform::operator()(const Point3<T> &p, Vec3<T> *absError) const {
-        Point3<T> out = (*this)(p);
-        T px = p.x, py = p.y, pz = p.z;
-        T absX = std::abs(m.data[0] * px) + std::abs(m.data[1] * py) +
-                    std::abs(m.data[2] * pz) + std::abs(m.data[3]);
-        T absY = std::abs(m.data[4] * px) + std::abs(m.data[5] * py) +
-                    std::abs(m.data[6] * pz) + std::abs(m.data[7]);
-        T absZ = std::abs(m.data[8] * px) + std::abs(m.data[9] * py) +
-                    std::abs(m.data[10] * pz) + std::abs(m.data[11]);
-        *absError = tgamma(3) * Vec3<T>(absX, absY, absZ);
-
-        return out;
+        return Ray(o, d, r.tMax/*, r.time, r.medium*/);
     }
 
     bool Transform::willSwapHandedness() const {

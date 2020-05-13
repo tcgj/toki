@@ -8,6 +8,8 @@ namespace TK {
     template <typename T> class Vec3;
     template <typename T> class Point3;
     template <typename T> class AABB;
+    class Ray;
+    class Shape;
 
     typedef bool tkBool;
     typedef unsigned char tkUChar;
