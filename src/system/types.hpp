@@ -2,8 +2,6 @@
 
 #include <string>
 
-#define TK_EPSILON 0.00001
-
 namespace TK {
     template <typename T> class Vec3;
     template <typename T> class Point3;

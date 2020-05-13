@@ -6,14 +6,13 @@
 namespace TK {
     class Shape {
     public:
-        Shape() : invertNormals(false) {}
-        Shape(const Transform *worldTransform, bool invertNormals)
+        Shape(const Transform *worldTransform, bool invertNormals = false)
             : worldTransform(worldTransform), invertNormals(invertNormals) {}
 
         virtual tkAABBf boundingVolume() const = 0;
         virtual bool intersect(const Ray &r, tkFloat *tHit,
                                SurfaceInteraction *interaction) const = 0;
-        virtual bool hasIntersect(const Ray &r, tkFloat *tHit) const;
+        virtual bool hasIntersect(const Ray &r) const;
 
     protected:
         const Transform *worldTransform = nullptr;
@@ -21,8 +20,9 @@ namespace TK {
     };
 
     // Default inefficient intersection test
-    inline bool Shape::hasIntersect(const Ray &r, tkFloat *tHit) const {
+    inline bool Shape::hasIntersect(const Ray &r) const {
+        tkFloat tHit;
         SurfaceInteraction interaction;
-        return intersect(r, tHit, &interaction);
+        return intersect(r, &tHit, &interaction);
     }
 } // namespace TK
