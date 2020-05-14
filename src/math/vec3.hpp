@@ -36,6 +36,7 @@ namespace TK {
         Vec3<T> &normalized();
 
         // Explicit cast
+        explicit operator Point2<T>() const;
         explicit operator Point3<T>() const;
         explicit operator Vec2<T>() const;
 

@@ -38,6 +38,10 @@ namespace TK {
         return Vec3<T>(x, y, 0);
     }
     template <typename T>
+    inline Vec3<T>::operator Point2<T>() const {
+        return Point2<T>(x, y);
+    }
+    template <typename T>
     inline Vec3<T>::operator Point3<T>() const {
         return Point3<T>(x, y, z);
     }
@@ -56,6 +60,10 @@ namespace TK {
     template <typename T>
     inline Point3<T>::operator Point2<T>() const {
         return Point2<T>(x, y);
+    }
+    template <typename T>
+    inline Point3<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
     }
     template <typename T>
     inline Point3<T>::operator Vec3<T>() const {

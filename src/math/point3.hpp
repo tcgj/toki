@@ -29,8 +29,9 @@ namespace TK {
         bool operator!=(const Point3<T> &p) const;
 
         // Explicit cast
-        explicit operator Vec3<T>() const;
         explicit operator Point2<T>() const;
+        explicit operator Vec2<T>() const;
+        explicit operator Vec3<T>() const;
 
         union {
             struct { T x, y, z; };
