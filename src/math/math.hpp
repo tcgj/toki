@@ -1,10 +1,14 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 
 #include "system/types.hpp"
+#include "vec2.hpp"
 #include "vec3.hpp"
+#include "point2.hpp"
 #include "point3.hpp"
+#include "matrix44.hpp"
 
 #define TK_PI 3.141592653589793
 #define TK_INVPI 0.31830988618
@@ -26,22 +30,36 @@ namespace TK {
 
     // Explicit casts
     template <typename T>
+    inline Vec2<T>::operator Point2<T>() const {
+        return Point2<T>(x, y);
+    }
+    template <typename T>
+    inline Vec2<T>::operator Vec3<T>() const {
+        return Vec3<T>(x, y, 0);
+    }
+    template <typename T>
     inline Vec3<T>::operator Point3<T>() const {
         return Point3<T>(x, y, z);
     }
     template <typename T>
+    inline Vec3<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
+    }
+    template <typename T>
+    inline Point2<T>::operator Point3<T>() const {
+        return Point3<T>(x, y, 0);
+    }
+    template <typename T>
+    inline Point2<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
+    }
+    template <typename T>
+    inline Point3<T>::operator Point2<T>() const {
+        return Point2<T>(x, y);
+    }
+    template <typename T>
     inline Point3<T>::operator Vec3<T>() const {
         return Vec3<T>(x, y, z);
-    }
-
-    // Vector-Point operations
-    template <typename T>
-    inline Point3<T> operator+(const Point3<T> &p, const Vec3<T> &v) {
-        return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
-    }
-    template <typename T>
-    inline Point3<T> operator-(const Point3<T> &p, const Vec3<T> &v) {
-        return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
     }
 
     // Others

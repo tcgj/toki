@@ -17,7 +17,7 @@ namespace TK {
 
         bool getTriVertices(tkInt index, VertexAttr *v1, VertexAttr *v2, VertexAttr *v3) const;
 
-        const tkInt numTri, numVert;
+        tkInt numTri, numVert;
         std::vector<tkInt> indexBuffer; // std::vector to allow for easy triangle inversion
         std::unique_ptr<tkPoint3f[]> vertexBuffer;
         std::unique_ptr<tkVec3f[]> normalBuffer;

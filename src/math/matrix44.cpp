@@ -1,8 +1,5 @@
 #include "matrix44.hpp"
 
-#include <cmath>
-#include <iostream>
-
 namespace TK {
     Matrix44::Matrix44() {
         data[0]  = 1.0f; data[1]  = 0.0f; data[2]  = 0.0f; data[3]  = 0.0f;
@@ -94,10 +91,11 @@ namespace TK {
     }
     Matrix44 inverse(const Matrix44 &m) {
         tkFloat d = m.determinant();
-        if (std::abs(d) < TK_EPSILON) return Matrix44();
+        if (std::abs(d) < TK_EPSILON)
+            return Matrix44();
 
         // use Cramer's rule
-        d = (tkFloat)1 / d;
+        d = 1.0 / d;
         Matrix44 result;
         result.data[0] =
             d * (m.data[5] * (m.data[10] * m.data[15] - m.data[11] * m.data[14]) +

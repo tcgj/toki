@@ -2,7 +2,7 @@
 
 namespace TK {
     template <typename T>
-    AABB<T> bbUnion(const AABB<T> &b1, const AABB<T> &b2) {
+    inline AABB<T> bbUnion(const AABB<T> &b1, const AABB<T> &b2) {
         return AABB<T>(Point3<T>(std::min(b1.minPt.x, b2.minPt.x),
                                 std::min(b1.minPt.y, b2.minPt.y),
                                 std::min(b1.minPt.z, b2.minPt.z)),
@@ -11,7 +11,7 @@ namespace TK {
                                 std::max(b1.maxPt.z, b2.maxPt.z)));
     }
     template <typename T>
-    AABB<T> bbUnion(const AABB<T> &b, const Point3<T> &p) {
+    inline AABB<T> bbUnion(const AABB<T> &b, const Point3<T> &p) {
         return AABB<T>(Point3<T>(std::min(b.minPt.x, p.x),
                                 std::min(b.minPt.y, p.y),
                                 std::min(b.minPt.z, p.z)),
@@ -20,7 +20,7 @@ namespace TK {
                                 std::max(b.maxPt.z, p.z)));
     }
     template <typename T>
-    AABB<T> bbIntersect(const AABB<T> &b1, const AABB<T> &b2) {
+    inline AABB<T> bbIntersect(const AABB<T> &b1, const AABB<T> &b2) {
         return AABB<T>(Point3<T>(std::max(b1.minPt.x, b2.minPt.x),
                                 std::max(b1.minPt.y, b2.minPt.y),
                                 std::max(b1.minPt.z, b2.minPt.z)),
@@ -35,7 +35,7 @@ namespace TK {
         for (tkInt i = 0; i < 3; ++i) {
             // component-wise computation
             // p = o + t*d -----> t = (p - o) * 1/d
-            tkFloat invD = (tkFloat)1 / r.d[i];
+            tkFloat invD = 1.0 / r.d[i];
             tkFloat t0 = (b.minPt[i] - r.o[i]) * invD;
             tkFloat t1 = (b.minPt[i] - r.o[i]) * invD;
             if (t0 > t1)

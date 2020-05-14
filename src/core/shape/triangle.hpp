@@ -19,6 +19,6 @@ namespace TK {
 
     private:
         std::shared_ptr<Mesh> mesh;
-        const tkInt triIndex;
+        tkInt triIndex;
     };
 } // namespace TK

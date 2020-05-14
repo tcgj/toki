@@ -1,12 +1,13 @@
 #include "triangle.hpp"
 
 namespace TK {
-    tkAABBf Triangle::objectBoundingBox() const {
+    inline tkAABBf Triangle::objectBoundingBox() const {
         VertexAttr v0, v1, v2;
         Transform worldToObject = inverse(*worldTransform);
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        return bbUnion(tkAABBf(worldToObject(v0.pos), worldToObject(v1.pos)), worldToObject(v2.pos));
+        return bbUnion(tkAABBf(worldToObject(v0.pos), worldToObject(v1.pos)),
+                       worldToObject(v2.pos));
     }
 
     tkAABBf Triangle::worldBoundingBox() const {
@@ -15,8 +16,10 @@ namespace TK {
         return bbUnion(tkAABBf(v0.pos, v1.pos), v2.pos);
     }
 
+    // Implementation of Möller–Trumbore Ray-Triangle algorithm from
+    // https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
     bool Triangle::intersect(const Ray &r, tkFloat *tHit,
-                   SurfaceInteraction *interaction) const {
+                             SurfaceInteraction *interaction) const {
         VertexAttr v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
@@ -46,9 +49,11 @@ namespace TK {
         if (tempT < TK_EPSILON || tempT > r.tMax)
             return false;
 
+        tkVec3f normal = cross(e1, e2).normalized();
+
         *tHit = tempT;
         interaction->p = r(*tHit);
-        interaction->n = cross(e1, e2).normalized();
+        interaction->n = invertNormals ? -normal : normal;
         interaction->wout = -r.d;
         interaction->shape = this;
         return true;
@@ -76,12 +81,10 @@ namespace TK {
         tkVec3f q = cross(t, e1);
 
         tkFloat v = dot(r.d, q) * invDet;
-        if (v < 0.0 || u + v > 1.0)
-            return false;
+        if (v < 0.0 || u + v > 1.0) return false;
 
         tkFloat tempT = dot(e2, q) * invDet;
-        if (tempT < TK_EPSILON || tempT > r.tMax)
-            return false;
+        if (tempT < TK_EPSILON || tempT > r.tMax) return false;
 
         return true;
     }
@@ -95,8 +98,9 @@ namespace TK {
         std::vector<std::shared_ptr<Shape>> tris;
 
         for (tkInt i = 0; i < numTri; ++i)
-            tris.push_back(std::make_shared<Triangle>(mesh, i, worldTransform, invertNormals));
+            tris.push_back(std::make_shared<Triangle>(mesh, i, worldTransform,
+                                                      invertNormals));
 
         return tris;
     }
-} // namespace TK
+}  // namespace TK

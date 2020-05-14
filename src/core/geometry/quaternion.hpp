@@ -55,7 +55,7 @@ namespace TK {
         return *this;
     }
     inline Quaternion &Quaternion::operator/=(tkFloat f) {
-        tkFloat r = (tkFloat)1 / f;
+        tkFloat r = 1.0 / f;
         xyz *= r;
         w *= r;
         return *this;
@@ -77,7 +77,7 @@ namespace TK {
     }
     inline Quaternion Quaternion::operator/(tkFloat f) const {
         Quaternion ret = *this;
-        tkFloat r = (tkFloat)1 / f;
+        tkFloat r = 1.0 / f;
         ret.xyz *= r;
         ret.w *= r;
         return ret;

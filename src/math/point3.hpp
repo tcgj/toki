@@ -10,6 +10,7 @@ namespace TK {
             tkAssert(std::isnan(x) || std::isnan(y) || std::isnan(z));
         }
         Point3(const Point3<T> &p) : x(p.x), y(p.y), z(p.z) {}
+        Point3(const Point2<T> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
 
         // Unary/subscript operators
         const Point3<T> &operator+() const;
@@ -29,6 +30,7 @@ namespace TK {
 
         // Explicit cast
         explicit operator Vec3<T>() const;
+        explicit operator Point2<T>() const;
 
         union {
             struct { T x, y, z; };
@@ -52,7 +54,7 @@ namespace TK {
     template <typename T>
     inline Point3<T> Point3<T>::operator/(T w) const {
         tkAssert(w != 0);
-        tkFloat k = (tkFloat)1 / w;
+        tkFloat k = 1.0 / w;
         return Point3<T>(x * k, y * k, z * k);
     }
     template <typename T>
@@ -99,16 +101,28 @@ namespace TK {
 
     // Binary operators
     template <typename T>
-    inline Point3<T> operator*(const Point3<T> &p, T s) {
-        return Point3(p.x * s, p.y * s, p.z * s);
+    inline Point3<T> operator+(const Point3<T> &p1, const Point3<T> &p2) {
+        return Point3<T>(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
     }
     template <typename T>
-    inline Point3<T> operator*(T s, const Point3<T> &p) {
-        return Point3<T>(p.x * s, p.y * s, p.z * s);
+    inline Point3<T> operator+(const Point3<T> &p, const Vec3<T> &v) {
+        return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
     }
     template <typename T>
     inline Vec3<T> operator-(const Point3<T> &p1, const Point3<T> &p2) {
         return Vec3<T>(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
+    }
+    template <typename T>
+    inline Point3<T> operator-(const Point3<T> &p, const Vec3<T> &v) {
+        return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
+    }
+    template <typename T, typename U>
+    inline Point3<T> operator*(const Point3<T> &p, U s) {
+        return Point3(p.x * s, p.y * s, p.z * s);
+    }
+    template <typename T, typename U>
+    inline Point3<T> operator*(U s, const Point3<T> &p) {
+        return Point3<T>(p.x * s, p.y * s, p.z * s);
     }
 
     // Point operations
@@ -123,5 +137,18 @@ namespace TK {
     template <typename T>
     inline Point3<T> swizzle(const Point3<T> &p, tkInt x, tkInt y, tkInt z) {
         return Point3<T>(p[x], p[y], p[z]);
+    }
+
+    // IO stream operators
+    template <typename T>
+    inline std::istream &operator>>(std::istream &is, Point3<T> &p) {
+        is >> p.x >> p.y >> p.z;
+        return is;
+    }
+
+    template <typename T>
+    inline std::ostream &operator<<(std::ostream &os, const Point3<T> &p) {
+        os << "[" << p.x << " " << p.y << " " << p.z << "]";
+        return os;
     }
 } // namespace TK

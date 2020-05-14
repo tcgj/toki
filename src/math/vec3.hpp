@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <iostream>
-
 namespace TK {
     template <typename T>
     class Vec3 {
@@ -13,6 +10,7 @@ namespace TK {
             tkAssert(std::isnan(x) || std::isnan(y) || std::isnan(z));
         }
         Vec3(const Vec3<T> &v) : x(v.x), y(v.y), z(v.z) {}
+        Vec3(const Vec2<t> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
 
         // Unary/subscript operators
         const Vec3<T> &operator+() const;
@@ -39,6 +37,7 @@ namespace TK {
 
         // Explicit cast
         explicit operator Point3<T>() const;
+        explicit operator Vec2<T>() const;
 
         union {
             struct { T x, y, z; };
@@ -126,7 +125,7 @@ namespace TK {
     template <typename T>
     inline Vec3<T> &Vec3<T>::operator/=(T s) {
         tkAssert(s != 0);
-        tkFloat k = (tkFloat)1 / s;
+        tkFloat k = 1.0 / s;
         x *= k;
         y *= k;
         z *= k;
@@ -188,7 +187,7 @@ namespace TK {
     template <typename T>
     inline Vec3<T> operator/(const Vec3<T> &v, T s) {
         tkAssert(s != 0);
-        tkFloat k = (tkFloat)1 / s;
+        tkFloat k = 1.0 / s;
         return Vec3<T>(v.x * k, v.y * k, v.z * k);
     }
 
@@ -226,11 +225,12 @@ namespace TK {
         return Vec3<T>(v[x], v[y], v[z]);
     }
     template <typename T>
-    inline void orthogonalAxes(const Vec3<T> &v1, Vec3<T> *v2, Vec3<T> *v3) {
+    inline void coordinateSystem(const Vec3<T> &v1, Vec3<T> *v2, Vec3<T> *v3) {
+        // v1 = z-axis, v2 = x-axis, v3 = y-axis
         if (std::abs(v1.x) > std::abs(v1.y))
-            *v2 = Vec3<T>(-v1.z, 0, v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+            *v2 = Vec3<T>(0, v1.z, -v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
         else
-            *v2 = Vec3<T>(0, v1.z, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
+            *v2 = Vec3<T>(v1.z, 0, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
         *v3 = cross(v1, *v2);
     }
 

@@ -1,7 +1,7 @@
 #include "sphere.hpp"
 
 namespace TK {
-    tkAABBf Sphere::objectBoundingBox() const {
+    inline tkAABBf Sphere::objectBoundingBox() const {
         return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
     }
 
@@ -21,10 +21,12 @@ namespace TK {
         if (t0 < TK_EPSILON)
             t0 = t1;
 
+        tkVec3f normal = (*worldTransform)(normal, true);
+
         *tHit = t0;
         tkVec3f normal = normalize(tkVec3f(oRay(*tHit)));
         interaction->p = r(*tHit);
-        interaction->n = (*worldTransform)(normal, true);
+        interaction->n = invertNormals ? -normal : normal;
         interaction->wout = -r.d;
         interaction->shape = this;
 
