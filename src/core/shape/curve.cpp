@@ -46,7 +46,7 @@ namespace TK {
 
         // Maximum depth calculation based on prbt
         tkFloat l0 = 0;
-        for (tkInt i = 0; i < 2; ++i) {
+        for (tkUInt i = 0; i < 2; ++i) {
             l0 = std::max(l0,
                 std::max(std::max(std::abs(cp[i].x - 2 * cp[i + 1].x + cp[i + 2].x),
                                   std::abs(cp[i].y - 2 * cp[i + 1].y + cp[i + 2].y)),
@@ -55,7 +55,7 @@ namespace TK {
         tkFloat eps = std::max(common->width[0], common->width[1]) * 0.05;
         tkFloat fr0 = std::log(1.41421356237 * 12.0 * l0 / (8.0 * eps)) * 0.7213475108;
         tkInt r0 = (tkInt)std::round(fr0);
-        tkInt maxDepth = std::clamp(r0, 0, 10);
+        tkUInt maxDepth = std::clamp(r0, 0, 10);
 
         return recursiveIntersect(oRay, tHit, interaction, cp,
                                   inverse(objectToRay), rayBB, rayLen, uMin,
@@ -71,7 +71,7 @@ namespace TK {
                                    const tkPoint3f cp[4],
                                    const Transform &rayToObject, tkAABBf &rayBB,
                                    tkFloat rayLength, tkFloat u0, tkFloat u1,
-                                   tkInt depth) const {
+                                   tkUInt depth) const {
         if (depth <= 0) {
             // Base case, bounding box overlaps
 
@@ -137,7 +137,11 @@ namespace TK {
             }
 
             if (tHit) { // not a shadow ray
-                *tHit = p.z / rayLength; // Apparently not accurate for ribbons
+                tkFloat tempT = p.z / rayLength;
+                if (tempT < TK_EPSILON || tempT > r.tMax)
+                    return false;
+
+                *tHit = tempT; // Apparently not accurate for ribbons
                 interaction->p = (*worldTransform)(r(*tHit));
                 interaction->n = normalize((*worldTransform)(normal));
                 interaction->wout = normalize((*worldTransform)(-r.d));

@@ -11,9 +11,14 @@ namespace TK {
     struct Matrix44;
     class Ray;
     class Shape;
+    class Interaction;
+    class SurfaceInteraction;
+    class Interactable;
+    class Primitive;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;
+    typedef unsigned int tkUInt;
     typedef int tkInt;
     typedef float tkFloat;
     typedef float tkF32;

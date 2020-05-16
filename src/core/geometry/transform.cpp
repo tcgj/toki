@@ -33,7 +33,7 @@ namespace TK {
     AABB<T> Transform::operator()(const AABB<T> &bb) const {
         const Transform &mat = *this;
         AABB<T> out(mat(bb.corner(0)));
-        for (tkInt i = 1; i < 8; ++i) {
+        for (tkUInt i = 1; i < 8; ++i) {
             out = bbUnion(out, mat(bb.corner(i)));
         }
         return out;

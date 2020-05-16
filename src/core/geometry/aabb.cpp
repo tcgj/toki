@@ -30,9 +30,9 @@ namespace TK {
     }
 
     template <typename T>
-    bool hasIntersect(const AABB<T> &b, const Ray &r) {
+    bool AABB<T>::hasIntersect(const Ray &r) const {
         tkFloat tmin = 0, tmax = r.tMax;
-        for (tkInt i = 0; i < 3; ++i) {
+        for (tkUInt i = 0; i < 3; ++i) {
             // component-wise computation
             // p = o + t*d -----> t = (p - o) * 1/d
             tkFloat invD = 1.0 / r.d[i];
@@ -47,5 +47,29 @@ namespace TK {
                 return false;
         }
         return true;
+    }
+
+    template <typename T>
+    bool AABB<T>::hasIntersect(const Ray &r, const tkVec3f &invD, const int dirNegative[3]) const {
+        const AABB<T> &bb = *this;
+        tkFloat tMin = (bb[dirNegative[0]].x - r.o.x) * invD;
+        tkFloat tMax = (bb[1 - dirNegative[0]].x - r.o.x) * invD;
+        tkFloat tyMin = (bb[dirNegative[1]].y - r.o.y) * invD;
+        tkFloat tyMax = (bb[1 - dirNegative[1]].y - r.o.y) * invD;
+        if (tMin > tyMax || tyMin > tMax)
+            return false;
+        if (tyMin > tMin)
+            tMin = tyMin;
+        if (tyMax < tMax)
+            tMax = tyMax;
+        tkFloat tzMin = (bb[dirNegative[2]].z - r.o.z) * invD;
+        tkFloat tzMax = (bb[1 - dirNegative[2]].z - r.o.z) * invD;
+        if (tMin > tzMax || tzMin > tMax)
+            return false;
+        if (tzMin > tMin)
+            tMin = tzMin;
+        if (tzMax < tMax)
+            tMax = tzMax;
+        return tMin < r.tMax && tMax > 0;
     }
 } // namespace TK

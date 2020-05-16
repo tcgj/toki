@@ -15,8 +15,8 @@ namespace TK {
         // Unary/subscript operators
         const Vec3<T> &operator+() const;
         Vec3<T> operator-() const;
-        T operator[](tkInt i) const;
-        T &operator[](tkInt i);
+        T operator[](tkUInt i) const;
+        T &operator[](tkUInt i);
 
         // Assignment operators
         Vec3<T> &operator=(const Vec3<T> &v);
@@ -70,12 +70,12 @@ namespace TK {
         return Vec3<T>(-x, -y, -z);
     }
     template <typename T>
-    inline T Vec3<T>::operator[](tkInt i) const {
+    inline T Vec3<T>::operator[](tkUInt i) const {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }
     template <typename T>
-    inline T &Vec3<T>::operator[](tkInt i) {
+    inline T &Vec3<T>::operator[](tkUInt i) {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }

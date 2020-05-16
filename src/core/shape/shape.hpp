@@ -8,6 +8,7 @@ namespace TK {
     public:
         Shape(const Transform *worldTransform, bool invertNormals = false)
             : worldTransform(worldTransform), invertNormals(invertNormals) {}
+        virtual ~Shape();
 
         virtual tkAABBf objectBoundingBox() const = 0;
         virtual tkAABBf worldBoundingBox() const;
@@ -17,7 +18,7 @@ namespace TK {
 
     protected:
         const Transform *worldTransform = nullptr;
-        const bool invertNormals;
+        bool invertNormals;
     };
 
     // Default inefficient intersection test

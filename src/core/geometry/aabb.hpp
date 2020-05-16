@@ -18,34 +18,38 @@ namespace TK {
               maxPt(std::max(p1.x, p2.x), std::max(p1.y, p2.y), std::max(p1.z, p2.z)) {}
 
         // Subscript operators
-        const Point3<T> &operator[](tkInt i) const;
-        Point3<T> operator[](tkInt i);
+        const Point3<T> &operator[](tkUInt i) const;
+        Point3<T> operator[](tkUInt i);
 
         // Equality
         bool operator==(const AABB<T> &b) const;
         bool operator!=(const AABB<T> &b) const;
 
         // Math
-        Point3<T> corner(tkInt cIndex) const;
+        Point3<T> corner(tkUInt cIndex) const;
         Vec3<T> diagonal() const;
         T surfaceArea() const;
         T volume() const;
-        tkInt maxExtent() const;
+        tkUInt maxExtent() const;
         Point3<T> lerp(const tkPoint3f &t) const;
         Vec3<T> offset(const Point3<T> &p) const;
         void boundingSphere(Point3<T> *center, tkFloat *radius) const;
+
+        // Ray-BB intersection test
+        bool hasIntersect(const Ray &r) const;
+        bool hasIntersect(const Ray &r, const tkVec3f &invD, const int dirNegative[3]) const;
 
         Point3<T> minPt, maxPt;
     };
 
     template <typename T>
-    inline const Point3<T> &AABB<T>::operator[](tkInt i) const {
+    inline const Point3<T> &AABB<T>::operator[](tkUInt i) const {
         tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }
 
     template <typename T>
-    inline Point3<T> AABB<T>::operator[](tkInt i) {
+    inline Point3<T> AABB<T>::operator[](tkUInt i) {
         tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }
@@ -60,7 +64,7 @@ namespace TK {
     };
 
     template <typename T>
-    inline Point3<T> AABB<T>::corner(tkInt cIndex) const {
+    inline Point3<T> AABB<T>::corner(tkUInt cIndex) const {
         return Point3<T>((*this)[cIndex & 1].x,
                         (*this)[(cIndex & 2) ? 1 : 0].y,
                         (*this)[(cIndex & 4) ? 1 : 0].z);
@@ -81,7 +85,7 @@ namespace TK {
         return d.x * d.y * d.z;
     }
     template <typename T>
-    inline tkInt AABB<T>::maxExtent() const {
+    inline tkUInt AABB<T>::maxExtent() const {
         Vec<T> d = diagonal();
         if (d.x > d.y && d.x > d.z) {
             return 0;
@@ -140,8 +144,4 @@ namespace TK {
     AABB<T> bbUnion(const AABB<T> &b, const Point3<T> &p);
     template <typename T>
     AABB<T> bbIntersect(const AABB<T> &b1, const AABB<T> &b2);
-
-    // Ray-BB intersection test
-    template <typename T>
-    bool hasIntersect(const AABB<T> &b, const Ray &r);
 } // namespace TK

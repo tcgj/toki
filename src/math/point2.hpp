@@ -15,8 +15,8 @@ namespace TK {
         const Point2<T> &operator+() const;
         Point2<T> operator-() const;
         Point2<T> operator/(T w) const;
-        T operator[](tkInt i) const;
-        T &operator[](tkInt i);
+        T operator[](tkUInt i) const;
+        T &operator[](tkUInt i);
 
         // Assignment operators
         Point2<T> &operator=(const Point2<T> &p);
@@ -62,12 +62,12 @@ namespace TK {
         return Point2<T>(x * k, y * k);
     }
     template <typename T>
-    inline T Point2<T>::operator[](tkInt i) const {
+    inline T Point2<T>::operator[](tkUInt i) const {
         tkAssert(i == 0 || i == 1);
         return data[i];
     }
     template <typename T>
-    inline T &Point2<T>::operator[](tkInt i) {
+    inline T &Point2<T>::operator[](tkUInt i) {
         tkAssert(i == 0 || i == 1);
         return data[i];
     }

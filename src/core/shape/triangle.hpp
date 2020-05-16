@@ -7,7 +7,7 @@
 namespace TK {
     class Triangle : public Shape {
     public:
-        Triangle(const std::shared_ptr<Mesh> &mesh, tkInt triIndex,
+        Triangle(const std::shared_ptr<Mesh> &mesh, tkUInt triIndex,
                  Transform *worldTransform, bool invertNormals = false)
             : Shape(worldTransform, invertNormals), mesh(mesh), triIndex(triIndex) {}
 
@@ -19,6 +19,6 @@ namespace TK {
 
     private:
         std::shared_ptr<Mesh> mesh;
-        tkInt triIndex;
+        tkUInt triIndex;
     };
 } // namespace TK

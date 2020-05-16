@@ -90,14 +90,14 @@ namespace TK {
     }
 
     std::vector<std::shared_ptr<Shape>> GenerateMesh(
-        tkInt numTri, const tkInt *I, tkInt numVert, const tkPoint3f *V,
+        tkUInt numTri, const tkUInt *I, tkUInt numVert, const tkPoint3f *V,
         const tkVec3f *N, const tkVec3f *T, const Transform *worldTransform,
         bool invertNormals = false) {
         std::shared_ptr<Mesh> mesh =
             std::make_shared<Mesh>(worldTransform, numTri, I, numVert, V, N, T);
         std::vector<std::shared_ptr<Shape>> tris;
 
-        for (tkInt i = 0; i < numTri; ++i)
+        for (tkUInt i = 0; i < numTri; ++i)
             tris.push_back(std::make_shared<Triangle>(mesh, i, worldTransform,
                                                       invertNormals));
 
