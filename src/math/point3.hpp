@@ -11,7 +11,6 @@ namespace TK {
         Point3(T p0, T p1, T p2) : x(p0), y(p1), z(p2) {
             tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
-        Point3(const Point3<T> &p) : x(p.x), y(p.y), z(p.z) {}
         Point3(const Point2<T> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
 
         // Unary/subscript operators
@@ -22,7 +21,6 @@ namespace TK {
         T &operator[](tkInt i);
 
         // Assignment operators
-        Point3<T> &operator=(const Point3<T> &p);
         Point3<T> &operator+=(const Vec3<T> &v);
         Point3<T> &operator-=(const Vec3<T> &v);
 
@@ -71,13 +69,6 @@ namespace TK {
         return data[i];
     }
 
-    template <typename T>
-    inline Point3<T> &Point3<T>::operator=(const Point3<T> &p) {
-        x = p.x;
-        y = p.y;
-        z = p.z;
-        return *this;
-    }
     template <typename T>
     inline Point3<T> &Point3<T>::operator+=(const Vec3<T> &v) {
         x += v.x;

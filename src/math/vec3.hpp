@@ -11,7 +11,6 @@ namespace TK {
         Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {
             tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
-        Vec3(const Vec3<T> &v) : x(v.x), y(v.y), z(v.z) {}
         Vec3(const Vec2<t> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
 
         // Unary/subscript operators
@@ -91,13 +90,6 @@ namespace TK {
         return data[i];
     }
 
-    template <typename T>
-    inline Vec3<T> &Vec3<T>::operator=(const Vec3<T> &v) {
-        x = v.x;
-        y = v.y;
-        z = v.z;
-        return *this;
-    }
     template <typename T>
     inline Vec3<T> &Vec3<T>::operator+=(const Vec3<T> &v) {
         x += v.x;

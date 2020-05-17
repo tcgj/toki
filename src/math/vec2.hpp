@@ -11,7 +11,6 @@ namespace TK {
         Vec2(T v0, T v1) : x(v0), y(v1) {
             tkAssert(!(std::isnan(x) || std::isnan(y)));
         }
-        Vec2(const Vec2<T> &v) : x(v.x), y(v.y) {}
 
         // Unary/subscript operators
         const Vec2<T> &operator+() const;
@@ -20,7 +19,6 @@ namespace TK {
         T &operator[](tkInt i);
 
         // Assignment operators
-        Vec2<T> &operator=(const Vec2<T> &v);
         Vec2<T> &operator+=(const Vec2<T> &v);
         Vec2<T> &operator-=(const Vec2<T> &v);
         Vec2<T> &operator*=(const Vec2<T> &v);
@@ -83,12 +81,6 @@ namespace TK {
         return data[i];
     }
 
-    template <typename T>
-    inline Vec2<T> &Vec2<T>::operator=(const Vec2<T> &v) {
-        x = v.x;
-        y = v.y;
-        return *this;
-    }
     template <typename T>
     inline Vec2<T> &Vec2<T>::operator+=(const Vec2<T> &v) {
         x += v.x;
