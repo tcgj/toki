@@ -1,5 +1,7 @@
 #include "curve.hpp"
 
+#include "geometry/ray.hpp"
+
 namespace TK {
     inline tkAABBf Curve::objectBoundingBox() const {
         tkPoint3f cp[4];
