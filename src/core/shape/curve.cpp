@@ -57,7 +57,7 @@ namespace TK {
         tkFloat eps = std::max(common->width[0], common->width[1]) * 0.05;
         tkFloat fr0 = std::log(1.41421356237 * 12.0 * l0 / (8.0 * eps)) * 0.7213475108;
         tkInt r0 = (tkInt)std::round(fr0);
-        tkUInt maxDepth = std::clamp(r0, 0, 10);
+        tkUInt maxDepth = clamp(r0, 0, 10);
 
         return recursiveIntersect(oRay, tHit, interaction, cp,
                                   inverse(objectToRay), rayBB, rayLen, uMin,
@@ -95,7 +95,7 @@ namespace TK {
             // w is the ratio of the distance d to the line cp3-cp0
             tkFloat w = dot(-tkVec2f(cp[0]), segDir) / denom;
 
-            tkFloat u = std::clamp(lerp(u0, u1, w), u0, u1);
+            tkFloat u = clamp(lerp(u0, u1, w), u0, u1);
             tkFloat width = lerp(common->width[0], common->width[1], w);
             tkVec3f normal;
 
@@ -112,7 +112,7 @@ namespace TK {
 
             // Ensure intersection point is within curve's width
             tkVec3f dp;
-            tkPoint3f p = bezierEval(cp, std::clamp(w, 0.0f, 1.0f), &dp);
+            tkPoint3f p = bezierEval(cp, clamp(w, 0.0f, 1.0f), &dp);
             tkFloat pSqrLen2d = p.x * p.x + p.y * p.y;
             tkFloat widthSqrOver4 = width * width * 0.25;
             if (pSqrLen2d > widthSqrOver4)

@@ -69,7 +69,7 @@ namespace TK {
             return normalize((1 - t) * q1 + t * q2);
         } else {
             // clamped for robustness because of possible FPE
-            tkFloat theta0 = std::acos(std::clamp(cosTheta, -1.0f, 1.0f));
+            tkFloat theta0 = std::acos(clamp(cosTheta, -1, 1));
             tkFloat theta = theta0 * t;
             Quaternion qOrtho = normalize(q2 - q1 * cosTheta);
             return q1 * std::cos(theta) + qOrtho * std::sin(theta);

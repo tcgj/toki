@@ -129,7 +129,7 @@ namespace TK {
         SAHBucket buckets[bucketCount];
         for (tkUInt i = start; i < end; ++i) {
             tkUInt index = bucketCount * centroidBB.offset(primData[i].centroid)[axis];
-            index = std::clamp(index, (tkUInt)0, bucketCount);
+            index = clamp(index, 0, bucketCount);
             buckets[index].count++;
             buckets[index].bb = bbUnion(buckets[index].bb, primData[i].bb);
         }
@@ -167,7 +167,7 @@ namespace TK {
                 &primData[start], &primData[end - 1] + 1,
                 [=](const PrimitiveData &data) {
                     tkUInt index = bucketCount * centroidBB.offset(data.centroid)[axis];
-                    return std::clamp(index, (tkUInt)0, bucketCount) <= minCostPartition;
+                    return clamp(index, 0, bucketCount) <= minCostPartition;
                 });
             tkUInt mid = midPtr - &primData[0];
 
