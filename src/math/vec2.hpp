@@ -7,15 +7,15 @@ namespace TK {
         Vec2() : x(0), y(0) {}
         Vec2(T t) : x(t), y(t) {}
         Vec2(T v0, T v1) : x(v0), y(v1) {
-            tkAssert(std::isnan(x) || std::isnan(y));
+            tkAssert(!(std::isnan(x) || std::isnan(y)));
         }
         Vec2(const Vec2<T> &v) : x(v.x), y(v.y) {}
 
         // Unary/subscript operators
         const Vec2<T> &operator+() const;
         Vec2<T> operator-() const;
-        T operator[](tkUInt i) const;
-        T &operator[](tkUInt i);
+        T operator[](tkInt i) const;
+        T &operator[](tkInt i);
 
         // Assignment operators
         Vec2<T> &operator=(const Vec2<T> &v);
@@ -54,6 +54,15 @@ namespace TK {
     inline const Vec2<T> Vec2<T>::one = Vec2<T>(1);
 
     template <typename T>
+    inline bool isNaN(Vec2<T> &v) {
+        for (tkUInt i = 0; i < 2; ++i) {
+            if (std::isnan(data[i]))
+                return true;
+        }
+        return false;
+    }
+
+    template <typename T>
     inline const Vec2<T> &Vec2<T>::operator+() const {
         return *this;
     }
@@ -62,12 +71,12 @@ namespace TK {
         return Vec2<T>(-x, -y);
     }
     template <typename T>
-    inline T Vec2<T>::operator[](tkUInt i) const {
+    inline T Vec2<T>::operator[](tkInt i) const {
         tkAssert(i == 0 || i == 1);
         return data[i];
     }
     template <typename T>
-    inline T &Vec2<T>::operator[](tkUInt i) {
+    inline T &Vec2<T>::operator[](tkInt i) {
         tkAssert(i == 0 || i == 1);
         return data[i];
     }
@@ -98,7 +107,7 @@ namespace TK {
     }
     template <typename T>
     inline Vec2<T> &Vec2<T>::operator/=(const Vec2<T> &v) {
-        tkAssert(std::isnan(v.x) || std::isnan(v.y));
+        tkAssert(!isNaN(v));
         x /= v.x;
         y /= v.y;
         return *this;
@@ -129,7 +138,7 @@ namespace TK {
 
     template <typename T>
     inline tkFloat Vec2<T>::magnitude() const {
-        return sqrt(x * x + y * y);
+        return std::sqrt(x * x + y * y);
     }
     template <typename T>
     inline tkFloat Vec2<T>::squaredMagnitude() const {
@@ -139,7 +148,7 @@ namespace TK {
     inline Vec2<T> &Vec2<T>::normalized() {
         tkFloat sm = squaredMagnitude();
         if (sm > 0) {
-            *this /= sqrt(sm);
+            *this /= std::sqrt(sm);
         }
         return *this;
     }
@@ -167,7 +176,7 @@ namespace TK {
     }
     template <typename T>
     inline Vec2<T> operator/(const Vec2<T> &v1, const Vec2<T> &v2) {
-        tkAssert(std::isnan(v2.x) || std::isnan(v2.y));
+        tkAssert(!isNaN(v2));
         return Vec2<T>(v1.x / v2.x, v1.y / v2.y);
     }
     template <typename T>
@@ -193,13 +202,13 @@ namespace TK {
     template <typename T>
     inline tkFloat angleBetween(const Vec2<T> &v1, const Vec2<T> &v2) {
         tkFloat cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
-        return acos(cosTheta);
+        return std::acos(cosTheta);
     }
     template <typename T>
     inline Vec2<T> normalize(const Vec2<T> &v) {
         tkFloat sm = v.squaredMagnitude();
         if (sm > 0) {
-            return v / sqrt(sm);
+            return v / std::sqrt(sm);
         }
         return v;
     }

@@ -24,8 +24,8 @@ namespace TK {
                 delete right;
             }
 
-            void makeLeaf(tkInt count, tkUInt offset, const tkAABBf &bb);
-            void makeInterior(tkInt axis, Node *node0, Node *node1);
+            void makeLeaf(tkUInt count, tkUInt offset, const tkAABBf &bb);
+            void makeInterior(tkUInt axis, Node *node0, Node *node1);
 
             tkUInt numPrim;
             tkAABBf boundingBox;
@@ -55,7 +55,7 @@ namespace TK {
         std::vector<std::shared_ptr<Primitive>> primitives;
     };
 
-    inline void BVH::Node::makeLeaf(tkInt count, tkUInt offset, const tkAABBf &bb) {
+    inline void BVH::Node::makeLeaf(tkUInt count, tkUInt offset, const tkAABBf &bb) {
         numPrim = count;
         primOffset = offset;
         boundingBox = bb;
@@ -63,7 +63,7 @@ namespace TK {
         right = nullptr;
     }
 
-    inline void BVH::Node::makeInterior(tkInt axis, Node *node0, Node *node1) {
+    inline void BVH::Node::makeInterior(tkUInt axis, Node *node0, Node *node1) {
         numPrim = 0;
         boundingBox = bbUnion(node0->boundingBox, node1->boundingBox);
         splitAxis = axis;

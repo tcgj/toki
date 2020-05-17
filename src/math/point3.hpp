@@ -7,7 +7,7 @@ namespace TK {
         Point3() : x(0), y(0), z(0) {}
         Point3(T t) : x(t), y(t), z(t) {}
         Point3(T p0, T p1, T p2) : x(p0), y(p1), z(p2) {
-            tkAssert(std::isnan(x) || std::isnan(y) || std::isnan(z));
+            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
         Point3(const Point3<T> &p) : x(p.x), y(p.y), z(p.z) {}
         Point3(const Point2<T> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
@@ -16,8 +16,8 @@ namespace TK {
         const Point3<T> &operator+() const;
         Point3<T> operator-() const;
         Point3<T> operator/(T w) const;
-        T operator[](tkUInt i) const;
-        T &operator[](tkUInt i);
+        T operator[](tkInt i) const;
+        T &operator[](tkInt i);
 
         // Assignment operators
         Point3<T> &operator=(const Point3<T> &p);
@@ -59,12 +59,12 @@ namespace TK {
         return Point3<T>(x * k, y * k, z * k);
     }
     template <typename T>
-    inline T Point3<T>::operator[](tkUInt i) const {
+    inline T Point3<T>::operator[](tkInt i) const {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }
     template <typename T>
-    inline T &Point3<T>::operator[](tkUInt i) {
+    inline T &Point3<T>::operator[](tkInt i) {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }

@@ -18,8 +18,8 @@ namespace TK {
               maxPt(std::max(p1.x, p2.x), std::max(p1.y, p2.y), std::max(p1.z, p2.z)) {}
 
         // Subscript operators
-        const Point3<T> &operator[](tkUInt i) const;
-        Point3<T> operator[](tkUInt i);
+        const Point3<T> &operator[](tkInt i) const;
+        Point3<T> operator[](tkInt i);
 
         // Equality
         bool operator==(const AABB<T> &b) const;
@@ -43,13 +43,13 @@ namespace TK {
     };
 
     template <typename T>
-    inline const Point3<T> &AABB<T>::operator[](tkUInt i) const {
+    inline const Point3<T> &AABB<T>::operator[](tkInt i) const {
         tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }
 
     template <typename T>
-    inline Point3<T> AABB<T>::operator[](tkUInt i) {
+    inline Point3<T> AABB<T>::operator[](tkInt i) {
         tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }

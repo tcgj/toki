@@ -7,7 +7,7 @@ namespace TK {
         Vec3() : x(0), y(0), z(0) {}
         Vec3(T t) : x(t), y(t), z(t) {}
         Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {
-            tkAssert(std::isnan(x) || std::isnan(y) || std::isnan(z));
+            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
         Vec3(const Vec3<T> &v) : x(v.x), y(v.y), z(v.z) {}
         Vec3(const Vec2<t> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
@@ -15,8 +15,8 @@ namespace TK {
         // Unary/subscript operators
         const Vec3<T> &operator+() const;
         Vec3<T> operator-() const;
-        T operator[](tkUInt i) const;
-        T &operator[](tkUInt i);
+        T operator[](tkInt i) const;
+        T &operator[](tkInt i);
 
         // Assignment operators
         Vec3<T> &operator=(const Vec3<T> &v);
@@ -62,6 +62,15 @@ namespace TK {
     inline const Vec3<T> Vec3<T>::forward = Vec3<T>(0, 0, 1);
 
     template <typename T>
+    inline bool isNaN(Vec3<T> &v) {
+        for (tkUInt i = 0; i < 3; ++i) {
+            if (std::isnan(data[i]))
+                return true;
+        }
+        return false;
+    }
+
+    template <typename T>
     inline const Vec3<T> &Vec3<T>::operator+() const {
         return *this;
     }
@@ -70,12 +79,12 @@ namespace TK {
         return Vec3<T>(-x, -y, -z);
     }
     template <typename T>
-    inline T Vec3<T>::operator[](tkUInt i) const {
+    inline T Vec3<T>::operator[](tkInt i) const {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }
     template <typename T>
-    inline T &Vec3<T>::operator[](tkUInt i) {
+    inline T &Vec3<T>::operator[](tkInt i) {
         tkAssert(i >= 0 && i <= 2);
         return data[i];
     }
@@ -110,7 +119,7 @@ namespace TK {
     }
     template <typename T>
     inline Vec3<T> &Vec3<T>::operator/=(const Vec3<T> &v) {
-        tkAssert(std::isnan(v.x) || std::isnan(v.y) || std::isnan(v.z));
+        tkAssert(!isNaN(v));
         x /= v.x;
         y /= v.y;
         z /= v.z;
@@ -144,7 +153,7 @@ namespace TK {
 
     template <typename T>
     inline tkFloat Vec3<T>::magnitude() const {
-        return sqrt(x * x + y * y + z * z);
+        return std::sqrt(x * x + y * y + z * z);
     }
     template <typename T>
     inline tkFloat Vec3<T>::squaredMagnitude() const {
@@ -154,7 +163,7 @@ namespace TK {
     inline Vec3<T> &Vec3<T>::normalized() {
         tkFloat sm = squaredMagnitude();
         if (sm > 0) {
-            *this /= sqrt(sm);
+            *this /= std::sqrt(sm);
         }
         return *this;
     }
@@ -182,7 +191,7 @@ namespace TK {
     }
     template <typename T>
     inline Vec3<T> operator/(const Vec3<T> &v1, const Vec3<T> &v2) {
-        tkAssert(std::isnan(v2.x) || std::isnan(v2.y) || std::isnan(v2.z));
+        tkAssert(isNaN(v2));
         return Vec3<T>(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
     }
     template <typename T>
@@ -211,13 +220,13 @@ namespace TK {
     template <typename T>
     inline tkFloat angleBetween(const Vec3<T> &v1, const Vec3<T> &v2) {
         tkFloat cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
-        return acos(cosTheta);
+        return std::acos(cosTheta);
     }
     template <typename T>
     inline Vec3<T> normalize(const Vec3<T> &v) {
         tkFloat sm = v.squaredMagnitude();
         if (sm > 0) {
-            return v / sqrt(sm);
+            return v / std::sqrt(sm);
         }
         return v;
     }
@@ -229,9 +238,9 @@ namespace TK {
     inline void coordinateSystem(const Vec3<T> &v1, Vec3<T> *v2, Vec3<T> *v3) {
         // v1 = z-axis, v2 = x-axis, v3 = y-axis
         if (std::abs(v1.x) > std::abs(v1.y))
-            *v2 = Vec3<T>(0, v1.z, -v1.x) / sqrt(v1.x * v1.x + v1.z * v1.z);
+            *v2 = Vec3<T>(0, v1.z, -v1.x) / std::sqrt(v1.x * v1.x + v1.z * v1.z);
         else
-            *v2 = Vec3<T>(v1.z, 0, -v1.y) / sqrt(v1.y * v1.y + v1.z * v1.z);
+            *v2 = Vec3<T>(v1.z, 0, -v1.y) / std::sqrt(v1.y * v1.y + v1.z * v1.z);
         *v3 = cross(v1, *v2);
     }
 

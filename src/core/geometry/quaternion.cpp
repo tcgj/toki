@@ -10,7 +10,7 @@ namespace TK {
         if (trace > 0.0f) {
             // compute w from trace, then xyz
             // 4w^2 = [0,0] + [1,1] + [2,2] + [3,3] (but [3,3] == 1)
-            tkFloat s = sqrt(trace + 1.0f);
+            tkFloat s = std::sqrt(trace + 1.0f);
             w = s * 0.5f;
             s = 0.5f / s;
             xyz.x = (m.data[6] - m.data[9]) * s;
@@ -24,7 +24,7 @@ namespace TK {
             if (m.data[10] > m.data[5]) i = 2;
             tkUInt j = next[i];
             tkUInt k = next[j];
-            tkFloat s = sqrt(1.0f + m.data[i * 4 + i] - m.data[j * 4 + j] - m.data[k * 4 + k]);
+            tkFloat s = std::sqrt(1.0f + m.data[i * 4 + i] - m.data[j * 4 + j] - m.data[k * 4 + k]);
             q[i] = s * 0.5f;
             if (s != 0.0f) s = 0.5f / s; // Should never be zero
             q[j] = (m.data[i * 4 + j] + m.data[j * 4 + i]) * s;
@@ -67,10 +67,10 @@ namespace TK {
             return normalize((1 - t) * q1 + t * q2);
         } else {
             // clamped for robustness because of possible FPE
-            tkFloat theta0 = acos(std::clamp(cosTheta, -1.0f, 1.0f));
+            tkFloat theta0 = std::acos(std::clamp(cosTheta, -1.0f, 1.0f));
             tkFloat theta = theta0 * t;
             Quaternion qOrtho = normalize(q2 - q1 * cosTheta);
-            return q1 * cos(theta) + qOrtho * sin(theta);
+            return q1 * std::cos(theta) + qOrtho * std::sin(theta);
         }
     }
 } // namespace TK

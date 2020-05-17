@@ -100,8 +100,8 @@ namespace TK {
             // ribbon's width and normal have to be handled differently
             if (common->type == CurveType::RIBBON) {
                 // slerp normal based on the difference in their angles
-                tkFloat sin0 = sin((1 - u) * common->normalAngle) * common->invSinNormalAngle;
-                tkFloat sin1 = sin(u * common->normalAngle) * common->invSinNormalAngle;
+                tkFloat sin0 = std::sin((1 - u) * common->normalAngle) * common->invSinNormalAngle;
+                tkFloat sin1 = std::sin(u * common->normalAngle) * common->invSinNormalAngle;
                 normal = sin0 * common->normal[0] + sin1 * common->normal[1];
 
                 // update width based on rotation
@@ -118,7 +118,7 @@ namespace TK {
             if (p.z < 0 || p.z > rayLength * r.tMax)
                 return false;
 
-            tkFloat pLen2d = sqrt(pSqrLen2d);
+            tkFloat pLen2d = std::sqrt(pSqrLen2d);
             tkFloat edge = dp.x * -p.y + p.x * dp.y;
             tkFloat v = edge > 0 ? 2 * pLen2d / width : -2 * pLen2d / width;
 
@@ -130,7 +130,7 @@ namespace TK {
                 if (dot(dright, r.d) > 0)
                     dright = -dright;
                 tkPoint3f pCentre(p);
-                p += pLen2d * dup + sqrt(widthSqrOver4 - pSqrLen2d) * dright;
+                p += pLen2d * dup + std::sqrt(widthSqrOver4 - pSqrLen2d) * dright;
                 normal = p - pCentre;
             } else if (common->type == CurveType::FLAT) {
                 normal = -r.d;

@@ -81,7 +81,7 @@ namespace TK {
         if (discriminant < 0)
             return false;
 
-        tkF64 rootDiscriminant = sqrt(discriminant);
+        tkF64 rootDiscriminant = std::sqrt(discriminant);
         tkF64 x = -0.5 * (b < 0 ? b - rootDiscriminant : b + rootDiscriminant);
         *t0 = x / a;
         *t1 = c / x;
