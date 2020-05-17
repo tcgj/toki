@@ -1,6 +1,7 @@
 #include "bvh.hpp"
 
 #include "geometry/ray.hpp"
+#include "region/primitive.hpp"
 
 namespace TK {
     constexpr tkUInt maxNodeCount = 64;

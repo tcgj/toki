@@ -1,9 +1,6 @@
 #pragma once
 
-#include <cmath>
-#include <vector>
-
-#include "system/types.hpp"
+#include "system/system.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
 #include "point2.hpp"

@@ -1,5 +1,7 @@
 #include "quaternion.hpp"
 
+#include "transform.hpp"
+
 // All implementations here follow the right-hand coordinate system
 namespace TK {
     Quaternion::Quaternion(const Transform &t) {

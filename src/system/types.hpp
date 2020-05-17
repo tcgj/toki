@@ -10,6 +10,8 @@ namespace TK {
     template <typename T> class AABB;
     struct Matrix44;
     class Ray;
+    class Transform;
+    class Mesh;
     class Shape;
     class Interaction;
     class SurfaceInteraction;

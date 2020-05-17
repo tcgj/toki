@@ -1,5 +1,7 @@
 #pragma once
 
+#include "system/system.hpp"
+#include "geometry/aabb.hpp"
 #include "geometry/transform.hpp"
 #include "interaction/surfaceinteraction.hpp"
 

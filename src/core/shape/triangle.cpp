@@ -1,5 +1,10 @@
 #include "triangle.hpp"
 
+#include <vector>
+
+#include "geometry/aabb.hpp"
+#include "geometry/mesh.hpp"
+
 namespace TK {
     inline tkAABBf Triangle::objectBoundingBox() const {
         VertexAttr v0, v1, v2;

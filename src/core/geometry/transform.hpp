@@ -1,7 +1,6 @@
 #pragma once
 
 #include "math/math.hpp"
-#include "ray.hpp"
 
 namespace TK {
     class Transform {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "shape.hpp"
-#include "geometry/aabb.hpp"
 #include "curveutil.hpp"
 
 namespace TK {

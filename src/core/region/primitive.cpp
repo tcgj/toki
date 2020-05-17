@@ -1,7 +1,8 @@
 #include "primitive.hpp"
 
-#include "shape/shape.hpp"
 #include "geometry/aabb.hpp"
+#include "geometry/ray.hpp"
+#include "shape/shape.hpp"
 
 namespace TK {
     tkAABBf Primitive::worldBoundingBox() const {

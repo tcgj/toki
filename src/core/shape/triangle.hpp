@@ -1,8 +1,6 @@
 #pragma once
 
 #include "shape.hpp"
-#include "geometry/aabb.hpp"
-#include "geometry/mesh.hpp"
 
 namespace TK {
     class Triangle : public Shape {

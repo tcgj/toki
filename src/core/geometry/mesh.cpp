@@ -1,5 +1,7 @@
 #include "mesh.hpp"
 
+#include "transform.hpp"
+
 namespace TK {
     // mesh is initialized in world space to eliminate need for transformation
     // during ray intersection check

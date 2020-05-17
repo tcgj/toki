@@ -1,8 +1,10 @@
 #pragma once
 
+#include <vector>
+
+#include "region/region.hpp"
 #include "math/math.hpp"
 #include "geometry/aabb.hpp"
-#include "region/primitive.hpp"
 
 namespace TK {
     class BVH : public Region {

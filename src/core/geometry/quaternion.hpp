@@ -1,7 +1,6 @@
 #pragma once
 
 #include "math/math.hpp"
-#include "transform.hpp"
 
 namespace TK {
     struct Quaternion {

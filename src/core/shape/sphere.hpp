@@ -1,7 +1,6 @@
 #pragma once
 
 #include "shape.hpp"
-#include "geometry/aabb.hpp"
 
 namespace TK {
     class Sphere : public Shape {

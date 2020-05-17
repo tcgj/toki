@@ -1,5 +1,7 @@
 #pragma once
 
+#include "system/system.hpp"
+
 namespace TK {
     template <typename T>
     class Point2 {

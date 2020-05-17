@@ -1,5 +1,7 @@
 #include "transform.hpp"
 
+#include "geometry/ray.hpp"
+
 namespace TK {
     template <typename T>
     Point3<T> Transform::operator()(const Point3<T> &p) const {
