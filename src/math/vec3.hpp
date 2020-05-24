@@ -11,7 +11,7 @@ namespace TK {
         Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {
             tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
-        Vec3(const Vec2<t> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
+        Vec3(const Vec2<T> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
 
         // Unary/subscript operators
         const Vec3<T> &operator+() const;
@@ -214,7 +214,7 @@ namespace TK {
     template <typename T>
     inline tkFloat angleBetween(const Vec3<T> &v1, const Vec3<T> &v2) {
         tkFloat cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
-        return std::acos(cosTheta);
+        return std::acos(clamp(cosTheta, -1, 1));
     }
     template <typename T>
     inline Vec3<T> normalize(const Vec3<T> &v) {

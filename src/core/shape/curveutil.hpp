@@ -23,7 +23,7 @@ namespace TK {
         if (normal) {
             normal[0] = normalize(n[0]);
             normal[1] = normalize(n[1]);
-            normalAngle = std::acos(dot(normal[0], normal[1]));
+            normalAngle = std::acos(clamp(dot(normal[0], normal[1]), -1, 1));
             invSinNormalAngle = 1.0 / std::sin(normalAngle);
         }
     }

@@ -17,6 +17,7 @@ namespace TK {
     class SurfaceInteraction;
     class Interactable;
     class Primitive;
+    class RGBSpectrum;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;
@@ -36,4 +37,5 @@ namespace TK {
     typedef Point3<tkInt> tkPoint3i;
     typedef AABB<tkFloat> tkAABBf;
     typedef AABB<tkInt> tkAABBi;
+    typedef RGBSpectrum tkSpectrum;
 } // namespace TK
