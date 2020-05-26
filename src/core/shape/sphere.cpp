@@ -1,5 +1,7 @@
 #include "sphere.hpp"
 
+#include "geometry/ray.hpp"
+
 namespace TK {
     inline tkAABBf Sphere::objectBoundingBox() const {
         return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
