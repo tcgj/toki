@@ -36,7 +36,7 @@ namespace TK {
         friend Spectrum sqrt(const Spectrum &s);
         friend Spectrum pow(const Spectrum &s, tkFloat p);
         friend Spectrum exp(const Spectrum &s);
-        friend Spectrum clamp(const Spectrum &s, tkFloat lo = 0, tkFloat hi = Infinity);
+        friend Spectrum clamp(const Spectrum &s, tkFloat lo, tkFloat hi);
 
     protected:
         tkFloat c[numCoeff];
@@ -45,7 +45,7 @@ namespace TK {
     template <tkUInt nC>
     inline bool isNaN(Spectrum<nC> &s) {
         for (tkUInt i = 0; i < nC; ++i) {
-            if (std::isnan(c[i]))
+            if (std::isnan(s.c[i]))
                 return true;
         }
         return false;
@@ -212,7 +212,7 @@ namespace TK {
     inline Spectrum<nC> sqrt(const Spectrum<nC> &s) {
         Spectrum<nC> ret;
         for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] = std::sqrt(c[i]);
+            ret.c[i] = std::sqrt(s.c[i]);
         }
         return ret;
     }
@@ -228,13 +228,13 @@ namespace TK {
     inline Spectrum<nC> exp(const Spectrum<nC> &s) {
         Spectrum<nC> ret;
         for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] = std::exp(c[i]);
+            ret.c[i] = std::exp(s.c[i]);
         }
         return ret;
     }
 
     template <tkUInt nC>
-    inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo, tkFloat hi) {
+    inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo = 0, tkFloat hi = Infinity) {
         Spectrum<nC> ret;
         for (tkUInt i = 0; i < nC; ++i) {
             ret.c[i] = clamp(s.c[i], lo, hi);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "system/system.hpp"
 
 namespace TK {
@@ -20,7 +22,6 @@ namespace TK {
         T &operator[](tkInt i);
 
         // Assignment operators
-        Vec3<T> &operator=(const Vec3<T> &v);
         Vec3<T> &operator+=(const Vec3<T> &v);
         Vec3<T> &operator-=(const Vec3<T> &v);
         Vec3<T> &operator*=(const Vec3<T> &v);
@@ -65,7 +66,7 @@ namespace TK {
     template <typename T>
     inline bool isNaN(Vec3<T> &v) {
         for (tkUInt i = 0; i < 3; ++i) {
-            if (std::isnan(data[i]))
+            if (std::isnan(v.data[i]))
                 return true;
         }
         return false;

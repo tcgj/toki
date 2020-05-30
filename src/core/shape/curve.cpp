@@ -19,7 +19,7 @@ namespace TK {
 
     bool Curve::intersect(const Ray &r, tkFloat *tHit,
                    SurfaceInteraction *interaction) const {
-        Ray oRay = (inverse(*worldTransform))(r);
+        Ray oRay = (inverse(*objectToWorld))(r);
         tkPoint3f cpObj[4];
         computeSegmentControlPoints(cpObj);
 
@@ -121,8 +121,8 @@ namespace TK {
                 return false;
 
             tkFloat pLen2d = std::sqrt(pSqrLen2d);
-            tkFloat edge = dp.x * -p.y + p.x * dp.y;
-            tkFloat v = edge > 0 ? 2 * pLen2d / width : -2 * pLen2d / width;
+            //  = dp.x * -p.y + p.x * dp.y;
+            // kFloat v = edge > 0 ? 2 * pLen2d / width : -2 * pLen2d / width;
 
             // calculate normal at intersection
             if (common->type == CurveType::CYLINDER) {
@@ -144,9 +144,9 @@ namespace TK {
                     return false;
 
                 *tHit = tempT; // Apparently not accurate for ribbons
-                interaction->p = (*worldTransform)(r(*tHit));
-                interaction->n = normalize((*worldTransform)(normal));
-                interaction->wout = normalize((*worldTransform)(-r.d));
+                interaction->p = (*objectToWorld)(r(*tHit));
+                interaction->n = normalize((*objectToWorld)(normal));
+                interaction->wout = normalize((*objectToWorld)(-r.d));
                 interaction->shape = this;
             }
 
@@ -157,7 +157,7 @@ namespace TK {
             bezierSubdivide(cp, cpSplit);
 
             bool hit = false;
-            tkFloat u[3] = {u0, (u0 + u1) / 2.0, u1};
+            tkFloat u[3] = {u0, (u0 + u1) / 2, u1};
             const tkPoint3f *cpPtr = cpSplit;
             for (int seg = 0; seg < 2; ++seg, cpPtr += 3) {
                 tkAABBf curveBB = computeBoundingBox(cpPtr, u[seg], u[seg + 1]);

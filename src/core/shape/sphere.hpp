@@ -5,9 +5,9 @@
 namespace TK {
     class Sphere : public Shape {
     public:
-        Sphere(tkFloat radius, const Transform *worldTransform,
+        Sphere(tkFloat radius, const Transform *objectToWorld,
                 bool invertNormals = false)
-            : Shape(worldTransform, invertNormals), radius(radius) {}
+            : Shape(objectToWorld, invertNormals), radius(radius) {}
 
         tkAABBf objectBoundingBox() const override;
         bool intersect(const Ray &r, tkFloat *tHit,

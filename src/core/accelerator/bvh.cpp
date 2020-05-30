@@ -18,9 +18,9 @@ namespace TK {
         if (pLen == 0)
             return;
 
-        std::vector<PrimitiveData> primData(pLen);
+        std::vector<PrimitiveData> primData;
         for (tkUInt i = 0; i < pLen; ++i) {
-            primData[i] = {i, primitives[i]->worldBoundingBox()};
+            primData.emplace_back(i, primitives[i]->worldBoundingBox());
         }
 
         std::vector<std::shared_ptr<Primitive>> primOrdered;

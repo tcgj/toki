@@ -1,52 +1,8 @@
 #include "transform.hpp"
 
-#include "geometry/ray.hpp"
+#include "aabb.hpp"
 
 namespace TK {
-    template <typename T>
-    Point3<T> Transform::operator()(const Point3<T> &p) const {
-        T px = p.x, py = p.y, pz = p.z;
-        T x = m.data[0] * px + m.data[1] * py + m.data[2] * pz + m.data[3];
-        T y = m.data[4] * px + m.data[5] * py + m.data[6] * pz + m.data[7];
-        T z = m.data[8] * px + m.data[9] * py + m.data[10] * pz + m.data[11];
-        T w = m.data[12] * px + m.data[13] * py + m.data[14] * pz + m.data[15];
-        if (wp == 1)
-            return Point3<T>(x, y, z);
-        else
-            return Point3<T>(x, y, z) / w;
-    }
-    template <typename T>
-    Vec3<T> Transform::operator()(const Vec3<T> &v, bool isNormal = false) const {
-        T vx = v.x, vy = v.y, vz = v.z;
-
-        if (isNormal) {
-            return Vec3<T>(
-                mInv.data[0] * px + mInv.data[4] * py + mInv.data[8] * pz,
-                mInv.data[1] * px + mInv.data[5] * py + mInv.data[9] * pz,
-                mInv.data[2] * px + mInv.data[6] * py + mInv.data[10] * pz);
-        } else {
-            return Vec3<T>(
-                m.data[0] * px + m.data[1] * py + m.data[2] * pz,
-                m.data[4] * px + m.data[5] * py + m.data[6] * pz,
-                m.data[8] * px + m.data[9] * py + m.data[10] * pz);
-        }
-    }
-    template <typename T>
-    AABB<T> Transform::operator()(const AABB<T> &bb) const {
-        const Transform &mat = *this;
-        AABB<T> out(mat(bb.corner(0)));
-        for (tkUInt i = 1; i < 8; ++i) {
-            out = bbUnion(out, mat(bb.corner(i)));
-        }
-        return out;
-    }
-    Ray Transform::operator()(const Ray &r) const {
-        tkPoint3f o = (*this)(r.o);
-        tkVec3f d = (*this)(r.d);
-
-        return Ray(o, d, r.tMax/*, r.time, r.medium*/);
-    }
-
     bool Transform::willSwapHandedness() const {
         // Coordinate system swaps handedness only when
         // determinant of upper left 3x3 matrix is negative
@@ -160,5 +116,9 @@ namespace TK {
         viewMatrix.data[11] = -dot(camZ, eyeVec);
 
         return Transform(viewMatrix, inverse(viewMatrix));
+    }
+    // Projection Transform
+    Transform orthographic(tkFloat near, tkFloat far) {
+        return scale(1, 1, 1 / (far - near)) * translate(tkVec3f(0, 0, -near));
     }
 } // namespace TK

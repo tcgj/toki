@@ -20,7 +20,7 @@ namespace TK {
                                     tkFloat width0, tkFloat width1,
                                     const tkVec3f *n)
         : type(type), cp{cp[0], cp[1], cp[2], cp[3]}, width{width0, width1} {
-        if (normal) {
+        if (n != nullptr) {
             normal[0] = normalize(n[0]);
             normal[1] = normalize(n[1]);
             normalAngle = std::acos(clamp(dot(normal[0], normal[1]), -1, 1));
@@ -37,7 +37,7 @@ namespace TK {
     inline tkPoint3f bezierEval(const tkPoint3f cp[4], tkFloat u, tkVec3f *dp = nullptr) {
         tkPoint3f a[3] = {lerp(cp[0], cp[1], u), lerp(cp[1], cp[2], u), lerp(cp[2], cp[3], u)};
         tkPoint3f b[2] = {lerp(a[0], a[1], u), lerp(a[1], a[2], u)};
-        if (dp)
+        if (dp != nullptr)
             *dp = (tkFloat)3 * (b[1] - b[0]);
         return lerp(b[0], b[1], u);
     }

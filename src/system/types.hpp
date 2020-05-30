@@ -11,9 +11,9 @@ namespace TK {
     struct Matrix44;
     class Ray;
     class Transform;
-    class Mesh;
+    struct Mesh;
     class Shape;
-    class Interaction;
+    struct Interaction;
     class SurfaceInteraction;
     class Interactable;
     class Primitive;

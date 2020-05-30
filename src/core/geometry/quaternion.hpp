@@ -31,6 +31,18 @@ namespace TK {
 
     Quaternion slerp(tkFloat t, const Quaternion &q1, const Quaternion &q2);
 
+    // Quaternion operations
+    inline tkFloat dot(const Quaternion &q1, const Quaternion &q2) {
+        return dot(q1.xyz, q2.xyz) + q1.w * q2.w;
+    }
+    inline Quaternion normalize(const Quaternion &q) {
+        tkFloat sm = dot(q, q);
+        if (sm > 0) {
+            return q / std::sqrt(sm);
+        }
+        return q;
+    }
+
     inline Quaternion Quaternion::operator-() const {
         Quaternion ret;
         ret.xyz = -xyz;
@@ -96,17 +108,5 @@ namespace TK {
         ret.xyz *= f;
         ret.w *= f;
         return ret;
-    }
-
-    // Quaternion operations
-    inline tkFloat dot(const Quaternion &q1, const Quaternion &q2) {
-        return dot(q1.xyz, q2.xyz) + q1.w * q2.w;
-    }
-    inline Quaternion normalize(const Quaternion &q) {
-        tkFloat sm = dot(q, q);
-        if (sm > 0) {
-            return q / std::sqrt(sm);
-        }
-        return q;
     }
 } // namespace TK

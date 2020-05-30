@@ -8,9 +8,9 @@
 namespace TK {
     class Shape {
     public:
-        Shape(const Transform *worldTransform, bool invertNormals = false)
-            : worldTransform(worldTransform), invertNormals(invertNormals) {}
-        virtual ~Shape();
+        Shape(const Transform *objectToWorld, bool invertNormals = false)
+            : objectToWorld(objectToWorld), invertNormals(invertNormals) {}
+        virtual ~Shape() {}
 
         virtual tkAABBf objectBoundingBox() const = 0;
         virtual tkAABBf worldBoundingBox() const;
@@ -19,7 +19,7 @@ namespace TK {
         virtual bool hasIntersect(const Ray &r) const;
 
     protected:
-        const Transform *worldTransform = nullptr;
+        const Transform *objectToWorld = nullptr;
         bool invertNormals;
     };
 
@@ -31,6 +31,6 @@ namespace TK {
     }
 
     inline tkAABBf Shape::worldBoundingBox() const {
-        return (*worldTransform)(objectBoundingBox());
+        return (*objectToWorld)(objectBoundingBox());
     }
 } // namespace TK

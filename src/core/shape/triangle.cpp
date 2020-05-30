@@ -4,11 +4,12 @@
 
 #include "geometry/aabb.hpp"
 #include "geometry/mesh.hpp"
+#include "geometry/ray.hpp"
 
 namespace TK {
     inline tkAABBf Triangle::objectBoundingBox() const {
         VertexAttr v0, v1, v2;
-        Transform worldToObject = inverse(*worldTransform);
+        Transform worldToObject = inverse(*objectToWorld);
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         return bbUnion(tkAABBf(worldToObject(v0.pos), worldToObject(v1.pos)),
@@ -96,14 +97,14 @@ namespace TK {
 
     std::vector<std::shared_ptr<Shape>> GenerateMesh(
         tkUInt numTri, const tkUInt *I, tkUInt numVert, const tkPoint3f *V,
-        const tkVec3f *N, const tkVec3f *T, const Transform *worldTransform,
+        const tkVec3f *N, const tkVec3f *T, const Transform *objectToWorld,
         bool invertNormals = false) {
         std::shared_ptr<Mesh> mesh =
-            std::make_shared<Mesh>(worldTransform, numTri, I, numVert, V, N, T);
+            std::make_shared<Mesh>(*objectToWorld, numTri, I, numVert, V, N, T);
         std::vector<std::shared_ptr<Shape>> tris;
 
         for (tkUInt i = 0; i < numTri; ++i)
-            tris.push_back(std::make_shared<Triangle>(mesh, i, worldTransform,
+            tris.push_back(std::make_shared<Triangle>(mesh, i, objectToWorld,
                                                       invertNormals));
 
         return tris;

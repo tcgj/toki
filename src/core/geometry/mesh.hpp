@@ -12,7 +12,7 @@ namespace TK {
     };
 
     struct Mesh {
-        Mesh(const Transform &worldTransform, tkUInt numTri,
+        Mesh(const Transform &objectToWorld, tkUInt numTri,
                    const tkUInt *I, tkUInt numVert, const tkPoint3f *V,
                    const tkVec3f *N, const tkVec3f *T);
 

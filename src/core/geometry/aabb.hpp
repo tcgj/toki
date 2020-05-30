@@ -1,6 +1,8 @@
 #pragma once
 
 #include "system/system.hpp"
+#include "math/math.hpp"
+#include "ray.hpp"
 
 namespace TK {
     template <typename T>
@@ -37,7 +39,8 @@ namespace TK {
 
         // Ray-BB intersection test
         bool hasIntersect(const Ray &r) const;
-        bool hasIntersect(const Ray &r, const tkVec3f &invD, const int dirNegative[3]) const;
+        bool hasIntersect(const Ray &r, const tkVec3f &invD,
+                          const int dirNegative[3]) const;
 
         Point3<T> minPt, maxPt;
     };
@@ -81,12 +84,12 @@ namespace TK {
     }
     template <typename T>
     inline T AABB<T>::volume() const {
-        Vec<T> d = diagonal();
+        Vec3<T> d = diagonal();
         return d.x * d.y * d.z;
     }
     template <typename T>
     inline tkUInt AABB<T>::maxExtent() const {
-        Vec<T> d = diagonal();
+        Vec3<T> d = diagonal();
         if (d.x > d.y && d.x > d.z) {
             return 0;
         } else if (d.y > d.z) {
@@ -97,9 +100,9 @@ namespace TK {
     }
     template <typename T>
     inline Point3<T> AABB<T>::lerp(const tkPoint3f &t) const {
-        return Point3<T>(::lerp(minPt.x, maxPt.x, t.x),
-                        ::lerp(minPt.y, maxPt.y, t.y),
-                        ::lerp(minPt.z, maxPt.z, t.z));
+        return Point3<T>(TK::lerp(minPt.x, maxPt.x, t.x),
+                        TK::lerp(minPt.y, maxPt.y, t.y),
+                        TK::lerp(minPt.z, maxPt.z, t.z));
     }
     template <typename T>
     inline Vec3<T> AABB<T>::offset(const Point3<T> &p) const {
@@ -139,9 +142,75 @@ namespace TK {
     }
 
     template <typename T>
-    AABB<T> bbUnion(const AABB<T> &b1, const AABB<T> &b2);
+    inline AABB<T> bbUnion(const AABB<T> &b1, const AABB<T> &b2) {
+        return AABB<T>(Point3<T>(std::min(b1.minPt.x, b2.minPt.x),
+                                std::min(b1.minPt.y, b2.minPt.y),
+                                std::min(b1.minPt.z, b2.minPt.z)),
+                    Point3<T>(std::max(b1.maxPt.x, b2.maxPt.x),
+                                std::max(b1.maxPt.y, b2.maxPt.y),
+                                std::max(b1.maxPt.z, b2.maxPt.z)));
+    }
     template <typename T>
-    AABB<T> bbUnion(const AABB<T> &b, const Point3<T> &p);
+    inline AABB<T> bbUnion(const AABB<T> &b, const Point3<T> &p) {
+        return AABB<T>(Point3<T>(std::min(b.minPt.x, p.x),
+                                std::min(b.minPt.y, p.y),
+                                std::min(b.minPt.z, p.z)),
+                    Point3<T>(std::max(b.maxPt.x, p.x),
+                                std::max(b.maxPt.y, p.y),
+                                std::max(b.maxPt.z, p.z)));
+    }
     template <typename T>
-    AABB<T> bbIntersect(const AABB<T> &b1, const AABB<T> &b2);
+    inline AABB<T> bbIntersect(const AABB<T> &b1, const AABB<T> &b2) {
+        return AABB<T>(Point3<T>(std::max(b1.minPt.x, b2.minPt.x),
+                                std::max(b1.minPt.y, b2.minPt.y),
+                                std::max(b1.minPt.z, b2.minPt.z)),
+                    Point3<T>(std::min(b1.maxPt.x, b2.maxPt.x),
+                                std::min(b1.maxPt.y, b2.maxPt.y),
+                                std::min(b1.maxPt.z, b2.maxPt.z)));
+    }
+
+    template <typename T>
+    inline bool AABB<T>::hasIntersect(const Ray &r) const {
+        tkFloat tmin = 0, tmax = r.tMax;
+        for (tkUInt i = 0; i < 3; ++i) {
+            // component-wise computation
+            // p = o + t*d -----> t = (p - o) * 1/d
+            tkFloat invD = 1.0 / r.d[i];
+            tkFloat t0 = (minPt[i] - r.o[i]) * invD;
+            tkFloat t1 = (minPt[i] - r.o[i]) * invD;
+            if (t0 > t1)
+                std::swap(t0, t1);
+            tmin = t0 > tmin ? t0 : tmin;
+            tmax = t1 < tmax ? t1 : tmax;
+
+            if (tmin > tmax)
+                return false;
+        }
+        return true;
+    }
+
+    template <typename T>
+    inline bool AABB<T>::hasIntersect(const Ray &r, const tkVec3f &invD,
+                               const int dirNegative[3]) const {
+        const AABB<T> &bb = *this;
+        tkFloat tMin = (bb[dirNegative[0]].x - r.o.x) * invD.x;
+        tkFloat tMax = (bb[1 - dirNegative[0]].x - r.o.x) * invD.x;
+        tkFloat tyMin = (bb[dirNegative[1]].y - r.o.y) * invD.y;
+        tkFloat tyMax = (bb[1 - dirNegative[1]].y - r.o.y) * invD.y;
+        if (tMin > tyMax || tyMin > tMax)
+            return false;
+        if (tyMin > tMin)
+            tMin = tyMin;
+        if (tyMax < tMax)
+            tMax = tyMax;
+        tkFloat tzMin = (bb[dirNegative[2]].z - r.o.z) * invD.z;
+        tkFloat tzMax = (bb[1 - dirNegative[2]].z - r.o.z) * invD.z;
+        if (tMin > tzMax || tzMin > tMax)
+            return false;
+        if (tzMin > tMin)
+            tMin = tzMin;
+        if (tzMax < tMax)
+            tMax = tzMax;
+        return tMin < r.tMax && tMax > 0;
+    }
 } // namespace TK

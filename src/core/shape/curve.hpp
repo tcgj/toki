@@ -7,8 +7,8 @@ namespace TK {
     class Curve : public Shape {
     public:
         Curve(const std::shared_ptr<CurveCommon> &common, tkFloat uMin,
-              tkFloat uMax, const Transform *worldTransform)
-            : Shape(worldTransform, false), common(common), uMin(uMin), uMax(uMax) {}
+              tkFloat uMax, const Transform *objectToWorld)
+            : Shape(objectToWorld, false), common(common), uMin(uMin), uMax(uMax) {}
 
         tkAABBf objectBoundingBox() const override;
         bool intersect(const Ray &r, tkFloat *tHit,

@@ -16,6 +16,7 @@ namespace TK {
 
         r.tMax = tHit;
         interaction->primitive = this;
+        return true;
     }
 
     bool Primitive::hasIntersect(const Ray &r) const {

@@ -5,24 +5,24 @@
 namespace TK {
     // mesh is initialized in world space to eliminate need for transformation
     // during ray intersection check
-    Mesh::Mesh(const Transform &worldTransform, tkUInt numTri, const tkUInt *I,
+    Mesh::Mesh(const Transform &objectToWorld, tkUInt numTri, const tkUInt *I,
                tkUInt numVert, const tkPoint3f *V, const tkVec3f *N,
                const tkVec3f *T)
         : numTri(numTri), numVert(numVert), indexBuffer(I, I + 3 * numTri) {
         // clear ptr and set ownership
         vertexBuffer.reset(new tkPoint3f[numVert]);
         for (tkUInt i = 0; i < numVert; ++i)
-            vertexBuffer[i] = worldTransform(V[i]);
+            vertexBuffer[i] = objectToWorld(V[i]);
 
         if (N != nullptr) {
             normalBuffer.reset(new tkVec3f[numVert]);
             for (tkUInt i = 0; i < numVert; ++i)
-                normalBuffer[i] = worldTransform(N[i]);
+                normalBuffer[i] = objectToWorld(N[i]);
         }
         if (T != nullptr) {
             tangentBuffer.reset(new tkVec3f[numVert]);
             for (tkUInt i = 0; i < numVert; ++i)
-                tangentBuffer[i] = worldTransform(T[i]);
+                tangentBuffer[i] = objectToWorld(T[i]);
         }
     }
 

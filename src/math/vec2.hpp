@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "system/system.hpp"
 
 namespace TK {
@@ -56,7 +58,7 @@ namespace TK {
     template <typename T>
     inline bool isNaN(Vec2<T> &v) {
         for (tkUInt i = 0; i < 2; ++i) {
-            if (std::isnan(data[i]))
+            if (std::isnan(v.data[i]))
                 return true;
         }
         return false;
