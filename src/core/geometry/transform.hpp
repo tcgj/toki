@@ -6,7 +6,7 @@
 namespace TK {
     class Transform {
     public:
-        Transform() {}
+        Transform() = default;
         Transform(const tkFloat d[16]) {
             m = Matrix44(d[0], d[1], d[2], d[3],
                          d[4], d[5], d[6],  d[7],

@@ -10,7 +10,7 @@ namespace TK {
     public:
         Shape(const Transform *objectToWorld, bool invertNormals = false)
             : objectToWorld(objectToWorld), invertNormals(invertNormals) {}
-        virtual ~Shape() {}
+        virtual ~Shape() = default;
 
         virtual tkAABBf objectBoundingBox() const = 0;
         virtual tkAABBf worldBoundingBox() const;

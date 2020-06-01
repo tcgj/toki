@@ -5,7 +5,7 @@
 namespace TK {
     class Region {
     public:
-        virtual ~Region() {}
+        virtual ~Region() = default;
 
         virtual tkAABBf worldBoundingBox() const = 0;
         virtual bool intersect(const Ray &r, SurfaceInteraction *interaction) const = 0;
