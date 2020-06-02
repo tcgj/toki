@@ -116,4 +116,5 @@ namespace TK {
 
     // Projection transformation
     Transform orthographic(tkFloat near, tkFloat far);
+    Transform perspective(tkFloat fovy, tkFloat near, tkFloat far);
 } // namespace TK

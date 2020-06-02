@@ -119,6 +119,12 @@ namespace TK {
     }
     // Projection Transform
     Transform orthographic(tkFloat near, tkFloat far) {
-        return scale(1, 1, 1 / (far - near)) * translate(tkVec3f(0, 0, -near));
+        return scale(1, 1, 1 / (far - near)) * translate(tkVec3f(0, 0, near));
+    }
+    Transform perspective(tkFloat fovy, tkFloat near, tkFloat far) {
+        tkFloat nMinusF = far - near;
+        tkFloat invTan = 1 / std::tan(degToRad(fovy) * 0.5);
+        Matrix44 persp(invTan, 0, 0, 0, 0, invTan, 0, 0, 0, 0, far / nMinusF, near * far / nMinusF, 0, 0, -1, 0);
+        return Transform(persp);
     }
 } // namespace TK

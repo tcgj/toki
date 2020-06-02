@@ -234,7 +234,7 @@ namespace TK {
     }
 
     template <tkUInt nC>
-    inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo = 0, tkFloat hi = Infinity) {
+    inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo = 0, tkFloat hi = TK_INFINITY) {
         Spectrum<nC> ret;
         for (tkUInt i = 0; i < nC; ++i) {
             ret.c[i] = clamp(s.c[i], lo, hi);

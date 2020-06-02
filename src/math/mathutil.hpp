@@ -9,7 +9,7 @@ namespace TK {
     }
 
     template <typename T, typename U, typename V>
-    inline T clamp(T val, U lo, V hi) {
+    inline T clamp(const T &val, const U &lo, const V &hi) {
         if (val < lo)
             return lo;
         else if (val > hi)

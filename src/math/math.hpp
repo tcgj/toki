@@ -23,8 +23,8 @@
 
 namespace TK {
     // Constants
-    static constexpr tkFloat MaxFloat = std::numeric_limits<tkFloat>::max();
-    static constexpr tkFloat Infinity = std::numeric_limits<tkFloat>::infinity();
+    static constexpr tkFloat TK_MAXFLOAT = std::numeric_limits<tkFloat>::max();
+    static constexpr tkFloat TK_INFINITY = std::numeric_limits<tkFloat>::infinity();
 
     // Explicit casts
     template <typename T>

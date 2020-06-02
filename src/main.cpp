@@ -114,6 +114,7 @@ int main() {
 #include "interaction/surfaceinteraction.hpp"
 #include "accelerator/bvh.hpp"
 #include "camera/orthographic.hpp"
+#include "camera/perspective.hpp"
 
 int main() {
     return 0;
