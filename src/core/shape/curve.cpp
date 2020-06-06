@@ -159,7 +159,7 @@ namespace TK {
             bool hit = false;
             tkFloat u[3] = {u0, (u0 + u1) / 2, u1};
             const tkPoint3f *cpPtr = cpSplit;
-            for (int seg = 0; seg < 2; ++seg, cpPtr += 3) {
+            for (tkUInt seg = 0; seg < 2; ++seg, cpPtr += 3) {
                 tkAABBf curveBB = computeBoundingBox(cpPtr, u[seg], u[seg + 1]);
                 if (!overlap(curveBB, rayBB))
                     continue;

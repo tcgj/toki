@@ -14,6 +14,10 @@ namespace TK {
             minPt = Point3<T>(maxVal);
             maxPt = Point3<T>(minVal);
         }
+        AABB(const Point2<T> &p) : minPt(p, 0), maxPt(p, 0) {}
+        AABB(const Point2<T> &p1, const Point2<T> &p2)
+            : minPt(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 0),
+              maxPt(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 0) {}
         AABB(const Point3<T> &p) : minPt(p), maxPt(p) {}
         AABB(const Point3<T> &p1, const Point3<T> &p2)
             : minPt(std::min(p1.x, p2.x), std::min(p1.y, p2.y), std::min(p1.z, p2.z)),
@@ -31,6 +35,7 @@ namespace TK {
         Point3<T> corner(tkUInt cIndex) const;
         Vec3<T> diagonal() const;
         T surfaceArea() const;
+        T area(tkInt axis1, tkInt axis2) const;
         T volume() const;
         tkUInt maxExtent() const;
         Point3<T> lerp(const tkPoint3f &t) const;
@@ -40,7 +45,7 @@ namespace TK {
         // Ray-BB intersection test
         bool hasIntersect(const Ray &r) const;
         bool hasIntersect(const Ray &r, const tkVec3f &invD,
-                          const int dirNegative[3]) const;
+                          const tkInt dirNegative[3]) const;
 
         Point3<T> minPt, maxPt;
     };
@@ -81,6 +86,11 @@ namespace TK {
     inline T AABB<T>::surfaceArea() const {
         Vec3<T> d = diagonal();
         return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
+    }
+    template <typename T>
+    inline T AABB<T>::area(tkInt axis1, tkInt axis2) const {
+        Vec3<T> d = diagonal();
+        return d[axis1] * d[axis2];
     }
     template <typename T>
     inline T AABB<T>::volume() const {
@@ -191,7 +201,7 @@ namespace TK {
 
     template <typename T>
     inline bool AABB<T>::hasIntersect(const Ray &r, const tkVec3f &invD,
-                               const int dirNegative[3]) const {
+                               const tkInt dirNegative[3]) const {
         const AABB<T> &bb = *this;
         tkFloat tMin = (bb[dirNegative[0]].x - r.o.x) * invD.x;
         tkFloat tMax = (bb[1 - dirNegative[0]].x - r.o.x) * invD.x;

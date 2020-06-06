@@ -28,6 +28,6 @@ namespace TK {
 
     private:
         std::shared_ptr<CurveCommon> common;
-        float uMin, uMax;
+        tkFloat uMin, uMax;
     };
 }  // namespace TK

@@ -36,8 +36,8 @@ namespace TK {
     }
 
     Matrix44 &Matrix44::operator*=(const Matrix44 &m) {
-        for (tkUInt i = 0; i < 4; i++) {
-            for (tkUInt j = 0; j < 4; j++) {
+        for (tkUInt i = 0; i < 4; ++i) {
+            for (tkUInt j = 0; j < 4; ++j) {
                 data[i * 4 + j] = data[i * 4] * m.data[j] +
                                 data[i * 4 + 1] * m.data[4 + j] +
                                 data[i * 4 + 2] * m.data[8 + j] +
@@ -60,8 +60,8 @@ namespace TK {
     // Binary operators
     Matrix44 operator*(const Matrix44 &m1, const Matrix44 &m2) {
         Matrix44 m;
-        for (tkUInt i = 0; i < 4; i++) {
-            for (tkUInt j = 0; j < 4; j++) {
+        for (tkUInt i = 0; i < 4; ++i) {
+            for (tkUInt j = 0; j < 4; ++j) {
                 m.data[i * 4 + j] =
                     m1.data[i * 4] * m2.data[j] + m1.data[i * 4 + 1] * m2.data[4 + j] +
                     m1.data[i * 4 + 2] * m2.data[8 + j] + m1.data[i * 4 + 3] * m2.data[12 + j];

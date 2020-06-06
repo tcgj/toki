@@ -11,7 +11,7 @@ namespace TK {
         }
     }
 
-    void StratifiedSampler::sample2D(tkPoint2f *samples, tkUInt countX, tkUInt countY) const {
+    void StratifiedSampler::sample2D(tkVec2f *samples, tkUInt countX, tkUInt countY) const {
         tkFloat invX = (tkFloat)1 / countX;
         tkFloat invY = (tkFloat)1 / countY;
         tkUInt curr = 0;

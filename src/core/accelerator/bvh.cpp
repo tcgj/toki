@@ -53,10 +53,10 @@ namespace TK {
     bool BVH::intersectNode(const Ray &r, Node *root, SurfaceInteraction *interaction) const {
         // Pre-calculation for aabb intersection test
         tkVec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
-        int dirNegative[3] = {invD.x < 0, invD.y < 0, invD.z < 0};
+        tkInt dirNegative[3] = {invD.x < 0, invD.y < 0, invD.z < 0};
 
         bool hit = false;
-        int stackPtr = 1;
+        tkInt stackPtr = 1;
         Node *toVisit[64] = {root};
         Node *curr;
         while (stackPtr > 0) {
@@ -67,12 +67,12 @@ namespace TK {
             // Has intersection, check if leaf/interior
             if (curr->numPrim > 0) {
                 if (interaction != nullptr) {
-                    for (int i = 0; i < curr->numPrim; ++i) {
+                    for (tkUInt i = 0; i < curr->numPrim; ++i) {
                         if (primitives[curr->primOffset + i]->intersect(r, interaction))
                             hit = true;
                     }
                 } else {
-                    for (int i = 0; i < curr->numPrim; ++i) {
+                    for (tkUInt i = 0; i < curr->numPrim; ++i) {
                         if (primitives[curr->primOffset + i]->hasIntersect(r))
                             return true;
                     }
@@ -112,7 +112,7 @@ namespace TK {
         tkAABBf centroidBB;
         for (tkUInt i = start; i < end; ++i)
             centroidBB = bbUnion(centroidBB, primData[i].centroid);
-        int axis = centroidBB.maxExtent();
+        tkInt axis = centroidBB.maxExtent();
 
         // Centroids are almost at the same point, don't split
         if (centroidBB.maxPt[axis] - centroidBB.minPt[axis] < TK_EPSILON) {
@@ -152,7 +152,7 @@ namespace TK {
 
         // Get the partition with minimum cost
         tkFloat minCost = costs[0];
-        int minCostPartition = 0;
+        tkInt minCostPartition = 0;
         for (tkUInt i = 0; i < bucketCount - 1; ++i) {
             if (costs[i] < minCost) {
                 minCost = costs[i];
