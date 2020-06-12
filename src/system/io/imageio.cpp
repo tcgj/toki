@@ -22,14 +22,14 @@ namespace TK {
 
         if (data == nullptr) {
             fprintf(stderr, "Error: Image file cannot be read: %s\n", filename);
-            return 0;
+            return 1;
         }
 
         *imageData = data;
         *imageWidth = w;
         *imageHeight = h;
         *numComponents = t;
-        return 1;
+        return 0;
     }
 
     tkInt writeToPngFile(const tkChar *filename, const tkUChar *imageData,
@@ -43,8 +43,9 @@ namespace TK {
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n",
                     filename);
+            return 1;
         }
-        return result;
+        return 0;
     }
 
     tkInt writeToJpgFile(const tkChar *filename, const tkUChar *imageData,
@@ -58,7 +59,8 @@ namespace TK {
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n",
                     filename);
+            return 1;
         }
-        return result;
+        return 0;
     }
 } // namespace TK
