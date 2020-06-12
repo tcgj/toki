@@ -9,6 +9,6 @@ namespace TK {
 
     tkSpectrum BxDF::getSample(const tkVec3f &wo, tkVec3f *wi,
                                  tkFloat *pdf) const {
-        
+        return 0.0f;
     }
 } // namespace TK

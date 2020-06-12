@@ -21,6 +21,8 @@ namespace TK {
         Spectrum operator-(const Spectrum &s) const;
         Spectrum operator*(const Spectrum &s) const;
         Spectrum operator/(const Spectrum &s) const;
+        Spectrum operator*(tkFloat f) const;
+        Spectrum operator/(tkFloat f) const;
 
         Spectrum &operator+=(const Spectrum &s);
         Spectrum &operator-=(const Spectrum &s);
@@ -31,6 +33,14 @@ namespace TK {
 
         bool operator==(const Spectrum &s) const;
         bool operator!=(const Spectrum &s) const;
+
+        friend Spectrum operator*(tkFloat f, const Spectrum &s) {
+            Spectrum ret = s;
+            for (tkUInt i = 0; i < numCoeff; ++i) {
+                ret.c[i] *= f;
+            }
+            return ret;
+        }
 
         bool isBlack() const;
         friend Spectrum sqrt(const Spectrum &s);
@@ -103,7 +113,26 @@ namespace TK {
         tkAssert(!isNaN(s));
         Spectrum<nC> ret = *this;
         for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] += s.c[i];
+            ret.c[i] /= s.c[i];
+        }
+        return ret;
+    }
+    template <tkUInt nC>
+    inline Spectrum<nC> Spectrum<nC>::operator*(tkFloat f) const {
+        Spectrum<nC> ret = *this;
+        for (tkUInt i = 0; i < nC; ++i) {
+            ret.c[i] *= f;
+        }
+        return ret;
+    }
+
+    template <tkUInt nC>
+    inline Spectrum<nC> Spectrum<nC>::operator/(tkFloat f) const {
+        tkAssert(f != 0);
+        Spectrum<nC> ret = *this;
+        tkFloat invF = 1.0 / f;
+        for (tkUInt i = 0; i < nC; ++i) {
+            ret.c[i] *= invF;
         }
         return ret;
     }
@@ -169,34 +198,6 @@ namespace TK {
                 return false;
         }
         return true;
-    }
-
-    // Binary operators
-    template <tkUInt nC>
-    inline Spectrum<nC> operator*(const Spectrum<nC> &s, tkFloat f) {
-        Spectrum<nC> ret = s;
-        for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] *= f;
-        }
-        return ret;
-    }
-    template <tkUInt nC>
-    inline Spectrum<nC> operator*(tkFloat f, const Spectrum<nC> &s) {
-        Spectrum<nC> ret = s;
-        for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] *= f;
-        }
-        return ret;
-    }
-    template <tkUInt nC>
-    inline Spectrum<nC> operator/(const Spectrum<nC> &s, tkFloat f) {
-        tkAssert(f != 0);
-        tkFloat invF = 1.0 / f;
-        Spectrum<nC> ret = s;
-        for (tkUInt i = 0; i < nC; ++i) {
-            ret.c[i] *= invF;
-        }
-        return ret;
     }
 
     // Spectrum operations

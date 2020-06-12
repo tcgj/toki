@@ -6,7 +6,7 @@ namespace TK {
     // Frees image data from file read.
     void releaseData(tkUChar **imageData);
 
-    // Reads an image given the filename. Returns 1 if file is read, and 0
+    // Reads an image given the filename. Returns 0 if file is read, and 1
     // otherwise.
     //
     // Resulting image data is pointed to by imageData, width pointed to by
@@ -18,8 +18,8 @@ namespace TK {
                     tkInt *imageWidth, tkInt *imageHeight,
                     tkInt *numComponents);
 
-    // Writes an image to file given the filename, in the PNG format. Returns 1
-    // if file is written, and 0 otherwise.
+    // Writes an image to file given the filename, in the PNG format. Returns 0
+    // if file is written, and 1 otherwise.
     //
     // Image data should be provided in imageData, width in imageWidth, height
     // in imageHeight, and the number of components in numComponents.
@@ -29,8 +29,8 @@ namespace TK {
                         tkInt imageWidth, tkInt imageHeight,
                         tkInt numComponents);
 
-    // Writes an image to file given the filename, in the JPG format. Returns 1
-    // if file is written, and 0 otherwise.
+    // Writes an image to file given the filename, in the JPG format. Returns 0
+    // if file is written, and 1 otherwise.
     //
     // Image data should be provided in imageData, width in imageWidth, height
     // in imageHeight, and the number of components in numComponents.
