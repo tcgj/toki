@@ -118,6 +118,7 @@ int main() {
 #include "target/imagetarget.hpp"
 #include "bsdf/bsdfutil.hpp"
 #include "bsdf/bxdf.hpp"
+#include "bsdf/fresnel.hpp"
 
 int main() {
     return 0;
