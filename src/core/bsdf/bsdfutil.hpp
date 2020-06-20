@@ -4,7 +4,7 @@
 
 namespace TK {
     inline tkFloat cosTheta(const tkVec3f &w) {
-        return w.y;
+        return w.z;
     }
 
     inline tkFloat absCosTheta(const tkVec3f &w) {
@@ -42,7 +42,7 @@ namespace TK {
 
     inline tkFloat sinPhi(const tkVec3f &w) {
         tkFloat sT = sinTheta(w);
-        return sT == 0 ? 0 : clamp(w.z / sT, -1, 1);
+        return sT == 0 ? 0 : clamp(w.y / sT, -1, 1);
     }
 
     inline tkFloat sinSqrPhi(const tkVec3f &w) {
@@ -50,6 +50,23 @@ namespace TK {
     }
 
     inline bool isSameHemisphere(const tkVec3f &w1, const tkVec3f &w2) {
-        return w1.y * w2.y > 0;
+        return w1.z * w2.z > 0;
+    }
+
+    inline tkVec3f reflect(const tkVec3f &v, const tkVec3f &n) {
+        return 2 * dot(v, n) * n - v;
+    }
+
+    inline tkVec3f refract(const tkVec3f &v, const tkVec3f &n, tkFloat etaI,
+                           tkFloat etaT) {
+        tkFloat eta = etaI / etaT;
+        tkFloat cosI = dot(v, n);
+        tkFloat sinSqrI = std::max((tkFloat)0, 1 - cosI * cosI);
+        tkFloat sinSqrT = eta * eta * sinSqrI;
+        if (sinSqrT >= 1)
+            return tkVec3f(0);
+
+        tkFloat cosT = std::sqrt(1 - sinSqrT);
+        return -eta * v + (eta * cosI - cosT) * n;
     }
 } // namespace TK
