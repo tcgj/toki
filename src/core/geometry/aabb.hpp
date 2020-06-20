@@ -100,13 +100,12 @@ namespace TK {
     template <typename T>
     inline tkUInt AABB<T>::maxExtent() const {
         Vec3<T> d = diagonal();
-        if (d.x > d.y && d.x > d.z) {
+        if (d.x > d.y && d.x > d.z)
             return 0;
-        } else if (d.y > d.z) {
+        else if (d.y > d.z)
             return 1;
-        } else {
+        else
             return 2;
-        }
     }
     template <typename T>
     inline Point3<T> AABB<T>::lerp(const tkPoint3f &t) const {
@@ -117,9 +116,12 @@ namespace TK {
     template <typename T>
     inline Vec3<T> AABB<T>::offset(const Point3<T> &p) const {
         Vec3<T> o = p - minPt;
-        if (maxPt.x > minPt.x) o.x /= maxPt.x - minPt.x;
-        if (maxPt.y > minPt.y) o.y /= maxPt.y - minPt.y;
-        if (maxPt.z > minPt.z) o.z /= maxPt.z - minPt.z;
+        if (maxPt.x > minPt.x)
+            o.x /= maxPt.x - minPt.x;
+        if (maxPt.y > minPt.y)
+            o.y /= maxPt.y - minPt.y;
+        if (maxPt.z > minPt.z)
+            o.z /= maxPt.z - minPt.z;
         return o;
     }
     template <typename T>

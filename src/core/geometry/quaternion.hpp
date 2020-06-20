@@ -37,9 +37,9 @@ namespace TK {
     }
     inline Quaternion normalize(const Quaternion &q) {
         tkFloat sm = dot(q, q);
-        if (sm > 0) {
+        if (sm > 0)
             return q / std::sqrt(sm);
-        }
+
         return q;
     }
 
@@ -96,9 +96,9 @@ namespace TK {
 
     inline Quaternion &Quaternion::normalized() {
         tkFloat sm = dot(*this, *this);
-        if (sm > 0) {
+        if (sm > 0)
             *this /= std::sqrt(sm);
-        }
+
         return *this;
     }
 

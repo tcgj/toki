@@ -36,9 +36,9 @@ namespace TK {
 
         friend Spectrum operator*(tkFloat f, const Spectrum &s) {
             Spectrum ret = s;
-            for (tkUInt i = 0; i < numCoeff; ++i) {
+            for (tkUInt i = 0; i < numCoeff; ++i)
                 ret.c[i] *= f;
-            }
+
             return ret;
         }
 
@@ -68,9 +68,9 @@ namespace TK {
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator-() const {
         Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] = -c[i];
-        }
+
         return ret;
     }
     template <tkUInt nC>
@@ -87,42 +87,42 @@ namespace TK {
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator+(const Spectrum<nC> &s) const {
         Spectrum<nC> ret = *this;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] += s.c[i];
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator-(const Spectrum<nC> &s) const {
         Spectrum<nC> ret = *this;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] -= s.c[i];
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator*(const Spectrum<nC> &s) const {
         Spectrum<nC> ret = *this;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] *= s.c[i];
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator/(const Spectrum<nC> &s) const {
         tkAssert(!isNaN(s));
         Spectrum<nC> ret = *this;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] /= s.c[i];
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> Spectrum<nC>::operator*(tkFloat f) const {
         Spectrum<nC> ret = *this;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] *= f;
-        }
+
         return ret;
     }
 
@@ -131,115 +131,115 @@ namespace TK {
         tkAssert(f != 0);
         Spectrum<nC> ret = *this;
         tkFloat invF = 1.0 / f;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] *= invF;
-        }
+
         return ret;
     }
 
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator+=(const Spectrum<nC> &s) {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] += s.c[i];
-        }
+
         return *this;
     }
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator-=(const Spectrum<nC> &s) {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] -= s.c[i];
-        }
+
         return *this;
     }
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator*=(const Spectrum<nC> &s) {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] *= s.c[i];
-        }
+
         return *this;
     }
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator/=(const Spectrum<nC> &s) {
         tkAssert(!isNaN(s));
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] /= s.c[i];
-        }
+
         return *this;
     }
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator*=(tkFloat f) {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] *= f;
-        }
+
         return *this;
     }
     template <tkUInt nC>
     inline Spectrum<nC> &Spectrum<nC>::operator/=(tkFloat f) {
         tkAssert(f != 0);
         tkFloat invF = 1.0 / f;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             c[i] *= invF;
-        }
+
         return *this;
     }
 
     template <tkUInt nC>
     inline bool Spectrum<nC>::operator==(const Spectrum<nC> &s) const {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             if (c[i] != s.c[i])
                 return false;
-        }
+
         return true;
     }
     template <tkUInt nC>
     inline bool Spectrum<nC>::operator!=(const Spectrum<nC> &s) const {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             if (c[i] == s.c[i])
                 return false;
-        }
+
         return true;
     }
 
     // Spectrum operations
     template <tkUInt nC>
     inline bool Spectrum<nC>::isBlack() const {
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             if (c[i] != 0.0)
                 return false;
-        }
+
         return true;
     }
     template <tkUInt nC>
     inline Spectrum<nC> sqrt(const Spectrum<nC> &s) {
         Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] = std::sqrt(s.c[i]);
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> pow(const Spectrum<nC> &s, tkFloat p) {
         Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] = std::pow(s.c[i], p);
-        }
+
         return ret;
     }
     template <tkUInt nC>
     inline Spectrum<nC> exp(const Spectrum<nC> &s) {
         Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] = std::exp(s.c[i]);
-        }
+
         return ret;
     }
 
     template <tkUInt nC>
     inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo = 0, tkFloat hi = TK_INFINITY) {
         Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i) {
+        for (tkUInt i = 0; i < nC; ++i)
             ret.c[i] = clamp(s.c[i], lo, hi);
-        }
+
         return ret;
     }
 } // namespace TK

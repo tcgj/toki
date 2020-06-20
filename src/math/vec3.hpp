@@ -157,9 +157,9 @@ namespace TK {
     template <typename T>
     inline Vec3<T> &Vec3<T>::normalized() {
         tkFloat sm = squaredMagnitude();
-        if (sm > 0) {
+        if (sm > 0)
             *this /= std::sqrt(sm);
-        }
+
         return *this;
     }
 
@@ -220,9 +220,9 @@ namespace TK {
     template <typename T>
     inline Vec3<T> normalize(const Vec3<T> &v) {
         tkFloat sm = v.squaredMagnitude();
-        if (sm > 0) {
+        if (sm > 0)
             return v / std::sqrt(sm);
-        }
+
         return v;
     }
     template <typename T>

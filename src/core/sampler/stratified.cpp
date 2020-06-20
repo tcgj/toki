@@ -6,9 +6,8 @@
 namespace TK {
     void StratifiedSampler::sample1D(tkFloat *samples, tkUInt count) const {
         tkFloat invCount = (tkFloat)1 / count;
-        for (tkUInt i = 0; i < count; ++i) {
+        for (tkUInt i = 0; i < count; ++i)
             samples[i] = std::min((i + Random::nextFloat()) * invCount, TK_ONE_MINUS_EPSILON);
-        }
     }
 
     void StratifiedSampler::sample2D(tkVec2f *samples, tkUInt countX, tkUInt countY) const {
