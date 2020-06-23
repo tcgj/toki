@@ -1,6 +1,6 @@
 #include "bxdf.hpp"
 
-#include "bsdfutil.hpp"
+#include "scatteringutil.hpp"
 #include "sampling/random.hpp"
 #include "sampling/sampling.hpp"
 #include "spectrum/rgbspectrum.hpp"

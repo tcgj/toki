@@ -1,6 +1,6 @@
 #include "speculartransmission.hpp"
 
-#include "bsdfutil.hpp"
+#include "scatteringutil.hpp"
 
 namespace TK {
     tkSpectrum SpecularTransmission::operator()(const tkVec3f &wo, const tkVec3f &wi) const {

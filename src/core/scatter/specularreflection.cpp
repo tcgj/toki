@@ -1,6 +1,6 @@
 #include "specularreflection.hpp"
 
-#include "bsdfutil.hpp"
+#include "scatteringutil.hpp"
 
 namespace TK {
     tkSpectrum SpecularReflection::operator()(const tkVec3f &wo, const tkVec3f &wi) const {

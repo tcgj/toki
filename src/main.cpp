@@ -116,9 +116,9 @@ int main() {
 #include "camera/orthographic.hpp"
 #include "camera/perspective.hpp"
 #include "target/imagetarget.hpp"
-#include "bsdf/bsdfutil.hpp"
-#include "bsdf/bxdf.hpp"
-#include "bsdf/fresnel.hpp"
+#include "scatter/scatteringutil.hpp"
+#include "scatter/bxdf.hpp"
+#include "scatter/fresnel.hpp"
 
 int main() {
     return 0;
