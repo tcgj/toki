@@ -2,7 +2,6 @@
 
 #include "bxdf.hpp"
 #include "fresnel.hpp"
-#include "spectrum/rgbspectrum.hpp"
 
 namespace TK {
     class SpecularTransmission : public BxDF {
