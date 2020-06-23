@@ -19,7 +19,7 @@ namespace TK {
         // const Medium *medium;
     };
 
-    tkPoint3f Ray::operator()(tkFloat t) const {
+    inline tkPoint3f Ray::operator()(tkFloat t) const {
         return o + t * d;
     }
 } // namespace TK
