@@ -42,7 +42,7 @@ namespace TK {
     }
 
     tkSpectrum DielectricFresnel::evaluate(tkFloat cosI) const {
-        return computeDielectricFresnel(cosI, etaI, etaT);
+        return computeDielectricFresnel(cosI, etaA, etaB);
     }
 
     tkSpectrum NoOpFresnel::evaluate(tkFloat cosI) const {

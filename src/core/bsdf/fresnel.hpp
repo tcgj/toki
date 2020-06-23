@@ -27,13 +27,13 @@ namespace TK {
 
     class DielectricFresnel : public Fresnel {
     public:
-        DielectricFresnel(tkFloat etaI, tkFloat etaT)
-            : etaI(etaI), etaT(etaT) {}
+        DielectricFresnel(tkFloat etaA, tkFloat etaB)
+            : etaA(etaA), etaB(etaB) {}
 
         tkSpectrum evaluate(tkFloat cosI) const override;
 
     private:
-        tkFloat etaI, etaT;
+        tkFloat etaA, etaB;
     };
 
     class NoOpFresnel : public Fresnel {
