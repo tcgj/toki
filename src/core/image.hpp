@@ -4,12 +4,12 @@
 
 #include "system/system.hpp"
 #include "math/math.hpp"
-#include "geometry/aabb.hpp"
+#include "core/geometry/aabb.hpp"
 
 namespace TK {
-    class ImageTarget {
+    class Image {
     public:
-        ImageTarget(const tkVec2i &res, const std::string &filename);
+        Image(const tkVec2i &res, const std::string &filename);
 
         tkVec3f getPixelColor(const tkPoint2i &imgCoord) const;
         void updatePixelColor(const tkPoint2i &imgCoord,

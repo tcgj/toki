@@ -1,23 +1,23 @@
-#include "imagetarget.hpp"
+#include "image.hpp"
 
 #include "system/io/imageio.hpp"
 #include "spectrum/rgbspectrum.hpp"
 
 namespace TK {
-    ImageTarget::ImageTarget(const tkVec2i &res, const std::string &filename)
+    Image::Image(const tkVec2i &res, const std::string &filename)
         : resolution(res), filename(filename) {
         pixels = std::make_unique<tkSpectrum[]>(res.x * res.y);
     }
 
-    tkVec3f ImageTarget::getPixelColor(const tkPoint2i &imgCoord) const {
+    tkVec3f Image::getPixelColor(const tkPoint2i &imgCoord) const {
         return pixels[imgCoord.y * resolution.x + imgCoord.x].toRGB();
     }
 
-    void ImageTarget::updatePixelColor(const tkPoint2i &imgCoord, const tkSpectrum &colorContribution) {
+    void Image::updatePixelColor(const tkPoint2i &imgCoord, const tkSpectrum &colorContribution) {
         pixels[imgCoord.y * resolution.x + imgCoord.x] += colorContribution;
     }
 
-    void ImageTarget::write() {
+    void Image::write() {
         tkUChar imageData[3 * resolution.x * resolution.y];
 
         tkUInt offset = 0;
