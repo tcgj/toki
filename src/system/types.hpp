@@ -19,6 +19,8 @@ namespace TK {
     class Primitive;
     class RGBSpectrum;
     class BxDF;
+    class Scatter;
+    class Material;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;

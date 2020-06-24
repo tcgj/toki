@@ -11,6 +11,10 @@ namespace TK {
         bt = normalize(cross(n, t));
     }
 
+    Scatter::~Scatter() {
+        delete[] bxdfs;
+    }
+
     tkSpectrum Scatter::operator()(const tkVec3f &wo, const tkVec3f &wi) const {
         tkVec3f localWo = worldToLocal(wo);
         tkVec3f localWi = worldToLocal(wi);

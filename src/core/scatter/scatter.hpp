@@ -6,6 +6,7 @@ namespace TK {
     class Scatter {
     public:
         Scatter(const SurfaceInteraction &interaction);
+        ~Scatter();
 
         tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
 

@@ -3,6 +3,7 @@
 #include "geometry/aabb.hpp"
 #include "geometry/ray.hpp"
 #include "shape/shape.hpp"
+#include "material/material.hpp"
 
 namespace TK {
     tkAABBf Primitive::worldBoundingBox() const {
@@ -22,14 +23,8 @@ namespace TK {
     bool Primitive::hasIntersect(const Ray &r) const {
         return shape->hasIntersect(r);
     }
-/*
-    Material *Primitive::getMaterial() const {
-        return material.get();
-    }
-*/
-    void Primitive::computeScatteringFunctions(SurfaceInteraction *interaction/*,
-                                            MemoryArena &arena*/) const {
-        /*if (material)
-            material->ComputeScatteringFunctions(interaction, arena);*/
+
+    std::shared_ptr<Material> Primitive::getMaterial() const {
+        return material;
     }
 } // namespace TK
