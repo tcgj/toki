@@ -23,6 +23,11 @@ namespace TK {
         template <typename T> AABB<T> operator()(const AABB<T> &bb) const;
         Ray operator()(const Ray &r) const;
 
+        template <typename T> Point3<T> applyInverse(const Point3<T> &p) const;
+        template <typename T> Vec3<T> applyInverse(const Vec3<T> &v, bool isNormal = false) const;
+        template <typename T> AABB<T> applyInverse(const AABB<T> &bb) const;
+        Ray applyInverse(const Ray &r) const;
+
         // Equality
         bool operator==(const Transform &t) const;
         bool operator!=(const Transform &t) const;
@@ -87,6 +92,49 @@ namespace TK {
     inline Ray Transform::operator()(const Ray &r) const {
         tkPoint3f o = (*this)(r.o);
         tkVec3f d = (*this)(r.d);
+
+        return Ray(o, d, r.tMax/*, r.time, r.medium*/);
+    }
+
+    template <typename T>
+    inline Point3<T> Transform::applyInverse(const Point3<T> &p) const {
+        T px = p.x, py = p.y, pz = p.z;
+        T x = mInv.data[0] * px + mInv.data[1] * py + mInv.data[2] * pz + mInv.data[3];
+        T y = mInv.data[4] * px + mInv.data[5] * py + mInv.data[6] * pz + mInv.data[7];
+        T z = mInv.data[8] * px + mInv.data[9] * py + mInv.data[10] * pz + mInv.data[11];
+        T w = mInv.data[12] * px + mInv.data[13] * py + mInv.data[14] * pz + mInv.data[15];
+        if (w == 1)
+            return Point3<T>(x, y, z);
+        else
+            return Point3<T>(x, y, z) / w;
+    }
+    template <typename T>
+    inline Vec3<T> Transform::applyInverse(const Vec3<T> &v, bool isNormal) const {
+        T vx = v.x, vy = v.y, vz = v.z;
+
+        if (isNormal) {
+            return Vec3<T>(
+                m.data[0] * vx + m.data[4] * vy + m.data[8] * vz,
+                m.data[1] * vx + m.data[5] * vy + m.data[9] * vz,
+                m.data[2] * vx + m.data[6] * vy + m.data[10] * vz);
+        } else {
+            return Vec3<T>(
+                mInv.data[0] * vx + mInv.data[1] * vy + mInv.data[2] * vz,
+                mInv.data[4] * vx + mInv.data[5] * vy + mInv.data[6] * vz,
+                mInv.data[8] * vx + mInv.data[9] * vy + mInv.data[10] * vz);
+        }
+    }
+    template <typename T>
+    inline AABB<T> Transform::applyInverse(const AABB<T> &bb) const {
+        AABB<T> out(this->applyInverse(bb.corner(0)));
+        for (tkUInt i = 1; i < 8; ++i) {
+            out = bbUnion(out, this->applyInverse(bb.corner(i)));
+        }
+        return out;
+    }
+    inline Ray Transform::applyInverse(const Ray &r) const {
+        tkPoint3f o = this->applyInverse(r.o);
+        tkVec3f d = this->applyInverse(r.d);
 
         return Ray(o, d, r.tMax/*, r.time, r.medium*/);
     }

@@ -35,17 +35,16 @@ namespace TK {
               focalLength(focalLength) {
             // image space has boundaries from (0, 0) to (res.x, res.y)
             // whereas screen space is not scaled to image resolution, and does not bound from origin
-            screenToImage =
-                scale(/*image->resolution.x*/1 / (screen.maxPt.x - screen.minPt.x),
-                      /*image->resolution.y*/1 / (screen.maxPt.y - screen.minPt.y), 1) *
-                translate(tkVec3f(-screen.minPt.x, -screen.maxPt.y, 0));
-            imageToScreen = inverse(screenToImage);
+            imageToScreen = inverse(
+                scale(/*image->resolution.x*/ 1 / (screen.maxPt.x - screen.minPt.x),
+                      /*image->resolution.y*/ 1 / (screen.maxPt.y - screen.minPt.y), 1) *
+                translate(tkVec3f(-screen.minPt.x, -screen.maxPt.y, 0)));
             imageToCamera = inverse(cameraToScreen) * imageToScreen;
         }
 
     protected:
-        Transform cameraToScreen, imageToCamera;
-        Transform screenToImage, imageToScreen;
+        Transform imageToCamera, cameraToScreen;
+        Transform imageToScreen;
         tkFloat lensRadius, focalLength;
     };
 } // namespace TK

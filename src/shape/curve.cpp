@@ -19,7 +19,7 @@ namespace TK {
 
     bool Curve::intersect(const Ray &r, tkFloat *tHit,
                    SurfaceInteraction *interaction) const {
-        Ray oRay = (inverse(*objectToWorld))(r);
+        Ray oRay = objectToWorld->applyInverse(r);
         tkPoint3f cpObj[4];
         computeSegmentControlPoints(cpObj);
 

@@ -9,7 +9,7 @@ namespace TK {
 
     bool Sphere::intersect(const Ray &r, tkFloat *tHit,
                            SurfaceInteraction *interaction) const {
-        Ray oRay = (inverse(*objectToWorld))(r);
+        Ray oRay = objectToWorld->applyInverse(r);
         tkVec3f r0 = tkVec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
@@ -35,7 +35,7 @@ namespace TK {
     }
 
     bool Sphere::hasIntersect(const Ray &r) const {
-        Ray oRay = (inverse(*objectToWorld))(r);
+        Ray oRay = objectToWorld->applyInverse(r);
         tkVec3f r0 = oRay.o - tkPoint3f::zero;
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
