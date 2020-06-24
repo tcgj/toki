@@ -11,7 +11,7 @@ namespace TK {
         return dhr * fresnel->evaluate(cosTheta(wi)) / absCosTheta(wi);
     }
 
-    tkSpectrum SpecularReflection::getSample(const tkVec3f &wo, tkVec3f *wi, tkFloat *pdf) const {
+    tkSpectrum SpecularReflection::sample(const tkVec3f &wo, tkVec3f *wi, tkFloat *pdf) const {
         *wi = tkVec3f(-wo.x, -wo.y, wo.z);
         *pdf = 1;
         return dhr * fresnel->evaluate(cosTheta(*wi)) / absCosTheta(*wi);

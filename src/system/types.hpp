@@ -15,7 +15,6 @@ namespace TK {
     class Shape;
     struct Interaction;
     class SurfaceInteraction;
-    class Interactable;
     class Primitive;
     class RGBSpectrum;
     class BxDF;

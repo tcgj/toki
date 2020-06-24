@@ -13,7 +13,7 @@ namespace TK {
 
         tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
 
-        tkSpectrum getSample(const tkVec3f &wo, tkVec3f *wi,
+        tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi,
                              tkFloat *pdf) const;
 
     private:

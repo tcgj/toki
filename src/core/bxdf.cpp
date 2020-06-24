@@ -14,7 +14,7 @@ namespace TK {
         return isSameHemisphere(wo, wi) ? absCosTheta(wi) * TK_INVPI : 0;
     }
 
-    tkSpectrum BxDF::getSample(const tkVec3f &wo, tkVec3f *wi,
+    tkSpectrum BxDF::sample(const tkVec3f &wo, tkVec3f *wi,
                                  tkFloat *pdf) const {
         *wi = cosHemisphereSample(Random::nextFloat(), Random::nextFloat());
         if (wo.z < 0)

@@ -14,7 +14,7 @@ namespace TK {
         return dht * (tkSpectrum(1.0f) - fresnel.evaluate(cosTheta(wi))) / absCosTheta(wi);
     }
 
-    tkSpectrum SpecularTransmission::getSample(const tkVec3f &wo, tkVec3f *wi,
+    tkSpectrum SpecularTransmission::sample(const tkVec3f &wo, tkVec3f *wi,
                                                tkFloat *pdf) const {
         bool exiting = cosTheta(wo) > 0;
         tkFloat etaI = exiting ? etaB : etaA;

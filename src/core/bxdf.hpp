@@ -22,7 +22,7 @@ namespace TK {
 
         bool hasType(BxDFType t) const;
         virtual tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const;
-        virtual tkSpectrum getSample(const tkVec3f &wo, tkVec3f *wi, tkFloat *pdf) const;
+        virtual tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi, tkFloat *pdf) const;
 
         BxDFType type;
     };
