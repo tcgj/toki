@@ -99,26 +99,6 @@ int main() {
 }
 */
 #include "system/system.hpp"
-#include "math/math.hpp"
-#include "math/matrix44.hpp"
-#include "geometry/ray.hpp"
-#include "geometry/aabb.hpp"
-#include "geometry/geometry.hpp"
-#include "geometry/quaternion.hpp"
-#include "geometry/transform.hpp"
-#include "region/primitive.hpp"
-#include "spectrum/rgbspectrum.hpp"
-#include "shape/curve.hpp"
-#include "shape/sphere.hpp"
-#include "shape/triangle.hpp"
-#include "interaction/surfaceinteraction.hpp"
-#include "accelerator/bvh.hpp"
-#include "camera/orthographic.hpp"
-#include "camera/perspective.hpp"
-#include "target/imagetarget.hpp"
-#include "scatter/scatteringutil.hpp"
-#include "scatter/bxdf.hpp"
-#include "scatter/fresnel.hpp"
 
 int main() {
     return 0;
