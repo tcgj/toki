@@ -146,7 +146,7 @@ namespace TK {
                 *tHit = tempT; // Apparently not accurate for ribbons
                 interaction->p = (*objectToWorld)(r(*tHit));
                 interaction->n = normalize((*objectToWorld)(normal));
-                interaction->wout = normalize((*objectToWorld)(-r.d));
+                interaction->wo = normalize((*objectToWorld)(-r.d));
                 interaction->shape = this;
             }
 

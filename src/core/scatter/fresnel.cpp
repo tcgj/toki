@@ -1,13 +1,13 @@
 #include "fresnel.hpp"
 
 namespace TK {
-    tkFloat computeDielectricFresnel(tkFloat cosI, tkFloat etaI,
-                                     tkFloat etaT) {
+    tkFloat computeDielectricFresnel(tkFloat cosI, tkFloat etaA,
+                                     tkFloat etaB) {
         bool entering = cosI > 0;
-        if (!entering) {
-            std::swap(etaI, etaT);
+        tkFloat etaI = entering ? etaA : etaB;
+        tkFloat etaT = entering ? etaB : etaA;
+        if (!entering)
             cosI = std::abs(cosI);
-        }
 
         tkFloat sinI = std::sqrt(std::max((tkFloat)0, 1 - cosI * cosI));
         tkFloat sinT = etaI * sinI / etaT;

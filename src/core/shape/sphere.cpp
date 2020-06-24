@@ -28,7 +28,7 @@ namespace TK {
         normal = (*objectToWorld)(normal, true);
         interaction->p = r(*tHit);
         interaction->n = invertNormals ? -normal : normal;
-        interaction->wout = -r.d;
+        interaction->wo = -r.d;
         interaction->shape = this;
 
         return true;

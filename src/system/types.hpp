@@ -18,6 +18,7 @@ namespace TK {
     class Interactable;
     class Primitive;
     class RGBSpectrum;
+    class BxDF;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;

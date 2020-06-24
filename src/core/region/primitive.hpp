@@ -13,7 +13,7 @@ namespace TK {
         bool intersect(const Ray &r, SurfaceInteraction *interaction) const override;
         bool hasIntersect(const Ray &r) const override;
         /*Material *getMaterial() const;*/
-        void ComputeScatteringFunctions(SurfaceInteraction *interaction/*,
+        void computeScatteringFunctions(SurfaceInteraction *interaction/*,
                                                 MemoryArena &arena*/) const;
 
     private:

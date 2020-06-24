@@ -27,7 +27,7 @@ namespace TK {
         return material.get();
     }
 */
-    void Primitive::ComputeScatteringFunctions(SurfaceInteraction *interaction/*,
+    void Primitive::computeScatteringFunctions(SurfaceInteraction *interaction/*,
                                             MemoryArena &arena*/) const {
         /*if (material)
             material->ComputeScatteringFunctions(interaction, arena);*/
