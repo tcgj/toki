@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "mathutil.hpp"
+#include "util/mathutil.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
 #include "point2.hpp"
