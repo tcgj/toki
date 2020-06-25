@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "geometry/transform.hpp"
+#include "core/transform.hpp"
 
 namespace TK {
     class Light {
@@ -11,14 +11,14 @@ namespace TK {
 
         virtual void preprocess(/*const Scene &scene*/) {}
         virtual bool isDelta() const {
-            return true;
-        }
-        virtual bool isInfinite() const {
+            // Whether the light source is described by a delta distribution,
+            // positional wise or directional-wise
             return false;
         }
         virtual tkSpectrum power() const = 0;
         virtual tkSpectrum sample(const Interaction &interaction, tkVec3f *wi, tkFloat *pdf) const = 0;
 
+    protected:
         Transform lightToWorld;
     };
 } // namespace TK
