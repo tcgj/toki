@@ -1,6 +1,6 @@
 #include "orthographic.hpp"
 
-#include "core/geometry/ray.hpp"
+#include "core/ray.hpp"
 
 namespace TK {
     tkFloat OrthographicCamera::generateRay(const CameraSample &sample, Ray *r) const {

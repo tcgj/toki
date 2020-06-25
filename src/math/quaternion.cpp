@@ -1,6 +1,6 @@
 #include "quaternion.hpp"
 
-#include "transform.hpp"
+#include "core/transform.hpp"
 
 // All implementations here follow the right-hand coordinate system
 namespace TK {
@@ -22,13 +22,16 @@ namespace TK {
             const tkUInt next[3] = {1, 2, 0};
             tkFloat q[3];
             tkUInt i = 0;
-            if (m.data[5] > m.data[0]) i = 1;
-            if (m.data[10] > m.data[5]) i = 2;
+            if (m.data[5] > m.data[0])
+                i = 1;
+            if (m.data[10] > m.data[5])
+                i = 2;
             tkUInt j = next[i];
             tkUInt k = next[j];
             tkFloat s = std::sqrt(1.0f + m.data[i * 4 + i] - m.data[j * 4 + j] - m.data[k * 4 + k]);
             q[i] = s * 0.5f;
-            if (s != 0.0f) s = 0.5f / s; // Should never be zero
+            if (s != 0.0f)
+                s = 0.5f / s; // Should never be zero
             q[j] = (m.data[i * 4 + j] + m.data[j * 4 + i]) * s;
             q[k] = (m.data[i * 4 + k] + m.data[k * 4 + i]) * s;
             w = (m.data[j * 4 + k] - m.data[k * 4 + j]) * s;

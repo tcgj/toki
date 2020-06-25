@@ -1,6 +1,6 @@
 #include "bvh.hpp"
 
-#include "core/geometry/ray.hpp"
+#include "core/ray.hpp"
 #include "region/primitive.hpp"
 
 namespace TK {

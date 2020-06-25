@@ -1,7 +1,7 @@
 #include "primitive.hpp"
 
-#include "core/geometry/aabb.hpp"
-#include "core/geometry/ray.hpp"
+#include "core/aabb.hpp"
+#include "core/ray.hpp"
 #include "core/shape.hpp"
 #include "core/material.hpp"
 

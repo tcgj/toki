@@ -1,6 +1,6 @@
 #include "curve.hpp"
 
-#include "core/geometry/ray.hpp"
+#include "core/ray.hpp"
 
 namespace TK {
     inline tkAABBf Curve::objectBoundingBox() const {

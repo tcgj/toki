@@ -1,6 +1,6 @@
 #include "perspective.hpp"
 
-#include "core/geometry/transform.hpp"
+#include "core/transform.hpp"
 
 namespace TK {
     PerspectiveCamera::PerspectiveCamera(

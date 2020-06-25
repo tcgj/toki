@@ -1,6 +1,6 @@
 #include "sphere.hpp"
 
-#include "core/geometry/ray.hpp"
+#include "core/ray.hpp"
 
 namespace TK {
     inline tkAABBf Sphere::objectBoundingBox() const {

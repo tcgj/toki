@@ -4,7 +4,7 @@
 
 #include "system/system.hpp"
 #include "math/math.hpp"
-#include "core/geometry/aabb.hpp"
+#include "core/aabb.hpp"
 
 namespace TK {
     class Image {

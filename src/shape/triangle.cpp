@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "core/geometry/aabb.hpp"
-#include "core/geometry/mesh.hpp"
-#include "core/geometry/ray.hpp"
+#include "mesh.hpp"
+#include "core/aabb.hpp"
+#include "core/ray.hpp"
 
 namespace TK {
     inline tkAABBf Triangle::objectBoundingBox() const {
