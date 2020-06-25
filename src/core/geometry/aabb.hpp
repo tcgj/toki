@@ -124,20 +124,15 @@ namespace TK {
             o.z /= maxPt.z - minPt.z;
         return o;
     }
-    template <typename T>
-    inline void AABB<T>::boundingSphere(Point3<T> *center, tkFloat *radius) const {
-        *center = (minPt + maxPt) / 2;
-        *radius = isInside(*center, *this) ? distance(*center, maxPt) : 0;
-    }
 
     // Bounding box operations
     template <typename T>
-    inline bool inside(const Point3<T> &p, const AABB<T> &b) {
+    inline bool isInside(const Point3<T> &p, const AABB<T> &b) {
         return (p.x >= b.minPt.x && p.x <= b.maxPt.x && p.y >= b.minPt.y &&
                 p.y <= b.maxPt.y && p.z >= b.minPt.z && p.z <= b.maxPt.z);
     }
     template <typename T>
-    inline bool insideExclusive(const Point3<T> &p, const AABB<T> &b) {
+    inline bool isInsideExclusive(const Point3<T> &p, const AABB<T> &b) {
         return (p.x >= b.minPt.x && p.x < b.maxPt.x && p.y >= b.minPt.y &&
                 p.y < b.maxPt.y && p.z >= b.minPt.z && p.z < b.maxPt.z);
     }
@@ -179,6 +174,13 @@ namespace TK {
                     Point3<T>(std::min(b1.maxPt.x, b2.maxPt.x),
                                 std::min(b1.maxPt.y, b2.maxPt.y),
                                 std::min(b1.maxPt.z, b2.maxPt.z)));
+    }
+
+    template <typename T>
+    inline void AABB<T>::boundingSphere(Point3<T> *center,
+                                        tkFloat *radius) const {
+        *center = (minPt + maxPt) / 2;
+        *radius = isInside(*center, *this) ? distance(*center, maxPt) : 0;
     }
 
     template <typename T>
