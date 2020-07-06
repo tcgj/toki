@@ -15,11 +15,14 @@ namespace TK {
     class Shape;
     struct Interaction;
     class SurfaceInteraction;
+    class Region;
     class Primitive;
     class RGBSpectrum;
+    class Light;
     class BxDF;
     class Scatter;
     class Material;
+    class Scene;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;

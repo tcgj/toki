@@ -9,7 +9,7 @@ namespace TK {
         Light(const Transform &lightToWorld) : lightToWorld(lightToWorld) {}
         virtual ~Light() = default;
 
-        virtual void preprocess(/*const Scene &scene*/) {}
+        virtual void preprocess(const Scene &scene) {}
         virtual bool isDelta() const {
             // Whether the light source is described by a delta distribution,
             // positional wise or directional-wise

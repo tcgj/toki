@@ -1,8 +1,11 @@
 #include "directional.hpp"
 
+#include "core/scene.hpp"
+
 namespace TK {
-    void DirectionalLight::preprocess(/*const Scene &scene*/) {
+    void DirectionalLight::preprocess(const Scene &scene) {
         // Obtain scene radius and scene center from scene data
+        scene.worldBoundingBox().boundingSphere(&sceneCenter, &sceneRadius);
     }
 
     bool DirectionalLight::isDelta() const {

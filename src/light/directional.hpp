@@ -11,7 +11,7 @@ namespace TK {
             : Light(lightToWorld), radiance(radiance),
               dir(normalize(lightToWorld(tkVec3f::right))) {}
 
-        void preprocess(/*const Scene &scene*/);
+        void preprocess(const Scene &scene);
         bool isDelta() const;
         tkSpectrum power() const;
         tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
