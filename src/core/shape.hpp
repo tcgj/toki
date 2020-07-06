@@ -1,8 +1,8 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "core/aabb.hpp"
-#include "core/transform.hpp"
+#include "aabb.hpp"
+#include "transform.hpp"
 #include "interaction/surfaceinteraction.hpp"
 
 namespace TK {

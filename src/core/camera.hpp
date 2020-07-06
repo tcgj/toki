@@ -1,8 +1,8 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "core/transform.hpp"
-#include "core/aabb.hpp"
+#include "transform.hpp"
+#include "aabb.hpp"
 
 namespace TK {
     struct CameraSample {
