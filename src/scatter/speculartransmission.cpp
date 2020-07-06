@@ -15,7 +15,7 @@ namespace TK {
     }
 
     tkSpectrum SpecularTransmission::sample(const tkVec3f &wo, tkVec3f *wi,
-                                               tkFloat *pdf) const {
+                                            const tkVec2f &samp, tkFloat *pdf) const {
         bool exiting = cosTheta(wo) > 0;
         tkFloat etaI = exiting ? etaB : etaA;
         tkFloat etaT = exiting ? etaA : etaB;

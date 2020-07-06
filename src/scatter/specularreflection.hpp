@@ -13,8 +13,8 @@ namespace TK {
 
         tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
 
-        tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi,
-                             tkFloat *pdf) const;
+        tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi, const tkVec2f &samp,
+                          tkFloat *pdf) const;
 
     private:
         tkSpectrum dhr; // directional-hemispherical reflectance
