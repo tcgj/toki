@@ -13,6 +13,7 @@ namespace TK {
         bool intersect(const Ray &r, SurfaceInteraction *interaction) const override;
         bool hasIntersect(const Ray &r) const override;
         std::shared_ptr<Material> getMaterial() const;
+        void updateScatter(Scatter *scatter) const;
 
     private:
         std::shared_ptr<Shape> shape;

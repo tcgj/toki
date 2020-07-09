@@ -22,7 +22,9 @@ namespace TK {
     class BxDF;
     class Scatter;
     class Material;
+    class Camera;
     class Scene;
+    class Sampler;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;

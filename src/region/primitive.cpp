@@ -27,4 +27,10 @@ namespace TK {
     std::shared_ptr<Material> Primitive::getMaterial() const {
         return material;
     }
+
+    void Primitive::updateScatter(Scatter *scatter) const {
+        if (material != nullptr) {
+            material->updateScatter(scatter);
+        }
+    }
 } // namespace TK
