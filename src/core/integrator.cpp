@@ -1,9 +1,9 @@
 #include "integrator.hpp"
 
-#include "scattering.hpp"
 #include "ray.hpp"
+#include "interaction.hpp"
+#include "scattering.hpp"
 #include "spectrum/rgbspectrum.hpp"
-#include "interaction/surfaceinteraction.hpp"
 
 namespace TK {
     void SamplerIntegrator::render(const Scene &scene) {

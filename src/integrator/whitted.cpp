@@ -3,8 +3,7 @@
 #include "core/scene.hpp"
 #include "core/scattering.hpp"
 #include "core/light.hpp"
-#include "interaction/surfaceinteraction.hpp"
-#include "region/primitive.hpp"
+#include "core/interaction.hpp"
 #include "spectrum/rgbspectrum.hpp"
 #include "util/scatteringutil.hpp"
 

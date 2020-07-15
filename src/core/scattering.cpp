@@ -1,7 +1,7 @@
 #include "scattering.hpp"
 
 #include "bxdf.hpp"
-#include "interaction/surfaceinteraction.hpp"
+#include "interaction.hpp"
 #include "spectrum/rgbspectrum.hpp"
 
 namespace TK {

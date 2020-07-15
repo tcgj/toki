@@ -3,7 +3,7 @@
 #include "system/system.hpp"
 #include "aabb.hpp"
 #include "transform.hpp"
-#include "interaction/surfaceinteraction.hpp"
+#include "interaction.hpp"
 
 namespace TK {
     class Shape {

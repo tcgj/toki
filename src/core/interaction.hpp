@@ -2,6 +2,7 @@
 
 #include "system/system.hpp"
 #include "ray.hpp"
+#include "region/primitive.hpp"
 
 namespace TK {
     struct Interaction {
@@ -19,5 +20,18 @@ namespace TK {
         tkVec3f n;
         tkVec3f t;
         tkVec3f wo;
+    };
+
+    class SurfaceInteraction : public Interaction {
+    public:
+        void computeScattering(Scattering *s) {
+            if (primitive != nullptr)
+                primitive->computeScattering(s);
+            scattering = s;
+        }
+
+        const Shape *shape = nullptr;
+        const Primitive *primitive = nullptr;
+        Scattering *scattering = nullptr;
     };
 } // namespace TK
