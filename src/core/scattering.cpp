@@ -17,12 +17,12 @@ namespace TK {
         }
     }
 
-    tkSpectrum Scattering::operator()(const tkVec3f &wo, const tkVec3f &wi) const {
+    tkSpectrum Scattering::evaluate(const tkVec3f &wo, const tkVec3f &wi) const {
         tkVec3f localWo = worldToLocal(wo);
         tkVec3f localWi = worldToLocal(wi);
         tkSpectrum bsdf;
         for (tkUInt i = 0; i < numBxdf; ++i) {
-            bsdf += (*bxdfs[i])(localWo, localWi);
+            bsdf += bxdfs[i]->evaluate(localWo, localWi);
         }
         return bsdf;
     }

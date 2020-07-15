@@ -9,7 +9,7 @@ namespace TK {
         Lambert(const tkSpectrum &dhr)
             : BxDF(BxDFType(BXDF_REFLECTIVE | BXDF_DIFFUSE)), dhr(dhr) {}
 
-        tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
+        tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const override;
 
     private:
         tkSpectrum dhr;  // directional-hemispherical reflectance

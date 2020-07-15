@@ -11,11 +11,10 @@ namespace TK {
               dhr(dhr),
               fresnel(fresnel) {}
 
-        tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
-
-        tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const;
+        tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const override;
         tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi, const tkVec2f &samp,
-                          tkFloat *pdf) const;
+                          tkFloat *pdf) const override;
+        tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const override;
 
     private:
         tkSpectrum dhr; // directional-hemispherical reflectance

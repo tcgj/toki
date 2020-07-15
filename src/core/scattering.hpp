@@ -8,7 +8,7 @@ namespace TK {
         Scattering(const SurfaceInteraction &interaction);
         ~Scattering();
 
-        tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
+        tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const;
 
         bool addContribution(BxDF *bxdf);
         tkVec3f worldToLocal(const tkVec3f &v) const;

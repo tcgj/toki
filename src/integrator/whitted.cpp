@@ -36,7 +36,7 @@ namespace TK {
             if (pdf == 0 || ld.isBlack())
                 continue;
 
-            tkSpectrum f = scattering(wo, wi);
+            tkSpectrum f = scattering.evaluate(wo, wi);
             if (!f.isBlack())
                 li += f * ld * std::abs(dot(wi, normal)) / pdf;
         }

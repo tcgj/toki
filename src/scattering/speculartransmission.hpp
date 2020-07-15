@@ -10,11 +10,10 @@ namespace TK {
             : BxDF(BxDFType(BXDF_TRANSMISSIVE | BXDF_SPECULAR)),
               dht(dht), fresnel(etaA, etaB), etaA(etaA), etaB(etaB) {}
 
-        tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
-
-        tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const;
+        tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const override;
         tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi, const tkVec2f &samp,
-                          tkFloat *pdf) const;
+                          tkFloat *pdf) const override;
+        tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const override;
 
     private:
         tkSpectrum dht; // directional-hemispherical transmittance
