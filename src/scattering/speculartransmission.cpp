@@ -4,14 +4,7 @@
 
 namespace TK {
     tkSpectrum SpecularTransmission::evaluate(const tkVec3f &wo, const tkVec3f &wi) const {
-        bool entering = cosTheta(wi) > 0;
-        tkFloat etaI = entering ? etaA : etaB;
-        tkFloat etaT = entering ? etaB : etaA;
-        tkVec3f refr = refract(wi, tkVec3f::forward, etaI, etaT);
-        if (refr == tkVec3f::zero || dot(refr, wo) < TK_ONE_MINUS_EPSILON)
-            return 0;
-
-        return dht * (tkSpectrum(1.0f) - fresnel.evaluate(cosTheta(wi))) / absCosTheta(wi);
+        return 0;
     }
 
     tkSpectrum SpecularTransmission::sample(const tkVec3f &wo, tkVec3f *wi,
