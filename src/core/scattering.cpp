@@ -75,7 +75,7 @@ namespace TK {
     }
 
     tkFloat Scattering::getPdf(const tkVec3f &worldWo, const tkVec3f &worldWi,
-                   BxDFType type = BXDF_ALL) const {
+                   BxDFType type) const {
         tkVec3f wo = worldToLocal(worldWo);
         tkVec3f wi = worldToLocal(worldWi);
         tkFloat ret;
