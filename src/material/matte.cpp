@@ -1,11 +1,11 @@
 #include "matte.hpp"
 
-#include "core/scatter.hpp"
-#include "scatter/lambert.hpp"
+#include "core/scattering.hpp"
+#include "scattering/lambert.hpp"
 
 namespace TK {
-    void Matte::updateScatter(Scatter *scatter) const {
+    void Matte::computeScattering(Scattering *scattering) const {
         if (!kd.isBlack())
-            scatter->addContribution(new Lambert(kd));
+            scattering->addContribution(new Lambert(kd));
     }
 } // namespace TK

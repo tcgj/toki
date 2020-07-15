@@ -3,10 +3,10 @@
 #include "math/math.hpp"
 
 namespace TK {
-    class Scatter {
+    class Scattering {
     public:
-        Scatter(const SurfaceInteraction &interaction);
-        ~Scatter();
+        Scattering(const SurfaceInteraction &interaction);
+        ~Scattering();
 
         tkSpectrum operator()(const tkVec3f &wo, const tkVec3f &wi) const;
 

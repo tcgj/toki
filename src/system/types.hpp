@@ -20,7 +20,7 @@ namespace TK {
     class RGBSpectrum;
     class Light;
     class BxDF;
-    class Scatter;
+    class Scattering;
     class Material;
     class Camera;
     class Scene;

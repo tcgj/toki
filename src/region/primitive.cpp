@@ -28,9 +28,8 @@ namespace TK {
         return material;
     }
 
-    void Primitive::updateScatter(Scatter *scatter) const {
-        if (material != nullptr) {
-            material->updateScatter(scatter);
-        }
+    void Primitive::computeScattering(Scattering *scattering) const {
+        if (material != nullptr)
+            material->computeScattering(scattering);
     }
 } // namespace TK

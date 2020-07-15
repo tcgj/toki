@@ -1,7 +1,7 @@
 #include "whitted.hpp"
 
 #include "core/scene.hpp"
-#include "core/scatter.hpp"
+#include "core/scattering.hpp"
 #include "core/light.hpp"
 #include "interaction/surfaceinteraction.hpp"
 #include "region/primitive.hpp"
@@ -19,8 +19,8 @@ namespace TK {
             return li;
         }
 
-        Scatter scatter(interaction);
-        interaction.updateScatter(&scatter);
+        Scattering scattering(interaction);
+        interaction.computeScattering(&scattering);
 
         tkVec3f normal = interaction.n;
         tkVec3f wo = interaction.wo;
@@ -37,7 +37,7 @@ namespace TK {
             if (pdf == 0 || ld.isBlack())
                 continue;
 
-            tkSpectrum f = scatter(wo, wi);
+            tkSpectrum f = scattering(wo, wi);
             if (!f.isBlack())
                 li += f * ld * std::abs(dot(wi, normal)) / pdf;
         }

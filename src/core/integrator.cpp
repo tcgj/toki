@@ -1,6 +1,6 @@
 #include "integrator.hpp"
 
-#include "scatter.hpp"
+#include "scattering.hpp"
 #include "ray.hpp"
 #include "spectrum/rgbspectrum.hpp"
 #include "interaction/surfaceinteraction.hpp"

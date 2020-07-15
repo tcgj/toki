@@ -6,14 +6,14 @@
 namespace TK {
     class SurfaceInteraction : public Interaction {
     public:
-        void updateScatter(Scatter *scatter) {
+        void computeScattering(Scattering *s) {
             if (primitive != nullptr)
-                primitive->updateScatter(scatter);
-            scattering = scatter;
+                primitive->computeScattering(s);
+            scattering = s;
         }
 
         const Shape *shape = nullptr;
         const Primitive *primitive = nullptr;
-        Scatter *scattering = nullptr;
+        Scattering *scattering = nullptr;
     };
 } // namespace TK
