@@ -2,7 +2,7 @@
 
 #include "bxdf.hpp"
 #include "interaction.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     Scattering::Scattering(const SurfaceInteraction &interaction) {

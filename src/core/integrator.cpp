@@ -3,7 +3,7 @@
 #include "ray.hpp"
 #include "interaction.hpp"
 #include "scattering.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     void SamplerIntegrator::render(const Scene &scene) {

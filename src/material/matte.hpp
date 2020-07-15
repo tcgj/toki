@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/material.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "core/spectrum.hpp"
 
 namespace TK {
     class Matte : public Material {

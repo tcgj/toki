@@ -1,7 +1,7 @@
 #include "image.hpp"
 
 #include "system/io/imageio.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     Image::Image(const tkVec2i &res, const std::string &filename)

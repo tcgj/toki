@@ -1,7 +1,7 @@
 #include "bxdf.hpp"
 
 #include "random.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "spectrum.hpp"
 #include "util/scatteringutil.hpp"
 #include "util/samplingutil.hpp"
 

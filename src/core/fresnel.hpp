@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     tkFloat ComputeDielectricFresnel(tkFloat cosI, tkFloat etaI,

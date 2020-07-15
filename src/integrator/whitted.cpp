@@ -4,7 +4,7 @@
 #include "core/scattering.hpp"
 #include "core/light.hpp"
 #include "core/interaction.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "core/spectrum.hpp"
 #include "util/scatteringutil.hpp"
 
 namespace TK {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/light.hpp"
-#include "spectrum/rgbspectrum.hpp"
+#include "core/spectrum.hpp"
 
 namespace TK {
     class PointLight : public Light {
