@@ -14,9 +14,9 @@ namespace TK {
         bool intersect(const Ray &r, SurfaceInteraction *interaction) const;
         bool hasIntersect(const Ray &r) const;
 
+        std::vector<std::shared_ptr<Light>> lights;
     private:
         std::shared_ptr<Region> region;
-        std::vector<std::shared_ptr<Light>> lights;
         tkAABBf worldBB;
     };
 } // namespace TK

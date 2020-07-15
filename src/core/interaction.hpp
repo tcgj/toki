@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system/system.hpp"
+#include "ray.hpp"
 
 namespace TK {
     struct Interaction {
@@ -8,6 +9,11 @@ namespace TK {
         Interaction(const tkPoint3f &p, const tkVec3f &n, const tkVec3f &t, const tkVec3f &wo)
             : p(p), n(n), t(t), wo(wo) {}
         virtual ~Interaction() = default;
+
+        Ray spawnRayTo(const tkVec3f &d) const {
+            tkPoint3f o = p + n * static_cast<tkFloat>(TK_EPSILON);
+            return Ray(o, d);
+        }
 
         tkPoint3f p;
         tkVec3f n;
