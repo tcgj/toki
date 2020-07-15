@@ -9,11 +9,11 @@ namespace TK {
     template <typename T> class Point3;
     template <typename T> class AABB;
     struct Matrix44;
+    struct Mesh;
+    struct Interaction;
     class Ray;
     class Transform;
-    struct Mesh;
     class Shape;
-    struct Interaction;
     class SurfaceInteraction;
     class Region;
     class Primitive;

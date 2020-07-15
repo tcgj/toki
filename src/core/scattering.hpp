@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/math.hpp"
+#include "bxdf.hpp"
 
 namespace TK {
     class Scattering {
@@ -8,7 +9,12 @@ namespace TK {
         Scattering(const SurfaceInteraction &interaction);
         ~Scattering();
 
-        tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const;
+        tkSpectrum evaluate(const tkVec3f &worldWo, const tkVec3f &worldWi) const;
+        tkSpectrum sample(const tkVec3f &worldWo, tkVec3f *worldWi,
+                          const tkVec2f &samp, tkFloat *pdf,
+                          BxDFType type = BXDF_ALL) const;
+        tkFloat getPdf(const tkVec3f &worldWo, const tkVec3f &worldWi,
+                       BxDFType type = BXDF_ALL) const;
 
         bool addContribution(BxDF *bxdf);
         tkVec3f worldToLocal(const tkVec3f &v) const;
