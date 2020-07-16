@@ -11,10 +11,8 @@ namespace TK {
             : p(p), n(n), t(t), wo(wo) {}
         virtual ~Interaction() = default;
 
-        Ray spawnRayTo(const tkVec3f &d) const {
-            tkPoint3f o = p + n * static_cast<tkFloat>(TK_EPSILON);
-            return Ray(o, d);
-        }
+        Ray spawnRayTo(const tkVec3f &d) const;
+        Ray spawnRayTo(const Interaction &interaction) const;
 
         tkPoint3f p;
         tkVec3f n;
@@ -24,14 +22,24 @@ namespace TK {
 
     class SurfaceInteraction : public Interaction {
     public:
-        void computeScattering(Scattering *s) {
-            if (primitive != nullptr)
-                primitive->computeScattering(s);
-            scattering = s;
-        }
+        void computeScattering(Scattering *s);
 
         const Shape *shape = nullptr;
         const Primitive *primitive = nullptr;
         Scattering *scattering = nullptr;
     };
+
+    Ray Interaction::spawnRayTo(const tkVec3f &d) const {
+        tkPoint3f o = p + n * static_cast<tkFloat>(TK_EPSILON);
+        return Ray(o, d);
+    }
+    Ray Interaction::spawnRayTo(const Interaction &interaction) const {
+        return spawnRayTo(interaction.p - p);
+    }
+
+    void SurfaceInteraction::computeScattering(Scattering *s) {
+        if (primitive != nullptr)
+            primitive->computeScattering(s);
+        scattering = s;
+    }
 } // namespace TK
