@@ -15,7 +15,8 @@ namespace TK {
 
         bool isDelta() const;
         tkSpectrum power() const;
-        tkSpectrum sample(const Interaction &interaction, tkVec3f *wi, tkFloat *pdf) const;
+        tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
+                          tkFloat *pdf, OcclusionChecker *occCheck) const;
 
     private:
         tkSpectrum intensity;

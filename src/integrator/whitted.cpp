@@ -30,14 +30,14 @@ namespace TK {
         for (const auto &light : scene.lights) {
             tkVec3f wi;
             tkFloat pdf;
-            // TODO: Also account for occlusion here
+            OcclusionChecker occCheck;
 
-            tkSpectrum ld = light->sample(interaction, &wi, &pdf);
+            tkSpectrum ld = light->sample(interaction, &wi, &pdf, &occCheck);
             if (pdf == 0 || ld.isBlack())
                 continue;
 
             tkSpectrum f = scattering.evaluate(wo, wi);
-            if (!f.isBlack())
+            if (!f.isBlack() && occCheck.notOccluded(scene))
                 li += f * ld * std::abs(dot(wi, normal)) / pdf;
         }
 

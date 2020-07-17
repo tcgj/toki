@@ -19,9 +19,12 @@ namespace TK {
     }
 
     tkSpectrum DirectionalLight::sample(const Interaction &interaction,
-                                        tkVec3f *wi, tkFloat *pdf) const {
-        *wi = dir;
+                                        tkVec3f *wi, tkFloat *pdf,
+                                        OcclusionChecker *occCheck) const {
+        *wi = -dir;
         *pdf = 1;
+        tkPoint3f lightRef = interaction.p - 2 * sceneRadius * dir;
+        *occCheck = OcclusionChecker(interaction, lightRef);
 
         return radiance;
     }

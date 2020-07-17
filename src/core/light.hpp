@@ -2,8 +2,24 @@
 
 #include "system/system.hpp"
 #include "transform.hpp"
+#include "scene.hpp"
+#include "interaction.hpp"
 
 namespace TK {
+    class OcclusionChecker {
+    public:
+        OcclusionChecker() = default;
+        OcclusionChecker(const Interaction &p0, const Interaction &p1)
+            : p0(p0), p1(p1) {}
+
+        bool notOccluded(const Scene &scene) const {
+            return !scene.hasIntersect(p0.spawnRayTo(p1));
+        }
+
+    private:
+        Interaction p0, p1;
+    };
+
     class Light {
     public:
         Light(const Transform &lightToWorld) : lightToWorld(lightToWorld) {}
@@ -16,7 +32,11 @@ namespace TK {
             return false;
         }
         virtual tkSpectrum power() const = 0;
-        virtual tkSpectrum sample(const Interaction &interaction, tkVec3f *wi, tkFloat *pdf) const = 0;
+        virtual tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
+                                  tkFloat *pdf, OcclusionChecker *occCheck) const = 0;
+        virtual tkFloat getPdf(const Interaction &interaction, const tkVec3f &wi) const {
+            return 0;
+        }
 
     protected:
         Transform lightToWorld;

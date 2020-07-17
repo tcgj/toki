@@ -11,13 +11,14 @@ namespace TK {
         return 4 * TK_PI * intensity;
     }
 
-    tkSpectrum PointLight::sample(const Interaction &interaction,
-                                    tkVec3f *wi, tkFloat *pdf) const {
+    tkSpectrum PointLight::sample(const Interaction &interaction, tkVec3f *wi,
+                                  tkFloat *pdf, OcclusionChecker *occCheck) const {
         // Manually calculate normalized direction wi to reuse invSqrLen
         tkVec3f dir = pos - interaction.p;
         tkFloat invSqrLen = 1 / dir.squaredMagnitude();
         *wi = dir * std::sqrt(invSqrLen);
         *pdf = 1;
+        *occCheck = OcclusionChecker(interaction, Interaction(pos));
 
         return intensity * invSqrLen;
     }
