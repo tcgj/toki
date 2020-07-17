@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "core/region.hpp"
 #include "math/math.hpp"
 #include "core/aabb.hpp"

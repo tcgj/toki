@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "system/system.hpp"
 #include "aabb.hpp"
 

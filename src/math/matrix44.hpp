@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "system/system.hpp"
 
 namespace TK {

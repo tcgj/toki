@@ -1,6 +1,5 @@
 #include "matrix44.hpp"
 
-#include <ostream>
 #include "math/math.hpp"
 
 namespace TK {

@@ -1,7 +1,5 @@
 #include "triangle.hpp"
 
-#include <vector>
-
 #include "mesh.hpp"
 #include "core/aabb.hpp"
 #include "core/ray.hpp"

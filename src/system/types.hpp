@@ -30,7 +30,11 @@ namespace TK {
     typedef char tkChar;
     typedef unsigned int tkUInt;
     typedef int tkInt;
+#ifdef TK_USE_DOUBLE
+    typedef double tkFloat;
+#else
     typedef float tkFloat;
+#endif // TK_USE_DOUBLE
     typedef float tkF32;
     typedef double tkF64;
     typedef std::string tkString;

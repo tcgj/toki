@@ -1,7 +1,5 @@
 #include "scattering.hpp"
 
-#include <vector>
-
 #include "interaction.hpp"
 #include "spectrum.hpp"
 #include "util/scatteringutil.hpp"

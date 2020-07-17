@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 //#define ENABLE_ASSERTS
 #include "error.hpp"

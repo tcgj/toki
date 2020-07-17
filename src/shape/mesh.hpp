@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "math/math.hpp"
 
 namespace TK {
