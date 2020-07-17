@@ -1,7 +1,6 @@
 #pragma once
 
 #include "system/system.hpp"
-#include "math/math.hpp"
 #include "ray.hpp"
 
 namespace TK {

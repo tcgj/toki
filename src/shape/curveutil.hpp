@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/math.hpp"
+#include "system/system.hpp"
 
 namespace TK {
     enum class CurveType { FLAT, CYLINDER, RIBBON };

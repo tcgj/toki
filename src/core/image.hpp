@@ -3,7 +3,6 @@
 #include <string>
 
 #include "system/system.hpp"
-#include "math/math.hpp"
 #include "aabb.hpp"
 
 namespace TK {
