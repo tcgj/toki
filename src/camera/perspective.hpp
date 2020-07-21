@@ -8,7 +8,7 @@ namespace TK {
         PerspectiveCamera(
             const Transform &cameraToWorld, const tkAABBf screen,
             tkFloat lensRadius, tkFloat focalLength,
-            tkFloat fovy /*, const Medium *medium, Image *image*/);
+            tkFloat fovy /*, const Medium *medium*/, Image *image);
 
         tkFloat generateRay(const CameraSample &sample, Ray *r) const override;
     private:

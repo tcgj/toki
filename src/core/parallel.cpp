@@ -19,38 +19,6 @@ namespace TK {
         return std::max(1u, std::thread::hardware_concurrency());
     }
 
-    void initThreads() {
-        // Set number of threads based on system options
-        tkInt threadCount = getNumCores();
-
-        // Create threads (main thread included)
-        for (tkInt i = 0; i < threadCount - 1; ++i) {
-            threads.push_back(std::thread(workerStart, i + 1));
-        }
-
-        // Set up main thread
-        threadIndex = 0;
-    }
-
-    void cleanupThreads() {
-        if (threads.empty())
-            return;
-
-        // Signal thread shutdown
-        {
-            std::lock_guard<std::mutex> lock(jobListMutex);
-            shutdownThreads = true;
-            jobListCond.notify_all();
-        }
-        for (auto &thread : threads) {
-            thread.join();
-        }
-
-        // Reset variables
-        threads.clear();
-        shutdownThreads = false;
-    }
-
     class ParallelForJob {
     public:
         ParallelForJob(tkI64 loopCount, tkInt batchSize,
@@ -174,5 +142,36 @@ namespace TK {
         jobListCond.notify_all();
         // Main thread starts with execution
         executeJob(job);
+    }
+
+    void initThreads() {
+        // Set number of threads based on system options
+        tkInt threadCount = getNumCores();
+
+        // Create threads (main thread included)
+        for (tkInt i = 0; i < threadCount - 1; ++i) {
+            threads.push_back(std::thread(workerStart, i + 1));
+        }
+
+        // Set up main thread
+        threadIndex = 0;
+    }
+
+    void cleanupThreads() {
+        if (threads.empty()) return;
+
+        // Signal thread shutdown
+        {
+            std::lock_guard<std::mutex> lock(jobListMutex);
+            shutdownThreads = true;
+            jobListCond.notify_all();
+        }
+        for (auto &thread : threads) {
+            thread.join();
+        }
+
+        // Reset variables
+        threads.clear();
+        shutdownThreads = false;
     }
 }  // namespace TK

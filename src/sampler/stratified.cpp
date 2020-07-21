@@ -19,6 +19,7 @@ namespace TK {
                                            TK_ONE_MINUS_EPSILON);
                 samples[curr].y = std::min((y + Random::nextFloat()) * invY,
                                            TK_ONE_MINUS_EPSILON);
+                curr++;
             }
         }
     }

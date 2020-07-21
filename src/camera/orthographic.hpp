@@ -9,7 +9,7 @@ namespace TK {
             const Transform &cameraToWorld, const tkAABBf &screen,
             tkFloat lensRadius,
             tkFloat focalLength /*, const Medium *medium, Image *image*/)
-            : ProjectionCamera(cameraToWorld, orthographic(0, 1), screen, lensRadius, focalLength/*, medium, image*/) {
+            : ProjectionCamera(cameraToWorld, orthographic(0, 1), screen, lensRadius, focalLength/*, medium*/, image) {
             // dx = imageToCamera(tkVec3f(1, 0, 0));
             // dy = imageToCamera(tkVec3f(0, 1, 0));
         }

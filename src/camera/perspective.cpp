@@ -6,10 +6,10 @@ namespace TK {
     PerspectiveCamera::PerspectiveCamera(
         const Transform &cameraToWorld, const tkAABBf screen,
         tkFloat lensRadius, tkFloat focalLength,
-        tkFloat fovy /*, const Medium *medium, Image *image*/)
+        tkFloat fovy /*, const Medium *medium*/, Image *image)
         : ProjectionCamera(cameraToWorld,
                            perspective(fovy, TK_EPSILON, 1000.0f), screen,
-                           lensRadius, focalLength) {
+                           lensRadius, focalLength, image) {
         // dx = imageToCamera(tkVec3f(1, 0, 0));
         // dy = imageToCamera(tkVec3f(0, 1, 0));
     }

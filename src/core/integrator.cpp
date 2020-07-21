@@ -2,19 +2,55 @@
 
 #include "ray.hpp"
 #include "interaction.hpp"
+#include "camera.hpp"
 #include "scattering.hpp"
 #include "spectrum.hpp"
 #include "sampler.hpp"
+#include "parallel.hpp"
+#include "random.hpp"
 
 namespace TK {
     void SamplerIntegrator::render(const Scene &scene) {
         preprocess(scene);
 
-        // implement parallel processing here
-        // iterate through tiles of image in parallel
-        // render each tile of the image
-        // combine output to form image
-        // write image to file
+        // Split image into tiles 16px x 16px wide to process in parallel
+        tkInt tileSize = 16;
+        tkInt numSamplesPerPixel = 32;
+        tkVec2i res = camera->image->resolution;
+        tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
+                         (res.y + tileSize - 1) / tileSize);
+
+        parallelFor2D(numTiles, [&](tkVec2i tile) {
+            // Calculate tile bounds
+            tkInt x0 = tile.x * tileSize;
+            tkInt x1 = std::min(x0 + tileSize, res.x);
+            tkInt y0 = tile.y * tileSize;
+            tkInt y1 = std::min(y0 + tileSize, res.y);
+
+            for (tkInt y = y0; y < y1; ++y) {
+                for (tkInt x = x0; x < x1; ++x) {
+                    tkPoint2i pix(x, y);
+
+                    for (tkInt i = 0; i < numSamplesPerPixel; ++i) {
+                        CameraSample cameraSample;
+                        cameraSample.imgCoord = tkPoint2f(Random::nextFloat() + pix.x,
+                                                          Random::nextFloat() + pix.y);
+
+                        Ray r;
+                        camera->generateRay(cameraSample, &r);
+                        tkSpectrum li;
+                        li = computeLi(scene, r, *sampler);
+
+                        // TODO: Check if radiance is valid
+
+                        camera->image->updatePixelColor(pix, li);
+                    }
+                }
+            }
+
+            std::cout << "Done with tile (" << tile.x << ", " << tile.y << ")" << std::endl;
+        });
+        camera->image->write();
     }
 
     tkSpectrum SamplerIntegrator::computeReflectedLi(const SurfaceInteraction &interaction,
