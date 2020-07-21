@@ -3,6 +3,8 @@
 #include <thread>
 #include <mutex>
 
+#include "math/math.hpp"
+
 namespace TK {
     class ParallelForJob;
     // Parallel global variables

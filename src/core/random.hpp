@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "system/system.hpp"
+#include "system/toki.hpp"
 
 namespace TK {
     class Random {

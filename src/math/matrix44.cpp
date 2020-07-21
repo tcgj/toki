@@ -1,5 +1,7 @@
 #include "matrix44.hpp"
 
+#include "math/math.hpp"
+
 namespace TK {
     Matrix44::Matrix44() {
         data[0]  = 1.0f; data[1]  = 0.0f; data[2]  = 0.0f; data[3]  = 0.0f;

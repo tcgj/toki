@@ -1,5 +1,6 @@
 #include "stratified.hpp"
 
+#include "math/math.hpp"
 #include "core/random.hpp"
 
 namespace TK {

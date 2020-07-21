@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system/system.hpp"
+#include "system/toki.hpp"
 #include "aabb.hpp"
 #include "transform.hpp"
 #include "interaction.hpp"

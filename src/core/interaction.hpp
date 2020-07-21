@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system/system.hpp"
+#include "system/toki.hpp"
 #include "ray.hpp"
 #include "region/primitive.hpp"
 

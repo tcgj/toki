@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "system/system.hpp"
+#include "system/toki.hpp"
 
 namespace TK {
     tkUInt getNumCores();

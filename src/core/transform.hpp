@@ -1,6 +1,7 @@
 #pragma once
 
-#include "system/system.hpp"
+#include "system/toki.hpp"
+#include "math/math.hpp"
 #include "ray.hpp"
 
 namespace TK {
