@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 namespace TK {
     template <typename T> class Vec2;
@@ -30,6 +31,7 @@ namespace TK {
     typedef char tkChar;
     typedef unsigned int tkUInt;
     typedef int tkInt;
+    typedef int64_t tkI64;
 #ifdef TK_USE_DOUBLE
     typedef double tkFloat;
 #else
