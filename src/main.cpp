@@ -1,5 +1,5 @@
-#include "system/system.hpp"
+#include "system/toki.hpp"
 
-int main() {
-    return 0;
+int main(int argc, char *argv[]) {
+    return TK::startToki(argc, argv);
 }

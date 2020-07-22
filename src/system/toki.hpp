@@ -12,8 +12,5 @@
 #include "types.hpp"
 
 namespace TK {
-    struct Options {
-        tkInt threadCount = 0;
-        std::string outfile;
-    };
-} // namespace TK
+    tkInt startToki(tkInt argc, tkChar *argv[]);
+}  // namespace TK

@@ -1,6 +1,6 @@
 #include "image.hpp"
 
-#include "system/io/imageio.hpp"
+#include "system/imageio.hpp"
 #include "spectrum.hpp"
 
 namespace TK {
