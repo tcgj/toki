@@ -95,7 +95,7 @@ namespace TK {
                    0, 0, 0, 1);
         return Transform(m, transpose(m));
     }
-    // View Transform
+    // View Transform (Camera To World)
     Transform lookAt(const tkPoint3f &eye, const tkPoint3f &at, const tkVec3f &up) {
         Matrix44 viewMatrix;
         tkVec3f eyeVec = tkVec3f(eye);
@@ -115,7 +115,7 @@ namespace TK {
         viewMatrix.data[10] = camZ.z;
         viewMatrix.data[11] = -dot(camZ, eyeVec);
 
-        return Transform(viewMatrix, inverse(viewMatrix));
+        return Transform(inverse(viewMatrix), viewMatrix);
     }
     // Projection Transform
     Transform orthographic(tkFloat near, tkFloat far) {
