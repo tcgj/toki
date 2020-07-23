@@ -13,5 +13,4 @@ namespace TK {
     void tokiConfigure(const Options &options);
     void tokiRun();
     void tokiShutdown();
-    void tokiParse(const std::string &filename);
 } // namespace TK
