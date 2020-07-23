@@ -1,6 +1,6 @@
 #include "mesh.hpp"
 
-#include "transform.hpp"
+#include "core/transform.hpp"
 
 namespace TK {
     // mesh is initialized in world space to eliminate need for transformation
