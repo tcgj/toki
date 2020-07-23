@@ -39,8 +39,8 @@ namespace TK {
             return nextIter >= iterCount && activeWorkers == 0;
         }
 
-        std::function<void(tkI64)> func1D;
-        std::function<void(tkVec2i)> func2D;
+        std::function<void(tkI64)> func1D = nullptr;
+        std::function<void(tkVec2i)> func2D = nullptr;
         tkI64 iterCount;
         tkInt xCount = -1;
         tkInt batchSize;
@@ -52,26 +52,23 @@ namespace TK {
     // Job execution function
     void executeJob(ParallelForJob &job) {
         std::unique_lock<std::mutex> lock(jobListMutex);
-        while (!job.done()) {
-            job.activeWorkers++;
 
-            tkI64 start = job.nextIter;
-            job.nextIter = std::min(start + job.batchSize, job.iterCount);
-            if (job.nextIter == job.iterCount)
-                jobList = job.nextJob;
+        tkI64 start = job.nextIter;
+        job.nextIter = std::min(start + job.batchSize, job.iterCount);
+        if (job.nextIter == job.iterCount)
+            jobList = job.nextJob;
 
-            // Start on job and allow other threads to execute as well
-            lock.unlock();
-            for (tkI64 i = start; i < job.nextIter; ++i) {
-                if (job.func1D != nullptr)
-                    job.func1D(i);
-                else
-                    job.func2D(tkVec2i(i % job.xCount, i / job.xCount));
-            }
-            lock.lock();
-
-            job.activeWorkers--;
+        // Start on job and allow other threads to execute as well
+        job.activeWorkers++;
+        lock.unlock();
+        for (tkI64 i = start; i < job.nextIter; ++i) {
+            if (job.func1D != nullptr)
+                job.func1D(i);
+            else
+                job.func2D(tkVec2i(i % job.xCount, i / job.xCount));
         }
+        lock.lock();
+        job.activeWorkers--;
     }
 
     // Worker thread initialization function
@@ -81,10 +78,13 @@ namespace TK {
         while (!shutdownThreads) {
             if (jobList == nullptr)
                 jobListCond.wait(lock);
-
-            ParallelForJob &job = *jobList;
-            executeJob(job);
-            jobListCond.notify_all();
+            else {
+                ParallelForJob &job = *jobList;
+                lock.unlock();
+                executeJob(job);
+                lock.lock();
+                jobListCond.notify_all();
+            }
         }
     }
 
@@ -140,18 +140,19 @@ namespace TK {
         }
 
         // Notify worker threads to execute job
-        std::unique_lock<std::mutex> lock(jobListMutex);
         jobListCond.notify_all();
         // Main thread starts with execution
-        executeJob(job);
+        while (!job.done()) {
+            executeJob(job);
+        }
     }
 
-    void initThreads() {
+    void initThreads(tkInt threadCount) {
         // Set number of threads based on system options
-        tkInt threadCount = getNumCores();
+        tkInt tc = threadCount == 0 ? getNumCores() : threadCount;
 
         // Create threads (main thread included)
-        for (tkInt i = 0; i < threadCount - 1; ++i) {
+        for (tkInt i = 0; i < tc - 1; ++i) {
             threads.push_back(std::thread(workerStart, i + 1));
         }
 
@@ -160,20 +161,21 @@ namespace TK {
     }
 
     void cleanupThreads() {
-        if (threads.empty()) return;
-
+        if (threads.empty())
+            return;
         // Signal thread shutdown
         {
             std::lock_guard<std::mutex> lock(jobListMutex);
             shutdownThreads = true;
             jobListCond.notify_all();
         }
+
         for (auto &thread : threads) {
             thread.join();
         }
 
         // Reset variables
-        threads.clear();
+        threads.erase(threads.begin(), threads.end());
         shutdownThreads = false;
     }
 }  // namespace TK

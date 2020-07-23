@@ -6,7 +6,7 @@
 
 namespace TK {
     tkUInt getNumCores();
-    void initThreads();
+    void initThreads(tkInt threadCount);
     void cleanupThreads();
     void parallelFor(tkI64 loopCount, tkInt batchSize,
                      std::function<void(tkI64)> func);

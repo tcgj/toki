@@ -47,8 +47,6 @@ namespace TK {
                     }
                 }
             }
-
-            std::cout << "Done with tile (" << tile.x << ", " << tile.y << ")" << std::endl;
         });
         camera->image->write();
     }
