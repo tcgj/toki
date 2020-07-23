@@ -15,8 +15,8 @@ namespace TK {
 
         const Spectrum &operator+() const;
         Spectrum operator-() const;
-        tkUInt operator[](tkInt i) const;
-        tkUInt &operator[](tkInt i);
+        tkFloat operator[](tkInt i) const;
+        tkFloat &operator[](tkInt i);
 
         Spectrum operator+(const Spectrum &s) const;
         Spectrum operator-(const Spectrum &s) const;
@@ -75,12 +75,12 @@ namespace TK {
         return ret;
     }
     template <tkUInt nC>
-    inline tkUInt Spectrum<nC>::operator[](tkInt i) const {
+    inline tkFloat Spectrum<nC>::operator[](tkInt i) const {
         tkAssert(i >= 0 && i < nC);
         return c[i];
     }
     template <tkUInt nC>
-    inline tkUInt &Spectrum<nC>::operator[](tkInt i) {
+    inline tkFloat &Spectrum<nC>::operator[](tkInt i) {
         tkAssert(i >= 0 && i < nC);
         return c[i];
     }
