@@ -39,7 +39,7 @@ namespace TK {
             imageToScreen = inverse(
                 scale(image->resolution.x / (screen.maxPt.x - screen.minPt.x),
                       image->resolution.y / (screen.maxPt.y - screen.minPt.y), 1) *
-                translate(tkVec3f(-screen.minPt.x, -screen.maxPt.y, 0)));
+                translate(tkVec3f(-screen.minPt.x, -screen.minPt.y, 0)));
             imageToCamera = inverse(cameraToScreen) * imageToScreen;
         }
 
