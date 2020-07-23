@@ -1,30 +1,34 @@
 #include "toki.hpp"
 
 #include "api.hpp"
+#include "filestream.hpp"
 
 namespace TK {
     void printUsage(const char *message = nullptr) {
         if (message != nullptr)
-            fprintf(stderr, "toki: ");
+            fprintf(stderr, "toki: %s\n", message);
         exit(message == nullptr ? 0 : 1);
     }
 
     tkInt startToki(tkInt argc, tkChar *argv[]) {
         TK::Options options;
+        std::string inputFile;
         for (int i = 1; i < argc; ++i) {
             char *str = argv[i];
-            if (strcmp(str, "-nt")) {
+            if (strcmp(str, "-nt") == 0) {
                 i++;
                 if (i == argc)
                     printUsage("missing numerical value after -nt");
                 options.threadCount = atoi(argv[i]);
-            } else if (strcmp(str, "-o")) {
+            } else if (strcmp(str, "-o") == 0) {
                 i++;
                 if (i == argc)
                     printUsage("missing filename after -o");
                 options.outFile = argv[i];
+            } else if (strcmp(str, "-f")) {
+                options.fastRender = true;
             } else {
-                options.inFile = argv[i];
+                inputFile = argv[i];
             }
         }
 
@@ -35,6 +39,7 @@ namespace TK {
 #endif
 
         // Init
+        FileStream stream(inputFile, FSM_IN);
         tokiConfigure(options);
 
         // Run

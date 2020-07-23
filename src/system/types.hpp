@@ -26,6 +26,8 @@ namespace TK {
     class Camera;
     class Scene;
     class Sampler;
+    class IStream;
+    class OStream;
 
     typedef unsigned char tkUChar;
     typedef char tkChar;
