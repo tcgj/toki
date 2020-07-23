@@ -61,8 +61,10 @@ namespace TK {
         tkVec2f sample;
         sampler.sample2D(&sample, 1, 1);
         tkSpectrum f = interaction.scattering->sample(wo, &wi, sample, &pdf, type);
-        Ray reflectedRay = interaction.spawnRayTo(wi);
         tkFloat cosTheta = std::abs(dot(interaction.n, wi));
+        if (pdf == 0 || f.isBlack() || cosTheta == 0)
+            return 0;
+        Ray reflectedRay = interaction.spawnRayTo(wi);
         return f * computeLi(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
