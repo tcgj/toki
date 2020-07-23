@@ -15,7 +15,7 @@ namespace TK {
     public:
         FileStream() = default;
         FileStream(const std::string filename, FileStreamMode fsm)
-            : file(std::fstream(filename, fsm)), reading(fsm & FileStreamMode::FSM_IN) {
+            : file(std::fstream(filename, fsm)), reading(fsm & FSM_IN) {
             // TODO: Setup a proper check for fail
             tkAssert(!file.is_open());
         }
@@ -86,6 +86,7 @@ namespace TK {
             if (!reading)
                 switchIO();
             file.read(data, size);
+            return *this;
         }
 
         // OStream operators
