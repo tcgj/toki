@@ -129,7 +129,7 @@ namespace TK {
         SAHBucket buckets[bucketCount];
         for (tkUInt i = start; i < end; ++i) {
             tkUInt index = bucketCount * centroidBB.offset(primData[i].centroid)[axis];
-            index = clamp(index, 0, bucketCount);
+            index = clamp(index, 0, bucketCount - 1);
             buckets[index].count++;
             buckets[index].bb = bbUnion(buckets[index].bb, primData[i].bb);
         }
