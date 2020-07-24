@@ -24,9 +24,9 @@ namespace TK {
         for (tkUInt y = 0; y < resolution.y; ++y) {
             for (tkUInt x = 0; x < resolution.x; ++x) {
                 tkVec3f color = getPixelColor(tkPoint2i(x, y));
-                imageData[offset] = static_cast<tkUChar>(color.r);
-                imageData[offset + 1] = static_cast<tkUChar>(color.g);
-                imageData[offset + 2] = static_cast<tkUChar>(color.b);
+                imageData[offset] = color.r * 255;
+                imageData[offset + 1] = color.g * 255;
+                imageData[offset + 2] = color.b * 255;
 
                 offset += 3;
             }
