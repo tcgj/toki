@@ -26,26 +26,21 @@ namespace TK {
 
     class ProjectionCamera : public Camera {
     public:
-        ProjectionCamera(const Transform &cameraToWorld,
-                         const Transform &cameraToScreen, tkAABBf screen,
+        ProjectionCamera(const Transform &cameraToWorld, const Transform &cameraToNDC,
                          tkFloat lensRadius, tkFloat focalLength
                          /*, const Medium *medium*/, Image *image)
             : Camera(cameraToWorld/*, medium*/, image),
-              cameraToScreen(cameraToScreen),
               lensRadius(lensRadius),
               focalLength(focalLength) {
             // image space has boundaries from (0, 0) to (res.x, res.y)
-            // whereas screen space is not scaled to image resolution, and does not bound from origin
-            imageToScreen = inverse(
-                scale(image->resolution.x / (screen.maxPt.x - screen.minPt.x),
-                      image->resolution.y / (screen.maxPt.y - screen.minPt.y), 1) *
-                translate(tkVec3f(-screen.minPt.x, -screen.minPt.y, 0)));
-            imageToCamera = inverse(cameraToScreen) * imageToScreen;
+            Transform imageToNDC = translate(tkVec3f(-1, -1, 0)) *
+                                    scale((tkFloat)2 / image->resolution.x,
+                                         (tkFloat)2 / image->resolution.y, 1);
+            imageToCamera = inverse(cameraToNDC) * imageToNDC;
         }
 
-    protected:
-        Transform imageToCamera, cameraToScreen;
-        Transform imageToScreen;
+    // protected:
+        Transform imageToCamera;
         tkFloat lensRadius, focalLength;
     };
 } // namespace TK
