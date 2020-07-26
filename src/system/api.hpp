@@ -8,7 +8,7 @@ namespace TK {
     struct Options {
         // Command-line options
         std::string outFile;
-        tkInt threadCount = 0;
+        tkInt threadCount = -1;
         bool fastRender = false;
 
         // File-specific options

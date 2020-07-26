@@ -10,7 +10,7 @@ namespace TK {
     // Parallel global variables
     static std::vector<std::thread> threads;
     static bool shutdownThreads = false;
-    static ParallelForJob *jobList = nullptr;
+    static std::shared_ptr<ParallelForJob> jobList = nullptr;
     static std::mutex jobListMutex;
     static std::condition_variable jobListCond;
 
@@ -20,6 +20,12 @@ namespace TK {
     tkUInt getNumCores() {
         return std::max(1u, std::thread::hardware_concurrency());
     }
+
+    struct JobFrag {
+        std::shared_ptr<ParallelForJob> job;
+        tkI64 start;
+        tkI64 end;
+    };
 
     class ParallelForJob {
     public:
@@ -46,46 +52,57 @@ namespace TK {
         tkInt batchSize;
         tkI64 nextIter = 0;
         tkInt activeWorkers = 0;
-        ParallelForJob *nextJob = nullptr;
+        std::shared_ptr<ParallelForJob> nextJob = nullptr;
     };
 
-    // Job execution function
-    void executeJob(ParallelForJob &job) {
-        std::unique_lock<std::mutex> lock(jobListMutex);
-
-        tkI64 start = job.nextIter;
-        job.nextIter = std::min(start + job.batchSize, job.iterCount);
-        if (job.nextIter == job.iterCount)
+    bool preprocessJob(JobFrag *jobFrag) {
+        ParallelForJob &job = *jobList;
+        if (job.nextIter == job.iterCount) {
             jobList = job.nextJob;
-
-        // Start on job and allow other threads to execute as well
-        job.activeWorkers++;
-        lock.unlock();
-        for (tkI64 i = start; i < job.nextIter; ++i) {
-            if (job.func1D != nullptr)
-                job.func1D(i);
-            else
-                job.func2D(tkVec2i(i % job.xCount, i / job.xCount));
+            jobListCond.notify_all();
+            return false;
         }
-        lock.lock();
-        job.activeWorkers--;
+
+        jobFrag->start = job.nextIter;
+        job.nextIter = std::min(jobFrag->start + job.batchSize, job.iterCount);
+        jobFrag->end = job.nextIter;
+        jobFrag->job = jobList;
+        return true;
+    }
+
+    // Job execution function
+    void executeJobFrag(const JobFrag &jobFrag) {
+        ParallelForJob &job = *(jobFrag.job);
+        if (job.func1D != nullptr) {
+            for (tkI64 i = jobFrag.start; i < jobFrag.end; ++i) {
+                job.func1D(i);
+            }
+        } else {
+            for (tkI64 i = jobFrag.start; i < jobFrag.end; ++i) {
+                job.func2D(tkVec2i(i % job.xCount, i / job.xCount));
+            }
+        }
     }
 
     // Worker thread initialization function
     void workerStart(tkInt index) {
         threadIndex = index;
         std::unique_lock<std::mutex> lock(jobListMutex);
+
+        JobFrag jobFrag;
         while (!shutdownThreads) {
             if (jobList == nullptr)
                 jobListCond.wait(lock);
-            else {
-                ParallelForJob &job = *jobList;
+            else if (preprocessJob(&jobFrag)) {
+                // Job can be worked on
+                jobFrag.job->activeWorkers++;
                 lock.unlock();
-                executeJob(job);
+                executeJobFrag(jobFrag);
                 lock.lock();
-                jobListCond.notify_all();
+                jobFrag.job->activeWorkers--;
             }
         }
+        std::cout << "Thread: " << threadIndex << " finished" << std::endl;
     }
 
     // Parallel for loop initialization function
@@ -103,18 +120,18 @@ namespace TK {
         }
 
         // Add job to list
-        ParallelForJob job(loopCount, batchSize, func);
+        std::shared_ptr<ParallelForJob> job = std::make_shared<ParallelForJob>(loopCount, batchSize, func);
         {
             std::lock_guard<std::mutex> lock(jobListMutex);
-            job.nextJob = jobList;
-            jobList = &job;
+            job->nextJob = jobList;
+            jobList = job;
         }
 
         // Notify worker threads to execute job
-        std::unique_lock<std::mutex> lock(jobListMutex);
         jobListCond.notify_all();
-        // Main thread starts with execution
-        executeJob(job);
+
+        // Wait for job
+        while (!job->done());
     }
 
     void parallelFor2D(const tkVec2i &loopCount, std::function<void(tkVec2i)> func) {
@@ -124,7 +141,7 @@ namespace TK {
         // Running on single thread, use standard for loop
         if (threads.empty() || loopCount.x * loopCount.y  <= 1) {
             for (tkInt y = 0; y < loopCount.y; ++y) {
-                for (tkInt x = 0; x < loopCount.x; ++y) {
+                for (tkInt x = 0; x < loopCount.x; ++x) {
                     func(tkVec2i(x, y));
                 }
             }
@@ -132,27 +149,26 @@ namespace TK {
         }
 
         // Add job to list
-        ParallelForJob job(loopCount, func);
+        std::shared_ptr<ParallelForJob> job = std::make_shared<ParallelForJob>(loopCount, func);
         {
             std::lock_guard<std::mutex> lock(jobListMutex);
-            job.nextJob = jobList;
-            jobList = &job;
+            job->nextJob = jobList;
+            jobList = job;
         }
 
         // Notify worker threads to execute job
         jobListCond.notify_all();
-        // Main thread starts with execution
-        while (!job.done()) {
-            executeJob(job);
-        }
+
+        // Wait for job
+        while (!job->done());
     }
 
     void initThreads(tkInt threadCount) {
         // Set number of threads based on system options
-        tkInt tc = threadCount == 0 ? getNumCores() : threadCount;
+        tkInt tc = threadCount < 0 ? getNumCores() : threadCount;
 
-        // Create threads (main thread included)
-        for (tkInt i = 0; i < tc - 1; ++i) {
+        // Create threads (main thread excluded)
+        for (tkInt i = 0; i < tc; ++i) {
             threads.push_back(std::thread(workerStart, i + 1));
         }
 
