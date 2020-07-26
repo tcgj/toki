@@ -30,13 +30,12 @@ namespace TK {
         interaction->n = invertNormals ? -normal : normal;
         interaction->wo = -r.d;
         interaction->shape = this;
-
         return true;
     }
 
     bool Sphere::hasIntersect(const Ray &r) const {
         Ray oRay = objectToWorld->applyInverse(r);
-        tkVec3f r0 = oRay.o - tkPoint3f::zero;
+        tkVec3f r0 = tkVec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
         tkFloat c = dot(r0, r0) - radius * radius;

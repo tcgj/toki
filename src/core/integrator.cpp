@@ -42,7 +42,6 @@ namespace TK {
                         li = computeLi(scene, r, *sampler);
 
                         // TODO: Check if radiance is valid
-
                         camera->image->updatePixelColor(pix, li);
                     }
                 }

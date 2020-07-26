@@ -102,7 +102,6 @@ namespace TK {
                 jobFrag.job->activeWorkers--;
             }
         }
-        std::cout << "Thread: " << threadIndex << " finished" << std::endl;
     }
 
     // Parallel for loop initialization function

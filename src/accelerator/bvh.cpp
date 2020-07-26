@@ -4,8 +4,8 @@
 #include "region/primitive.hpp"
 
 namespace TK {
-    constexpr tkUInt maxNodeCount = 64;
-    constexpr tkUInt bucketCount = 12;
+    static constexpr tkUInt maxNodeCount = 64;
+    static constexpr tkUInt bucketCount = 12;
     struct SAHBucket {
         tkUInt count = 0;
         tkAABBf bb;

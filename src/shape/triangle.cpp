@@ -85,10 +85,12 @@ namespace TK {
         tkVec3f q = cross(t, e1);
 
         tkFloat v = dot(r.d, q) * invDet;
-        if (v < 0.0 || u + v > 1.0) return false;
+        if (v < 0.0 || u + v > 1.0)
+            return false;
 
         tkFloat tempT = dot(e2, q) * invDet;
-        if (tempT < TK_EPSILON || tempT > r.tMax) return false;
+        if (tempT < TK_EPSILON || tempT > r.tMax)
+            return false;
 
         return true;
     }

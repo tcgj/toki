@@ -24,7 +24,7 @@ namespace TK {
         *wi = -dir;
         *pdf = 1;
         tkPoint3f lightRef = interaction.p - 2 * sceneRadius * dir;
-        *occCheck = OcclusionChecker(interaction, lightRef);
+        *occCheck = OcclusionChecker(interaction, Interaction(lightRef));
 
         return radiance;
     }

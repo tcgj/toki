@@ -9,6 +9,10 @@ namespace TK {
         pixels = std::make_unique<tkSpectrum[]>(res.x * res.y);
     }
 
+    tkFloat Image::getAspectRatio() const {
+        return (tkFloat)resolution.x / resolution.y;
+    }
+
     tkVec3f Image::getPixelColor(const tkPoint2i &imgCoord) const {
         return pixels[imgCoord.y * resolution.x + imgCoord.x].toRGB();
     }
