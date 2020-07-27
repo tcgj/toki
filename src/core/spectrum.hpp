@@ -35,6 +35,8 @@ namespace TK {
         bool operator==(const Spectrum &s) const;
         bool operator!=(const Spectrum &s) const;
 
+        bool isBlack() const;
+
         friend Spectrum operator*(tkFloat f, const Spectrum &s) {
             Spectrum ret = s;
             for (tkUInt i = 0; i < numCoeff; ++i)
@@ -42,12 +44,34 @@ namespace TK {
 
             return ret;
         }
+        inline Spectrum sqrt(const Spectrum &s) {
+            Spectrum ret;
+            for (tkUInt i = 0; i < numCoeff; ++i)
+                ret.c[i] = std::sqrt(s.c[i]);
 
-        bool isBlack() const;
-        friend Spectrum sqrt(const Spectrum &s);
-        friend Spectrum pow(const Spectrum &s, tkFloat p);
-        friend Spectrum exp(const Spectrum &s);
-        friend Spectrum clamp(const Spectrum &s, tkFloat lo, tkFloat hi);
+            return ret;
+        }
+        friend Spectrum pow(const Spectrum &s, tkFloat p) {
+            Spectrum ret;
+            for (tkUInt i = 0; i < numCoeff; ++i)
+                ret.c[i] = std::pow(s.c[i], p);
+
+            return ret;
+        }
+        friend Spectrum exp(const Spectrum &s) {
+            Spectrum ret;
+            for (tkUInt i = 0; i < numCoeff; ++i)
+                ret.c[i] = std::exp(s.c[i]);
+
+            return ret;
+        }
+        friend Spectrum clamp(const Spectrum &s, tkFloat lo = 0, tkFloat hi = 1) {
+            Spectrum ret;
+            for (tkUInt i = 0; i < numCoeff; ++i)
+                ret.c[i] = clamp(s.c[i], lo, hi);
+
+            return ret;
+        }
 
     protected:
         tkFloat c[numCoeff];
@@ -209,39 +233,6 @@ namespace TK {
                 return false;
 
         return true;
-    }
-    template <tkUInt nC>
-    inline Spectrum<nC> sqrt(const Spectrum<nC> &s) {
-        Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i)
-            ret.c[i] = std::sqrt(s.c[i]);
-
-        return ret;
-    }
-    template <tkUInt nC>
-    inline Spectrum<nC> pow(const Spectrum<nC> &s, tkFloat p) {
-        Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i)
-            ret.c[i] = std::pow(s.c[i], p);
-
-        return ret;
-    }
-    template <tkUInt nC>
-    inline Spectrum<nC> exp(const Spectrum<nC> &s) {
-        Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i)
-            ret.c[i] = std::exp(s.c[i]);
-
-        return ret;
-    }
-
-    template <tkUInt nC>
-    inline Spectrum<nC> clamp(const Spectrum<nC> &s, tkFloat lo = 0, tkFloat hi = TK_INFINITY) {
-        Spectrum<nC> ret;
-        for (tkUInt i = 0; i < nC; ++i)
-            ret.c[i] = clamp(s.c[i], lo, hi);
-
-        return ret;
     }
 
 
