@@ -15,12 +15,12 @@ namespace TK {
 
         // Split image into tiles 16px x 16px wide to process in parallel
         tkInt tileSize = 16;
-        tkInt numSamplesPerPixel = 32;
+        tkInt numSamplesPerPixel = 1;
         tkVec2i res = camera->image->resolution;
         tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
                          (res.y + tileSize - 1) / tileSize);
 
-        parallelFor2D(numTiles, [&](tkVec2i tile) {
+        parallelFor2D(numTiles, 1, [&](tkVec2i tile) {
             // Calculate tile bounds
             tkInt x0 = tile.x * tileSize;
             tkInt x1 = std::min(x0 + tileSize, res.x);
@@ -31,19 +31,24 @@ namespace TK {
                 for (tkInt x = x0; x < x1; ++x) {
                     tkPoint2i pix(x, y);
 
+                    tkSpectrum li;
                     for (tkInt i = 0; i < numSamplesPerPixel; ++i) {
                         CameraSample cameraSample;
                         cameraSample.imgCoord = tkPoint2f(Random::nextFloat() + pix.x,
                                                           Random::nextFloat() + pix.y);
 
-                        Ray r;
-                        camera->generateRay(cameraSample, &r);
-                        tkSpectrum li;
-                        li = computeLi(scene, r, *sampler);
+                        Ray ray;
+                        camera->generateRay(cameraSample, &ray);
+                        li += computeLi(scene, ray, *sampler);
 
                         // TODO: Check if radiance is valid
-                        camera->image->updatePixelColor(pix, li);
                     }
+
+                    li /= numSamplesPerPixel;
+                    li = clamp(li);
+                    camera->image->updatePixelColor(pix, li);
+                    // tkVec3f col = camera->image->getPixelColor(pix);
+                    // printf("Pixel [%d, %d]: [%f, %f, %f]\n", pix.x, pix.y, col.x, col.y, col.z);
                 }
             }
         });

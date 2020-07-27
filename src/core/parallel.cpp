@@ -34,11 +34,11 @@ namespace TK {
             : func1D(std::move(func)),
               iterCount(loopCount),
               batchSize(batchSize) {}
-        ParallelForJob(const tkVec2i &loopCount,
+        ParallelForJob(const tkVec2i &loopCount, tkInt batchSize,
                     const std::function<void(tkVec2i)> &func)
             : func2D(std::move(func)),
               iterCount(loopCount.x * loopCount.y),
-              batchSize(1),
+              batchSize(batchSize),
               xCount(loopCount.x) {}
 
         bool done() const {
@@ -133,7 +133,8 @@ namespace TK {
         while (!job->done());
     }
 
-    void parallelFor2D(const tkVec2i &loopCount, std::function<void(tkVec2i)> func) {
+    void parallelFor2D(const tkVec2i &loopCount, tkInt batchSize,
+                       std::function<void(tkVec2i)> func) {
         if (func == nullptr)
             return;
 
@@ -148,7 +149,7 @@ namespace TK {
         }
 
         // Add job to list
-        std::shared_ptr<ParallelForJob> job = std::make_shared<ParallelForJob>(loopCount, func);
+        std::shared_ptr<ParallelForJob> job = std::make_shared<ParallelForJob>(loopCount, batchSize, func);
         {
             std::lock_guard<std::mutex> lock(jobListMutex);
             job->nextJob = jobList;
