@@ -3,7 +3,8 @@
 #include <string>
 
 #include "system/toki.hpp"
-#include "aabb.hpp"
+#include "math/math.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     class Image {
@@ -14,11 +15,11 @@ namespace TK {
         tkVec3f getPixelColor(const tkPoint2i &imgCoord) const;
         void updatePixelColor(const tkPoint2i &imgCoord,
                               const tkSpectrum &colorContribution);
-        void write();
+        virtual void write() = 0;
 
         tkVec2i resolution;
         std::string filename;
-    private:
+    protected:
         std::unique_ptr<tkSpectrum[]> pixels;
     };
 } // namespace TK

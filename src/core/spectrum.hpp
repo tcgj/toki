@@ -65,13 +65,6 @@ namespace TK {
 
             return ret;
         }
-        friend Spectrum clamp(const Spectrum &s, tkFloat lo = 0, tkFloat hi = 1) {
-            Spectrum ret;
-            for (tkUInt i = 0; i < numCoeff; ++i)
-                ret.c[i] = clamp(s.c[i], lo, hi);
-
-            return ret;
-        }
 
     protected:
         tkFloat c[numCoeff];
