@@ -45,7 +45,6 @@ namespace TK {
                     }
 
                     li /= numSamplesPerPixel;
-                    li = clamp(li);
                     camera->image->updatePixelColor(pix, li);
                     // tkVec3f col = camera->image->getPixelColor(pix);
                     // printf("Pixel [%d, %d]: [%f, %f, %f]\n", pix.x, pix.y, col.x, col.y, col.z);
