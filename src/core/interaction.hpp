@@ -13,7 +13,7 @@ namespace TK {
         virtual ~Interaction() = default;
 
         Ray spawnRayTo(const tkVec3f &d) const;
-        Ray spawnRayTo(const Interaction &interaction) const;
+        Ray spawnRayTo(const Interaction &ref) const;
 
         tkPoint3f p;
         tkVec3f n;
@@ -35,8 +35,8 @@ namespace TK {
         return Ray(o, d);
     }
 
-    inline Ray Interaction::spawnRayTo(const Interaction &interaction) const {
-        return spawnRayTo(interaction.p - p);
+    inline Ray Interaction::spawnRayTo(const Interaction &ref) const {
+        return spawnRayTo(ref.p - p);
     }
 
     inline void SurfaceInteraction::computeScattering(Scattering *s) {

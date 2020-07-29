@@ -12,9 +12,8 @@ namespace TK {
               dir(normalize(lightToWorld(tkVec3f::right))) {}
 
         void preprocess(const Scene &scene);
-        bool isDelta() const;
         tkSpectrum power() const;
-        tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
+        tkSpectrum sample(const Interaction &ref, tkVec3f *wi,
                           tkFloat *pdf, OcclusionChecker *occCheck) const;
 
     private:

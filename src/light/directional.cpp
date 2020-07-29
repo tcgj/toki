@@ -8,23 +8,19 @@ namespace TK {
         scene.worldBoundingBox().boundingSphere(&sceneCenter, &sceneRadius);
     }
 
-    bool DirectionalLight::isDelta() const {
-        return true;
-    }
-
     tkSpectrum DirectionalLight::power() const {
         // Overestimate of the power received by the scene
         // using a projected disk perpendicular to light direction
         return radiance * TK_PI * sceneRadius * sceneRadius;
     }
 
-    tkSpectrum DirectionalLight::sample(const Interaction &interaction,
+    tkSpectrum DirectionalLight::sample(const Interaction &ref,
                                         tkVec3f *wi, tkFloat *pdf,
                                         OcclusionChecker *occCheck) const {
         *wi = -dir;
         *pdf = 1;
-        tkPoint3f lightRef = interaction.p - 2 * sceneRadius * dir;
-        *occCheck = OcclusionChecker(interaction, Interaction(lightRef));
+        tkPoint3f lightRef = ref.p - 2 * sceneRadius * dir;
+        *occCheck = OcclusionChecker(ref, Interaction(lightRef));
 
         return radiance;
     }

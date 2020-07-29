@@ -3,22 +3,18 @@
 #include "core/interaction.hpp"
 
 namespace TK {
-    bool PointLight::isDelta() const {
-        return true;
-    }
-
     tkSpectrum PointLight::power() const {
         return 4 * TK_PI * intensity;
     }
 
-    tkSpectrum PointLight::sample(const Interaction &interaction, tkVec3f *wi,
+    tkSpectrum PointLight::sample(const Interaction &ref, tkVec3f *wi,
                                   tkFloat *pdf, OcclusionChecker *occCheck) const {
         // Manually calculate normalized direction wi to reuse invSqrLen
-        tkVec3f dir = pos - interaction.p;
+        tkVec3f dir = pos - ref.p;
         tkFloat invSqrLen = 1 / dir.squaredMagnitude();
         *wi = dir * std::sqrt(invSqrLen);
         *pdf = 1;
-        *occCheck = OcclusionChecker(interaction, Interaction(pos));
+        *occCheck = OcclusionChecker(ref, Interaction(pos));
 
         return intensity * invSqrLen;
     }

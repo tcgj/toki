@@ -29,12 +29,15 @@ namespace TK {
         virtual bool isDelta() const {
             // Whether the light source is described by a delta distribution,
             // positional wise or directional-wise
-            return false;
+            return true;
         }
         virtual tkSpectrum power() const = 0;
-        virtual tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
+        virtual tkSpectrum computeLe(const SurfaceInteraction &interaction, const tkVec3f &w) const {
+            return 0;
+        };
+        virtual tkSpectrum sample(const Interaction &ref, tkVec3f *wi,
                                   tkFloat *pdf, OcclusionChecker *occCheck) const = 0;
-        virtual tkFloat getPdf(const Interaction &interaction, const tkVec3f &wi) const {
+        virtual tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const {
             return 0;
         }
 

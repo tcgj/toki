@@ -13,9 +13,8 @@ namespace TK {
             pos = tkPoint3f(mat.data[3], mat.data[7], mat.data[11]);
         }
 
-        bool isDelta() const;
         tkSpectrum power() const;
-        tkSpectrum sample(const Interaction &interaction, tkVec3f *wi,
+        tkSpectrum sample(const Interaction &ref, tkVec3f *wi,
                           tkFloat *pdf, OcclusionChecker *occCheck) const;
 
     private:
