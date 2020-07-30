@@ -10,8 +10,8 @@ namespace TK {
     }
 
     tkSpectrum AreaLight::computeLe(const SurfaceInteraction &interaction,
-                                    const tkVec3f &w) const {
-        if (dot(interaction.n, w) <= 0)
+                                    const tkVec3f &wi) const {
+        if (dot(interaction.n, wi) <= 0)
             return 0;
 
         return radiance;

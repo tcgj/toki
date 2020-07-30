@@ -14,7 +14,7 @@ namespace TK {
 
         bool isDelta() const override;
         tkSpectrum power() const override;
-        tkSpectrum computeLe(const SurfaceInteraction &interaction, const tkVec3f &w) const override;
+        tkSpectrum computeLe(const SurfaceInteraction &interaction, const tkVec3f &wi) const override;
         tkSpectrum sample(const Interaction &ref, tkVec3f *wi, tkVec2f &samp,
                           tkFloat *pdf, OcclusionChecker *occCheck) const override;
         tkFloat getPdf(const Interaction &ref,
