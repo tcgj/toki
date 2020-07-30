@@ -10,8 +10,8 @@ namespace TK {
     }
 
     tkSpectrum AreaLight::computeLe(const SurfaceInteraction &interaction,
-                                    const tkVec3f &wi) const {
-        if (dot(interaction.n, wi) <= 0)
+                                    const tkVec3f &wo) const {
+        if (dot(interaction.n, wo) <= 0)
             return 0;
 
         return radiance;
@@ -23,7 +23,8 @@ namespace TK {
         SurfaceInteraction samplePt = shape->sample(ref, samp, pdf);
         *wi = -samplePt.wo;
         *occCheck = OcclusionChecker(ref, samplePt);
-        return radiance;
+
+        return computeLe(samplePt, samplePt.wo);
     }
 
     tkFloat AreaLight::getPdf(const Interaction &ref, const tkVec3f &wi) const {

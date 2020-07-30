@@ -15,8 +15,8 @@
 #define TK_PIOVER2 1.57079632679
 #define TK_PIOVER4 0.78539816339
 
-#define TK_EPSILON 0.00001
-#define TK_ONE_MINUS_EPSILON (tkFloat)0x1.fffffp-1
+#define TK_EPSILON static_cast<tkFloat>(0.00001F)
+#define TK_ONE_MINUS_EPSILON 1 - TK_EPSILON
 
 #define degToRad(x) x * TK_PI / 180.0
 #define radToDeg(x) x * 180.0 / TK_PI
