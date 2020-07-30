@@ -28,6 +28,10 @@ namespace TK {
         return material;
     }
 
+    std::shared_ptr<Light> Primitive::getLight() const {
+        return light;
+    }
+
     void Primitive::computeScattering(Scattering *scattering) const {
         if (material != nullptr)
             material->computeScattering(scattering);
