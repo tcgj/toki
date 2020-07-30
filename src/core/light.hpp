@@ -4,6 +4,7 @@
 #include "transform.hpp"
 #include "scene.hpp"
 #include "interaction.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     class OcclusionChecker {
@@ -35,7 +36,7 @@ namespace TK {
         virtual tkSpectrum computeLe(const SurfaceInteraction &interaction, const tkVec3f &w) const {
             return 0;
         };
-        virtual tkSpectrum sample(const Interaction &ref, tkVec3f *wi,
+        virtual tkSpectrum sample(const Interaction &ref, tkVec3f *wi, tkVec2f &samp,
                                   tkFloat *pdf, OcclusionChecker *occCheck) const = 0;
         virtual tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const {
             return 0;

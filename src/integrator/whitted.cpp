@@ -5,6 +5,7 @@
 #include "core/light.hpp"
 #include "core/interaction.hpp"
 #include "core/spectrum.hpp"
+#include "core/sampler.hpp"
 #include "util/scatteringutil.hpp"
 
 namespace TK {
@@ -31,8 +32,10 @@ namespace TK {
             tkVec3f wi;
             tkFloat pdf;
             OcclusionChecker occCheck;
+            tkVec2f sample;
+            sampler.sample2D(&sample, 1, 1);
 
-            tkSpectrum ld = light->sample(interaction, &wi, &pdf, &occCheck);
+            tkSpectrum ld = light->sample(interaction, &wi, sample, &pdf, &occCheck);
             if (pdf == 0 || ld.isBlack())
                 continue;
 

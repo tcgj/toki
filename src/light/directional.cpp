@@ -14,8 +14,8 @@ namespace TK {
         return radiance * TK_PI * sceneRadius * sceneRadius;
     }
 
-    tkSpectrum DirectionalLight::sample(const Interaction &ref,
-                                        tkVec3f *wi, tkFloat *pdf,
+    tkSpectrum DirectionalLight::sample(const Interaction &ref, tkVec3f *wi,
+                                        tkVec2f &samp, tkFloat *pdf,
                                         OcclusionChecker *occCheck) const {
         *wi = -dir;
         *pdf = 1;

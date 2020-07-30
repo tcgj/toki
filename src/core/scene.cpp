@@ -7,6 +7,7 @@ namespace TK {
     Scene::Scene(std::shared_ptr<Region> region, const std::vector<std::shared_ptr<Light>> &lights)
         : region(region), lights(lights) {
         worldBB = region->worldBoundingBox();
+        // TODO: handle light preprocessing outside constructor
         for (const auto &l : lights) {
             l->preprocess(*this);
         }

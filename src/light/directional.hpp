@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/light.hpp"
-#include "core/spectrum.hpp"
 
 namespace TK {
     class DirectionalLight : public Light {
@@ -13,7 +12,7 @@ namespace TK {
 
         void preprocess(const Scene &scene);
         tkSpectrum power() const;
-        tkSpectrum sample(const Interaction &ref, tkVec3f *wi,
+        tkSpectrum sample(const Interaction &ref, tkVec3f *wi, tkVec2f &samp,
                           tkFloat *pdf, OcclusionChecker *occCheck) const;
 
     private:
