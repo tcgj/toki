@@ -15,7 +15,7 @@ namespace TK {
 
         // Split image into tiles 16px x 16px wide to process in parallel
         tkInt tileSize = 16;
-        tkInt numSamplesPerPixel = 1;
+        tkInt numSamplesPerPixel = 16;
         tkVec2i res = camera->image->resolution;
         tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
                          (res.y + tileSize - 1) / tileSize);

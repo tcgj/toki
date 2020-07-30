@@ -17,7 +17,9 @@ namespace TK {
         tkVec2i resolution;
     };
 
-    void tokiConfigure(const Options &options);
+    // Rendering API
+    void tokiConfigure(const Options &cmdLineOptions);
+    void tokiParse(IStream &stream);
     void tokiRun();
     void tokiShutdown();
 

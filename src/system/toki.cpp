@@ -41,6 +41,7 @@ namespace TK {
         // Init
         FileStream stream(inputFile, FSM_IN);
         tokiConfigure(options);
+        tokiParse(stream);
 
         // Run
         tokiRun();
