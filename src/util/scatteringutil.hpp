@@ -65,7 +65,7 @@ namespace TK {
         tkFloat sinSqrI = std::max((tkFloat)0, 1 - cosI * cosI);
         tkFloat sinSqrT = eta * eta * sinSqrI;
         if (sinSqrT >= 1)
-            return tkVec3f(0);
+            return tkVec3f::zero;
 
         tkFloat cosT = std::sqrt(1 - sinSqrT);
         return -eta * v + (eta * cosI - cosT) * n;

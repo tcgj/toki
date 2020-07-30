@@ -14,7 +14,7 @@ namespace TK {
 
     tkFloat PerspectiveCamera::generateRay(const CameraSample &sample, Ray *r) const {
         tkPoint3f cs_pos = imageToCamera(tkPoint3f(sample.imgCoord));
-        *r = Ray(tkPoint3f(0), normalize(tkVec3f(cs_pos)));
+        *r = Ray(tkPoint3f::zero, normalize(tkVec3f(cs_pos)));
         *r = cameraToWorld(*r);
         return 1;
     }
