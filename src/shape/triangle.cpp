@@ -106,9 +106,10 @@ namespace TK {
         return true;
     }
 
-    Interaction Triangle::sample(const Interaction &ref, const tkVec2f &samp,
-                                 tkFloat *pdf) const {
+    SurfaceInteraction Triangle::sample(const Interaction &ref,
+                                        const tkVec2f &samp,
+                                        tkFloat *pdf) const {
         // To be implemented
-        return Interaction();
+        return SurfaceInteraction();
     }
 }  // namespace TK

@@ -14,8 +14,8 @@ namespace TK {
         bool intersect(const Ray &r, tkFloat *tHit,
                        SurfaceInteraction *interaction) const override;
         bool hasIntersect(const Ray &r) const override;
-        Interaction sample(const Interaction &ref, const tkVec2f &samp,
-                           tkFloat *pdf) const override;
+        SurfaceInteraction sample(const Interaction &ref, const tkVec2f &samp,
+                                  tkFloat *pdf) const override;
         tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const override;
 
     private:

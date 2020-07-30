@@ -54,16 +54,16 @@ namespace TK {
         return true;
     }
 
-    Interaction Sphere::sample(const Interaction &ref, const tkVec2f &samp,
-                               tkFloat *pdf) const {
+    SurfaceInteraction Sphere::sample(const Interaction &ref,
+                                      const tkVec2f &samp, tkFloat *pdf) const {
         tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
-        tkVec3f dir = ref.p - center;
-        tkVec3f z = normalize(dir);
+        tkVec3f centerToRef = ref.p - center;
+        tkVec3f z = normalize(centerToRef);
         tkVec3f x, y;
         coordinateSystem(z, &x, &y);
-        Interaction ret;
+        SurfaceInteraction ret;
 
-        tkFloat sqrDist = dir.squaredMagnitude();
+        tkFloat sqrDist = centerToRef.squaredMagnitude();
         tkFloat sqrRadius = radius * radius;
 
         // Check if ref is within sphere
@@ -73,9 +73,10 @@ namespace TK {
             ret.p = (*objectToWorld)(tkPoint3f(n));
             if (invertNormals)
                 ret.n = -ret.n;
+            tkVec3f dir = ref.p - ret.p;
+            ret.wo = normalize(dir);
 
             // Similar to Shape::getPdf but skips intersection test
-            tkVec3f dir = ref.p - ret.p;
             tkFloat sampleSqrDist = dir.squaredMagnitude();
             if (sampleSqrDist == 0)
                 *pdf = 0;
@@ -105,6 +106,7 @@ namespace TK {
         ret.p = center + ret.n * radius;
         if (invertNormals)
             ret.n = -ret.n;
+        ret.wo = normalize(ref.p - ret.p);
         *pdf = uniformConePdf(cosThetaMin);
         return ret;
     }
