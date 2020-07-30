@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system/toki.hpp"
+#include "core/random.hpp"
 #include "geometryutil.hpp"
 
 namespace TK {
@@ -53,5 +54,16 @@ namespace TK {
         tkFloat theta = std::acos(1 - 2 * u);
         tkFloat phi = 2 * TK_PI * v;
         return polarToVec3(theta, phi);
+    }
+
+    inline tkVec3f uniformConeSample(tkFloat u, tkFloat v, tkFloat cosThetaMin) {
+        tkFloat cosTheta = 1 + (cosThetaMin - 1) * u;
+        tkFloat sinTheta = std::sqrt(1 - cosTheta * cosTheta);
+        tkFloat phi = 2 * TK_PI * v;
+        return polarToVec3(sinTheta, cosTheta, phi);
+    }
+
+    inline tkFloat uniformConePdf(tkFloat cosThetaMin) {
+        return 1 / (2 * TK_PI * (1 - cosThetaMin));
     }
 } // namespace TK
