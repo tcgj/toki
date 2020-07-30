@@ -4,7 +4,7 @@
 #include "math/math.hpp"
 
 namespace TK {
-    struct VertexAttr {
+    struct Vertex {
         tkPoint3f pos;
         tkVec3f normal;
         tkVec3f tangent;
@@ -15,7 +15,7 @@ namespace TK {
                    const tkUInt *I, tkUInt numVert, const tkPoint3f *V,
                    const tkVec3f *N, const tkVec3f *T);
 
-        bool getTriVertices(tkUInt index, VertexAttr *v1, VertexAttr *v2, VertexAttr *v3) const;
+        bool getTriVertices(tkUInt index, Vertex *v0, Vertex *v1, Vertex *v2) const;
 
         tkUInt numTri, numVert;
         std::vector<tkUInt> indexBuffer; // std::vector to allow for easy triangle inversion

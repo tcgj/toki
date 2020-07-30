@@ -26,27 +26,27 @@ namespace TK {
         }
     }
 
-    bool Mesh::getTriVertices(tkUInt triIndex, VertexAttr *v1, VertexAttr *v2,
-                        VertexAttr *v3) const {
+    bool Mesh::getTriVertices(tkUInt triIndex, Vertex *v0, Vertex *v1,
+                        Vertex *v2) const {
         if (triIndex >= numTri)
             return false;
 
-        tkUInt i1 = indexBuffer[3 * triIndex];
-        tkUInt i2 = indexBuffer[3 * triIndex + 1];
-        tkUInt i3 = indexBuffer[3 * triIndex + 2];
+        tkUInt i0 = indexBuffer[3 * triIndex];
+        tkUInt i1 = indexBuffer[3 * triIndex + 1];
+        tkUInt i2 = indexBuffer[3 * triIndex + 2];
 
+        v0->pos = vertexBuffer[i0];
         v1->pos = vertexBuffer[i1];
         v2->pos = vertexBuffer[i2];
-        v3->pos = vertexBuffer[i3];
         if (normalBuffer) {
+            v0->normal = normalBuffer[i0];
             v1->normal = normalBuffer[i1];
             v2->normal = normalBuffer[i2];
-            v3->normal = normalBuffer[i3];
         }
         if (tangentBuffer) {
+            v0->tangent = tangentBuffer[i0];
             v1->tangent = tangentBuffer[i1];
             v2->tangent = tangentBuffer[i2];
-            v3->tangent = tangentBuffer[i3];
         }
         return true;
     }

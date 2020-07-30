@@ -14,23 +14,16 @@ namespace TK {
 
         virtual tkAABBf objectBoundingBox() const = 0;
         virtual tkAABBf worldBoundingBox() const;
+        virtual tkFloat surfaceArea() const = 0;
         virtual bool intersect(const Ray &r, tkFloat *tHit,
                                SurfaceInteraction *interaction) const = 0;
         virtual bool hasIntersect(const Ray &r) const;
+        virtual Interaction sample(const Interaction &ref, const tkVec2f &samp,
+                                   tkFloat *pdf) const = 0;
+        virtual tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const;
 
     protected:
         const Transform *objectToWorld = nullptr;
         bool invertNormals;
     };
-
-    // Default inefficient intersection test
-    inline bool Shape::hasIntersect(const Ray &r) const {
-        tkFloat tHit;
-        SurfaceInteraction interaction;
-        return intersect(r, &tHit, &interaction);
-    }
-
-    inline tkAABBf Shape::worldBoundingBox() const {
-        return (*objectToWorld)(objectBoundingBox());
-    }
 } // namespace TK

@@ -1,10 +1,15 @@
 #include "sphere.hpp"
 
 #include "core/ray.hpp"
+#include "util/samplingutil.hpp"
 
 namespace TK {
     inline tkAABBf Sphere::objectBoundingBox() const {
         return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
+    }
+
+    tkFloat Sphere::surfaceArea() const {
+        return 4 * TK_PI * radius * radius;
     }
 
     bool Sphere::intersect(const Ray &r, tkFloat *tHit,
@@ -47,5 +52,72 @@ namespace TK {
             return false;
 
         return true;
+    }
+
+    Interaction Sphere::sample(const Interaction &ref, const tkVec2f &samp,
+                               tkFloat *pdf) const {
+        tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
+        tkVec3f dir = ref.p - center;
+        tkVec3f z = normalize(dir);
+        tkVec3f x, y;
+        coordinateSystem(z, &x, &y);
+        Interaction ret;
+
+        tkFloat sqrDist = dir.squaredMagnitude();
+        tkFloat sqrRadius = radius * radius;
+
+        // Check if ref is within sphere
+        if (sqrDist <= sqrRadius) {
+            tkVec3f n = radius * uniformSphereSample(samp[0], samp[1]);
+            ret.n = (*objectToWorld)(n, true);
+            ret.p = (*objectToWorld)(tkPoint3f(n));
+            if (invertNormals)
+                ret.n = -ret.n;
+
+            // Similar to Shape::getPdf but skips intersection test
+            tkVec3f dir = ref.p - ret.p;
+            tkFloat sampleSqrDist = dir.squaredMagnitude();
+            if (sampleSqrDist == 0)
+                *pdf = 0;
+            else {
+                tkFloat cosTheta = std::abs(dot(normalize(dir), ret.n));
+                *pdf = sampleSqrDist / (cosTheta * surfaceArea());
+            }
+            return ret;
+        }
+
+        tkFloat cosSqrTheta = 1 - sqrRadius / sqrDist;
+        tkFloat cosThetaMin = std::sqrt(clamp(cosSqrTheta, 0, 1));
+
+        // Random sample cone
+        tkFloat cosTheta = 1 + (cosThetaMin - 1) * samp[0];
+        tkFloat sinSqrTheta = 1 - cosTheta * cosTheta;
+        tkFloat phi = 2 * TK_PI * samp[1];
+
+        tkFloat dist = std::sqrt(sqrDist);
+        tkFloat sampleDist = dist * cosTheta - std::sqrt(sqrRadius - sqrDist * sinSqrTheta);
+
+        // Find sample point perp-dist from z-axis(sinA) and z-value(cosA) in sphere frame
+        tkFloat cosA = (sqrDist + sqrRadius - sampleDist * sampleDist) / (2 * dist * radius);
+        tkFloat sinA = std::sqrt(clamp(1 - cosA * cosA, 0, 1));
+
+        ret.n = polarToVec3(sinA, cosA, phi, x, y, z);
+        ret.p = center + ret.n * radius;
+        if (invertNormals)
+            ret.n = -ret.n;
+        *pdf = uniformConePdf(cosThetaMin);
+        return ret;
+    }
+
+    tkFloat Sphere::getPdf(const Interaction &ref, const tkVec3f &wi) const {
+        tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
+        tkFloat sqrRadius = radius * radius;
+        tkFloat sqrDist = squaredDistance(ref.p, center);
+        if (sqrDist <= sqrRadius)
+            return Shape::getPdf(ref, wi);
+
+        tkFloat cosSqrTheta = 1 - sqrRadius / sqrDist;
+        tkFloat cosThetaMin = std::sqrt(clamp(cosSqrTheta, 0, 1));
+        return uniformConePdf(cosThetaMin);
     }
 } // namespspace TK

@@ -6,25 +6,35 @@
 
 namespace TK {
     inline tkAABBf Triangle::objectBoundingBox() const {
-        VertexAttr v0, v1, v2;
-        Transform worldToObject = inverse(*objectToWorld);
+        Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        return bbUnion(tkAABBf(worldToObject(v0.pos), worldToObject(v1.pos)),
-                       worldToObject(v2.pos));
+        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.pos),
+                               objectToWorld->applyInverse(v1.pos)),
+                       objectToWorld->applyInverse(v2.pos));
     }
 
     tkAABBf Triangle::worldBoundingBox() const {
-        VertexAttr v0, v1, v2;
+        Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
         return bbUnion(tkAABBf(v0.pos, v1.pos), v2.pos);
+    }
+
+    tkFloat Triangle::surfaceArea() const {
+        Vertex v0, v1, v2;
+        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+
+        tkVec3f v01 = v1.pos - v0.pos;
+        tkVec3f v02 = v2.pos - v0.pos;
+
+        return cross(v01, v02).magnitude() * 0.5f;
     }
 
     // Implementation of Möller–Trumbore Ray-Triangle algorithm from
     // https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
     bool Triangle::intersect(const Ray &r, tkFloat *tHit,
                              SurfaceInteraction *interaction) const {
-        VertexAttr v0, v1, v2;
+        Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         tkVec3f e1 = v1.pos - v0.pos;
@@ -62,8 +72,9 @@ namespace TK {
         interaction->shape = this;
         return true;
     }
+
     bool Triangle::hasIntersect(const Ray &r) const {
-        VertexAttr v0, v1, v2;
+        Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         tkVec3f e1 = v1.pos - v0.pos;
@@ -95,18 +106,9 @@ namespace TK {
         return true;
     }
 
-    std::vector<std::shared_ptr<Shape>> GenerateMesh(
-        tkUInt numTri, const tkUInt *I, tkUInt numVert, const tkPoint3f *V,
-        const tkVec3f *N, const tkVec3f *T, const Transform *objectToWorld,
-        bool invertNormals = false) {
-        std::shared_ptr<Mesh> mesh =
-            std::make_shared<Mesh>(*objectToWorld, numTri, I, numVert, V, N, T);
-        std::vector<std::shared_ptr<Shape>> tris;
-
-        for (tkUInt i = 0; i < numTri; ++i)
-            tris.push_back(std::make_shared<Triangle>(mesh, i, objectToWorld,
-                                                      invertNormals));
-
-        return tris;
+    Interaction Triangle::sample(const Interaction &ref, const tkVec2f &samp,
+                                 tkFloat *pdf) const {
+        // To be implemented
+        return Interaction();
     }
 }  // namespace TK
