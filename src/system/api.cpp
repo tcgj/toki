@@ -14,9 +14,11 @@
 #include "material/matte.hpp"
 #include "core/spectrum.hpp"
 #include "accelerator/bvh.hpp"
+#include "accelerator/iterator.hpp"
 #include "light/point.hpp"
 #include "light/directional.hpp"
 #include "light/area.hpp"
+#include "core/random.hpp"
 
 namespace TK {
     static Options tokiOptions;
@@ -37,8 +39,192 @@ namespace TK {
         // TODO: Read required data from stream
 
         // Resolution default
-        tokiOptions.resolution = tkVec2i(1024, 768);
+        tokiOptions.resolution = tkVec2i(512, 512);
 
+        // Seed random generator
+        std::uint_least32_t seed;
+        Random::systemRand(&seed, sizeof(seed));
+        Random::seed(seed);
+
+        // testScene();
+
+        // Cornell Box
+        tkPoint3f eye(278, 273, -800);
+        tkPoint3f at(278, 273, 0);
+        Transform cameraToWorld = lookAt(eye, at, tkVec3f(0, 1, 0));
+        PNGImage output(tokiOptions.resolution, tokiOptions.outFile);
+        auto camera = std::make_shared<PerspectiveCamera>(
+            cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
+        auto sampler = std::make_shared<StratifiedSampler>();
+
+        tkSpectrum whiteKd(tkSpectrum::fromRGB(tkVec3f(0.75f, 0.75f, 0.75f)));
+        auto matteWhite = std::make_shared<Matte>(whiteKd);
+        tkSpectrum redKd(tkSpectrum::fromRGB(tkVec3f(0.66f, 0.0f, 0.0f)));
+        auto matteRed = std::make_shared<Matte>(redKd);
+        tkSpectrum greenKd(tkSpectrum::fromRGB(tkVec3f(0.15f, 0.476f, 0.0f)));
+        auto matteGreen = std::make_shared<Matte>(greenKd);
+
+        std::vector<std::shared_ptr<Primitive>> prims;
+
+        // Lights
+        std::vector<std::shared_ptr<Light>> lights;
+        // lights.push_back(std::make_shared<DirectionalLight>(rotateY(degToRad(-90)), tkSpectrum(0.7)));
+        // lights.push_back(std::make_shared<PointLight>(
+        //     translate(tkVec3f(343, 540, 227)), tkSpectrum(100000)));
+        // lights.push_back(std::make_shared<PointLight>(
+        //     translate(tkVec3f(213, 540, 332)), tkSpectrum(100000)));
+        Transform lightPos = translate(tkVec3f(278, 548.8, 279.5));
+        auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
+        auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight,
+                                                     tkSpectrum(10.0f));
+        lights.push_back(areaLight);
+        prims.push_back(
+            std::make_shared<Primitive>(sphereLight, nullptr, areaLight));
+
+        // Geometry
+        Transform tf = translate(tkVec3f::zero);
+        tkPoint3f V[64] = {
+            // Floor 0-1
+            tkPoint3f(552.8, 0, 0), tkPoint3f(0, 0, 0), tkPoint3f(0, 0, 559.2),
+            tkPoint3f(549.6, 0, 559.2),
+            // Light 2-3
+            tkPoint3f(343, 548.8, 227), tkPoint3f(343, 548.8, 332),
+            tkPoint3f(213, 548.8, 332), tkPoint3f(213, 548.8, 227),
+            // Ceiling 4-5
+            tkPoint3f(556, 548.8, 0), tkPoint3f(556, 548.8, 559.2),
+            tkPoint3f(0, 548.8, 559.2), tkPoint3f(0, 548.8, 0),
+            // Back wall 67
+            tkPoint3f(549.6, 0, 559.2), tkPoint3f(0, 0, 559.2),
+            tkPoint3f(0, 548.8, 559.2), tkPoint3f(556, 548.8, 559.2),
+            // Right wall 89
+            tkPoint3f(0, 0, 559.2), tkPoint3f(0, 0, 0), tkPoint3f(0, 548.8, 0),
+            tkPoint3f(0, 548.8, 559.2),
+            // Left wall 1011
+            tkPoint3f(552.8, 0, 0), tkPoint3f(549.6, 0, 559.2),
+            tkPoint3f(556, 548.8, 559.2), tkPoint3f(556, 548.8, 0),
+            // Short block 1221
+            tkPoint3f(130, 165, 65), tkPoint3f(82, 165, 225),
+            tkPoint3f(240, 165, 272), tkPoint3f(290, 165, 114),
+
+            tkPoint3f(290, 0, 114), tkPoint3f(290, 165, 114),
+            tkPoint3f(240, 165, 272), tkPoint3f(240, 0, 272),
+
+            tkPoint3f(130, 0, 65), tkPoint3f(130, 165, 65),
+            tkPoint3f(290, 165, 114), tkPoint3f(290, 0, 114),
+
+            tkPoint3f(82, 0, 225), tkPoint3f(82, 165, 225),
+            tkPoint3f(130, 165, 65), tkPoint3f(130, 0, 65),
+
+            tkPoint3f(240, 0, 272), tkPoint3f(240, 165, 272),
+            tkPoint3f(82, 165, 225), tkPoint3f(82, 0, 225),
+            // Tall Block 2231
+            tkPoint3f(423, 330, 247), tkPoint3f(265, 330, 296),
+            tkPoint3f(314, 330, 456), tkPoint3f(472, 330, 406),
+
+            tkPoint3f(423, 0, 247), tkPoint3f(423, 330, 247),
+            tkPoint3f(472, 330, 406), tkPoint3f(472, 0, 406),
+
+            tkPoint3f(472, 0, 406), tkPoint3f(472, 330, 406),
+            tkPoint3f(314, 330, 456), tkPoint3f(314, 0, 456),
+
+            tkPoint3f(314, 0, 456), tkPoint3f(314, 330, 456),
+            tkPoint3f(265, 330, 296), tkPoint3f(265, 0, 296),
+
+            tkPoint3f(265, 0, 296), tkPoint3f(265, 330, 296),
+            tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)};
+        tkUInt I[96] = {0,1,2,0,2,3,
+                        4,5,6,4,6,7,
+                        8,9,10,8,10,11,
+                        12,13,14,12,14,15,
+                        16,17,18,16,18,19,
+                        20,21,22,20,22,23,
+                        24,25,26,24,26,27,
+                        28,29,30,28,30,31,
+                        32,33,34,32,34,35,
+                        36,37,38,36,38,39,
+                        40,41,42,40,42,43,
+                        44,45,46,44,46,47,
+                        48,49,50,48,50,51,
+                        52,53,54,52,54,55,
+                        56,57,58,56,58,59,
+                        60,61,62,60,62,63};
+        auto mesh = std::make_shared<Mesh>(tf, 32, I, 64, V, nullptr, nullptr);
+        auto tri0 = std::make_shared<Triangle>(&tf, mesh, 0);
+        auto tri1 = std::make_shared<Triangle>(&tf, mesh, 1);
+        auto tri2 = std::make_shared<Triangle>(&tf, mesh, 2);
+        auto tri3 = std::make_shared<Triangle>(&tf, mesh, 3);
+        auto tri4 = std::make_shared<Triangle>(&tf, mesh, 4);
+        auto tri5 = std::make_shared<Triangle>(&tf, mesh, 5);
+        auto tri6 = std::make_shared<Triangle>(&tf, mesh, 6);
+        auto tri7 = std::make_shared<Triangle>(&tf, mesh, 7);
+        auto tri8 = std::make_shared<Triangle>(&tf, mesh, 8);
+        auto tri9 = std::make_shared<Triangle>(&tf, mesh, 9);
+        auto tri10 = std::make_shared<Triangle>(&tf, mesh, 10);
+        auto tri11 = std::make_shared<Triangle>(&tf, mesh, 11);
+        auto tri12 = std::make_shared<Triangle>(&tf, mesh, 12);
+        auto tri13 = std::make_shared<Triangle>(&tf, mesh, 13);
+        auto tri14 = std::make_shared<Triangle>(&tf, mesh, 14);
+        auto tri15 = std::make_shared<Triangle>(&tf, mesh, 15);
+        auto tri16 = std::make_shared<Triangle>(&tf, mesh, 16);
+        auto tri17 = std::make_shared<Triangle>(&tf, mesh, 17);
+        auto tri18 = std::make_shared<Triangle>(&tf, mesh, 18);
+        auto tri19 = std::make_shared<Triangle>(&tf, mesh, 19);
+        auto tri20 = std::make_shared<Triangle>(&tf, mesh, 20);
+        auto tri21 = std::make_shared<Triangle>(&tf, mesh, 21);
+        auto tri22 = std::make_shared<Triangle>(&tf, mesh, 22);
+        auto tri23 = std::make_shared<Triangle>(&tf, mesh, 23);
+        auto tri24 = std::make_shared<Triangle>(&tf, mesh, 24);
+        auto tri25 = std::make_shared<Triangle>(&tf, mesh, 25);
+        auto tri26 = std::make_shared<Triangle>(&tf, mesh, 26);
+        auto tri27 = std::make_shared<Triangle>(&tf, mesh, 27);
+        auto tri28 = std::make_shared<Triangle>(&tf, mesh, 28);
+        auto tri29 = std::make_shared<Triangle>(&tf, mesh, 29);
+        auto tri30 = std::make_shared<Triangle>(&tf, mesh, 30);
+        auto tri31 = std::make_shared<Triangle>(&tf, mesh, 31);
+        prims.push_back(std::make_shared<Primitive>(tri0, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri1, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri2, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri3, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri4, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri5, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri6, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri7, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri8, matteGreen));
+        prims.push_back(std::make_shared<Primitive>(tri9, matteGreen));
+        prims.push_back(std::make_shared<Primitive>(tri10, matteRed));
+        prims.push_back(std::make_shared<Primitive>(tri11, matteRed));
+        prims.push_back(std::make_shared<Primitive>(tri12, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri13, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri14, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri15, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri16, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri17, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri18, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri19, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri20, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri21, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri22, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri23, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri24, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri25, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri26, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri27, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri28, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri29, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri30, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri31, matteWhite));
+
+        // Accel Structure
+        auto accel = std::make_shared<Iterator>(prims, tkAABBf(tkPoint3f(0), tkPoint3f(560, 560, -560)));
+
+        // Scene
+        Scene scene(accel, lights);
+
+        WhittedIntegrator integrator(3, camera, sampler);
+        integrator.render(scene);
+    }
+
+    void testScene() {
         // Initialise camera
         tkPoint3f eye(3.0f, 5.0f, 5.0f);
         tkPoint3f at(0.0f, 2.0f, 0.0f);
@@ -65,8 +251,10 @@ namespace TK {
         // Plane
         Transform tf = translate(tkVec3f::zero);
         tkUInt I[6] = {0, 1, 3, 1, 2, 3};
-        tkPoint3f V[4] = { tkPoint3f(-10, 0, 10), tkPoint3f(10, 0, 10), tkPoint3f(10, 0, -10), tkPoint3f(-10, 0, -10) };
-        tkVec3f N[4] = { tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0) };
+        tkPoint3f V[4] = {tkPoint3f(-10, 0, 10), tkPoint3f(10, 0, 10),
+                          tkPoint3f(10, 0, -10), tkPoint3f(-10, 0, -10)};
+        tkVec3f N[4] = {tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0),
+                        tkVec3f(0, 1, 0)};
         auto mesh = std::make_shared<Mesh>(tf, 2, I, 4, V, N, nullptr);
         auto tri1 = std::make_shared<Triangle>(&tf, mesh, 0);
         auto tri2 = std::make_shared<Triangle>(&tf, mesh, 1);
@@ -78,16 +266,22 @@ namespace TK {
         auto sphere = std::make_shared<Sphere>(&sphereToWorld, 1.0f);
         prims.push_back(std::make_shared<Primitive>(sphere, matteRed));
 
-        // Accel Structure
-        auto accel = std::make_shared<BVH>(prims);
-
         // Lights
         std::vector<std::shared_ptr<Light>> lights;
-        // lights.push_back(std::make_shared<DirectionalLight>(rotateZ(degToRad(-90)), tkSpectrum(0.4)));
-        // lights.push_back(std::make_shared<PointLight>(translate(tkVec3f(-2.0f, 4.0f, 0)), tkSpectrum(10)));
-        Transform lightPos = translate(tkVec3f(0.0f, 6.0f, 0.0f));
+        // lights.push_back(std::make_shared<DirectionalLight>(rotateZ(degToRad(-90)),
+        // tkSpectrum(0.4)));
+        // lights.push_back(std::make_shared<PointLight>(translate(tkVec3f(-2.0f,
+        // 4.0f, 0)), tkSpectrum(10)));
+        Transform lightPos = translate(tkVec3f(-3.0f, 6.0f, 0.0f));
         auto sphereLight = std::make_shared<Sphere>(&lightPos, 2.0f);
-        lights.push_back(std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(1.0f)));
+        auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight,
+                                                     tkSpectrum(1.0f));
+        lights.push_back(areaLight);
+        prims.push_back(
+            std::make_shared<Primitive>(sphereLight, nullptr, areaLight));
+
+        // Accel Structure
+        auto accel = std::make_shared<BVH>(prims);
 
         // Scene
         Scene scene(accel, lights);
