@@ -12,6 +12,10 @@ namespace TK {
             tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
         }
         Vec3(const Vec2<T> &xy, T z) : x(xy.x), y(xy.y), z(z) {}
+        template <typename U>
+        explicit Vec3(const Vec3<U> &p) : x((T)p.x), y((T)p.y), z((T)p.z) {
+            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
+        }
 
         // Unary/subscript operators
         const Vec3<T> &operator+() const;

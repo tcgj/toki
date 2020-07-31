@@ -11,6 +11,10 @@ namespace TK {
         Vec2(T v0, T v1) : x(v0), y(v1) {
             tkAssert(!(std::isnan(x) || std::isnan(y)));
         }
+        template <typename U>
+        explicit Vec2(const Vec2<U> &p) : x((T)p.x), y((T)p.y) {
+            tkAssert(!(std::isnan(x) || std::isnan(y)));
+        }
 
         // Unary/subscript operators
         const Vec2<T> &operator+() const;

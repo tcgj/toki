@@ -11,6 +11,10 @@ namespace TK {
         Point2(T p0, T p1) : x(p0), y(p1) {
             tkAssert(!(std::isnan(x) || std::isnan(y)));
         }
+        template <typename U>
+        explicit Point2(const Point2<U> &p) : x((T)p.x), y((T)p.y) {
+            tkAssert(!(std::isnan(x) || std::isnan(y)));
+        }
 
         // Unary/subscript operators
         const Point2<T> &operator+() const;
