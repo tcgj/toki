@@ -10,12 +10,12 @@ namespace TK {
         return (tkFloat)resolution.x / resolution.y;
     }
 
-    tkVec3f Image::getPixelColor(const tkPoint2i &imgCoord) const {
-        return pixels[imgCoord.y * resolution.x + imgCoord.x].toRGB();
+    tkVec3f Image::getPixelColor(const tkPoint2i &pixelCoord) const {
+        return pixels[pixelCoord.y * resolution.x + pixelCoord.x].toRGB();
     }
 
-    void Image::updatePixelColor(const tkPoint2i &imgCoord, const tkSpectrum &colorContribution) {
-        pixels[imgCoord.y * resolution.x + imgCoord.x] += colorContribution;
+    void Image::updatePixelColor(const tkPoint2i &pixelCoord, const tkSpectrum &colorContribution) {
+        pixels[pixelCoord.y * resolution.x + pixelCoord.x] += colorContribution;
     }
 
     tkVec3f Image::gammaCorrect(const tkVec3f &rgb) const {

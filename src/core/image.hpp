@@ -12,8 +12,8 @@ namespace TK {
         Image(const tkVec2i &res, const std::string &filename);
 
         tkFloat getAspectRatio() const;
-        tkVec3f getPixelColor(const tkPoint2i &imgCoord) const;
-        void updatePixelColor(const tkPoint2i &imgCoord,
+        tkVec3f getPixelColor(const tkPoint2i &pixelCoord) const;
+        void updatePixelColor(const tkPoint2i &pixelCoord,
                               const tkSpectrum &colorContribution);
         virtual tkVec3f gammaCorrect(const tkVec3f &rgb) const;
         virtual void write() = 0;
