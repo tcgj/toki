@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
-
 namespace TK {
     template <typename T> class Vec2;
     template <typename T> class Vec3;

@@ -1,8 +1,16 @@
 #pragma once
 
-#include <cmath>
 #include <iostream>
+#include <functional>
+#include <thread>
+#include <mutex>
+#include <fstream>
+
+#include <random>
+#include <cmath>
+#include <string>
 #include <vector>
+#include <cstdint>
 
 //#define TK_DEBUG_MODE
 

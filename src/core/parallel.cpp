@@ -1,8 +1,5 @@
 #include "parallel.hpp"
 
-#include <thread>
-#include <mutex>
-
 #include "math/math.hpp"
 
 namespace TK {

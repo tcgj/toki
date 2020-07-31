@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include "system/toki.hpp"
 
 namespace TK {

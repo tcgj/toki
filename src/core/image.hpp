@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "system/toki.hpp"
 #include "math/math.hpp"
 #include "spectrum.hpp"
