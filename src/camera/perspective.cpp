@@ -9,8 +9,7 @@ namespace TK {
         tkFloat fovy/*, const Medium *medium*/, Image *image)
         : ProjectionCamera(cameraToWorld,
                            perspective(fovy, image->getAspectRatio(), TK_EPSILON, 1000.0f),
-                           lensRadius, focalLength, image) {
-    }
+                           lensRadius, focalLength, image) {}
 
     tkFloat PerspectiveCamera::generateRay(const CameraSample &sample, Ray *r) const {
         tkPoint3f cs_pos = imageToCamera(tkPoint3f(sample.imgCoord));

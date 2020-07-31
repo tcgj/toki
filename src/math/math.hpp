@@ -16,9 +16,13 @@
 #define TK_PIOVER4 0.78539816339
 
 // Used for small offsets, e.g. shadow epsilon
-#define TK_EPSILON 0.00001
+#define TK_EPSILON (tkFloat)0.00001
 // Represents the largest float below 1
-#define TK_ONE_MINUS_EPSILON 0x1.fffffp-1
+#ifdef TK_USE_DOUBLE
+#define TK_ONE_MINUS_EPSILON 0x1.fffffffffffffp-1
+#else
+#define TK_ONE_MINUS_EPSILON 0x1.fffffep-1f
+#endif
 
 #define degToRad(x) x * TK_PI / 180.0
 #define radToDeg(x) x * 180.0 / TK_PI
