@@ -41,11 +41,6 @@ namespace TK {
         // Resolution default
         tokiOptions.resolution = tkVec2i(512, 512);
 
-        // Seed random generator
-        std::uint_least32_t seed;
-        Random::systemRand(&seed, sizeof(seed));
-        Random::seed(seed);
-
         // testScene();
 
         // Cornell Box
@@ -55,7 +50,8 @@ namespace TK {
         PNGImage output(tokiOptions.resolution, tokiOptions.outFile);
         auto camera = std::make_shared<PerspectiveCamera>(
             cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
-        auto sampler = std::make_shared<StratifiedSampler>();
+        // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
+        auto sampler = std::make_shared<StratifiedSampler>(4, 4, 5);
 
         tkSpectrum whiteKd(tkSpectrum::fromRGB(tkVec3f(0.75f, 0.75f, 0.75f)));
         auto matteWhite = std::make_shared<Matte>(whiteKd);
@@ -233,7 +229,7 @@ namespace TK {
         auto camera = std::make_shared<PerspectiveCamera>(
             cameraToWorld, 1.0f, (at - eye).magnitude(), 60.0f, &output);
         // Set up sampler
-        auto sampler = std::make_shared<StratifiedSampler>();
+        auto sampler = std::make_shared<StratifiedSampler>(4, 4, 5);
 
         // Materials
         tkSpectrum greyKd(tkSpectrum::fromRGB(tkVec3f(0.9f, 0.9f, 0.9f)));

@@ -15,7 +15,6 @@ namespace TK {
 
         // Split image into tiles 16px x 16px wide to process in parallel
         tkInt tileSize = 16;
-        tkInt numSamplesPerPixel = 16;
         tkVec2i res = camera->image->resolution;
         tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
                          (res.y + tileSize - 1) / tileSize);
@@ -27,24 +26,26 @@ namespace TK {
             tkInt y0 = tile.y * tileSize;
             tkInt y1 = std::min(y0 + tileSize, res.y);
 
+            // Get sampler clone
+            std::unique_ptr<Sampler> localSampler = sampler->getClone();
+
             for (tkInt y = y0; y < y1; ++y) {
                 for (tkInt x = x0; x < x1; ++x) {
                     tkPoint2i pix(x, y);
+                    localSampler->setPixel(pix);
 
                     tkSpectrum li;
-                    for (tkInt i = 0; i < numSamplesPerPixel; ++i) {
-                        CameraSample cameraSample;
-                        cameraSample.imgCoord = tkPoint2f(Random::nextFloat() + pix.x,
-                                                          Random::nextFloat() + pix.y);
+                    do {
+                        CameraSample cameraSample = localSampler->getCameraSample(pix);
 
                         Ray ray;
                         camera->generateRay(cameraSample, &ray);
-                        li += computeLi(scene, ray, *sampler);
+                        li += computeLi(scene, ray, *localSampler);
 
                         // TODO: Check if radiance is valid
-                    }
+                    } while (localSampler->nextSample());
 
-                    li /= numSamplesPerPixel;
+                    li /= localSampler->samplesPerPixel;
                     camera->image->updatePixelColor(pix, li);
                     // tkVec3f col = camera->image->getPixelColor(pix);
                     // printf("Pixel [%d, %d]: [%f, %f, %f]\n", pix.x, pix.y, col.x, col.y, col.z);
@@ -60,10 +61,7 @@ namespace TK {
         tkVec3f wo = interaction.wo, wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
-        // TODO: Fix sampler interface for continuous sampling
-        tkVec2f sample;
-        sampler.sample2D(&sample, 1, 1);
-        tkSpectrum f = interaction.scattering->sample(wo, &wi, sample, &pdf, type);
+        tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, type);
         tkFloat cosTheta = std::abs(dot(interaction.n, wi));
         if (pdf == 0 || f.isBlack() || cosTheta == 0)
             return 0;

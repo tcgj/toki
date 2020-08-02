@@ -5,9 +5,14 @@
 namespace TK {
     class StratifiedSampler : public Sampler {
     public:
-        StratifiedSampler() = default;
+        StratifiedSampler(tkUInt xCount, tkUInt yCount, tkUInt dimensions);
 
-        void sample1D(tkFloat *samples, tkUInt count) const override;
-        void sample2D(tkVec2f *samples, tkUInt countX, tkUInt countY) const override;
+        void setPixel(const tkPoint2i &pixelCoord) override;
+        tkFloat nextFloat() override;
+        tkVec2f nextVector() override;
+        std::unique_ptr<Sampler> getClone() override;
+
+    private:
+        tkUInt xCount, yCount;
     };
 } // namespace TK

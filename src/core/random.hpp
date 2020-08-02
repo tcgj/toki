@@ -1,19 +1,20 @@
 #pragma once
 
-#include <random>
-#include <fstream>
-
 #include "system/toki.hpp"
 
 namespace TK {
     class Random {
     public:
-        static void seed(std::uint_least32_t val) {
-            gen = std::mt19937(val);
+        static std::uint_least32_t seed() {
+            std::uint_least32_t ret;
+            systemRand(&ret, sizeof(ret));
+            return ret;
         }
 
         static tkFloat nextFloat() {
-            return dist_float(gen);
+            thread_local std::unique_ptr<std::mt19937> gen = std::make_unique<std::mt19937>(seed());
+
+            return dist_float(*gen);
         }
 
         static size_t systemRand(void *dst, size_t dstlen) {
@@ -27,7 +28,6 @@ namespace TK {
 
     private:
         Random() = default;
-        static std::mt19937 gen;
         static std::uniform_real_distribution<tkFloat> dist_float;
     };
 } // namespace TK

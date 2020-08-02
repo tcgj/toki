@@ -38,10 +38,7 @@ namespace TK {
             tkVec3f wi;
             tkFloat pdf;
             OcclusionChecker occCheck;
-            tkVec2f sample;
-            sampler.sample2D(&sample, 1, 1);
-
-            tkSpectrum ld = light->sample(interaction, &wi, sample, &pdf, &occCheck);
+            tkSpectrum ld = light->sample(interaction, &wi, sampler.nextVector(), &pdf, &occCheck);
             if (pdf == 0 || ld.isBlack())
                 continue;
 
