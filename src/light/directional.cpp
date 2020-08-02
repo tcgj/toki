@@ -15,7 +15,7 @@ namespace TK {
     }
 
     tkSpectrum DirectionalLight::sample(const Interaction &ref, tkVec3f *wi,
-                                        tkVec2f &samp, tkFloat *pdf,
+                                        const tkVec2f &samp, tkFloat *pdf,
                                         OcclusionChecker *occCheck) const {
         *wi = -dir;
         *pdf = 1;

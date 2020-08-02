@@ -18,7 +18,7 @@ namespace TK {
     }
 
     tkSpectrum AreaLight::sample(const Interaction &ref, tkVec3f *wi,
-                                 tkVec2f &samp, tkFloat *pdf,
+                                 const tkVec2f &samp, tkFloat *pdf,
                                  OcclusionChecker *occCheck) const {
         SurfaceInteraction samplePt = shape->sample(ref, samp, pdf);
         *wi = -samplePt.wo;

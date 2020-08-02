@@ -76,8 +76,8 @@ namespace TK {
                    BxDFType type) const {
         tkVec3f wo = worldToLocal(worldWo);
         tkVec3f wi = worldToLocal(worldWi);
-        tkFloat ret;
-        tkInt count;
+        tkFloat ret = 0;
+        tkInt count = 0;
         for (tkUInt i = 0; i < numBxdf; ++i) {
             if (bxdfs[i]->hasType(type)) {
                 ret += bxdfs[i]->getPdf(wo, wi);

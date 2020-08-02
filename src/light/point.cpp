@@ -8,7 +8,7 @@ namespace TK {
     }
 
     tkSpectrum PointLight::sample(const Interaction &ref, tkVec3f *wi,
-                                  tkVec2f &samp, tkFloat *pdf,
+                                  const tkVec2f &samp, tkFloat *pdf,
                                   OcclusionChecker *occCheck) const {
         // Manually calculate normalized direction wi to reuse invSqrLen
         tkVec3f dir = pos - ref.p;
