@@ -74,7 +74,14 @@ namespace TK {
 
     /* ----- Triangle Sampling ----- */
     inline tkVec2f uniformTriangleSample(tkFloat u, tkFloat v) {
-        tkFloat su = std::sqrt(u);
-        return tkVec2f(1 - su, v * su);
+        // Uses the Eric Heitz Square-to-Triangle Mapping
+        tkVec2f ret;
+        if (v > u) {
+            ret.x = u * 0.5f;
+            ret.y = v - ret.x;
+        } else {
+            ret.y = v * 0.5f;
+            ret.x = u - ret.x;
+        }
     }
 } // namespace TK
