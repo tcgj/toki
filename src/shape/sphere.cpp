@@ -88,10 +88,10 @@ namespace TK {
         }
 
         tkFloat cosSqrTheta = 1 - sqrRadius / sqrDist;
-        tkFloat cosThetaMin = std::sqrt(clamp(cosSqrTheta, 0, 1));
+        tkFloat cosMaxTheta = std::sqrt(clamp(cosSqrTheta, 0, 1));
 
         // Random sample cone
-        tkFloat cosTheta = 1 + (cosThetaMin - 1) * samp[0];
+        tkFloat cosTheta = 1 + (cosMaxTheta - 1) * samp[0];
         tkFloat sinSqrTheta = 1 - cosTheta * cosTheta;
         tkFloat phi = 2 * TK_PI * samp[1];
 
@@ -107,7 +107,7 @@ namespace TK {
         if (invertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);
-        *pdf = uniformConePdf(cosThetaMin);
+        *pdf = uniformConePdf(cosMaxTheta);
         return ret;
     }
 
@@ -119,7 +119,7 @@ namespace TK {
             return Shape::getPdf(ref, wi);
 
         tkFloat cosSqrTheta = 1 - sqrRadius / sqrDist;
-        tkFloat cosThetaMin = std::sqrt(clamp(cosSqrTheta, 0, 1));
-        return uniformConePdf(cosThetaMin);
+        tkFloat cosMaxTheta = std::sqrt(clamp(cosSqrTheta, 0, 1));
+        return uniformConePdf(cosMaxTheta);
     }
 } // namespspace TK
