@@ -45,7 +45,7 @@ namespace TK {
         union {
             struct { T x, y; };
             struct { T s, t; };
-            T data[2];
+            T entries[2];
         };
 
         static const Vec2<T> zero;
@@ -60,7 +60,7 @@ namespace TK {
     template <typename T>
     inline bool isNaN(Vec2<T> &v) {
         for (tkUInt i = 0; i < 2; ++i) {
-            if (std::isnan(v.data[i]))
+            if (std::isnan(v.entries[i]))
                 return true;
         }
         return false;
@@ -77,12 +77,12 @@ namespace TK {
     template <typename T>
     inline T Vec2<T>::operator[](tkInt i) const {
         tkAssert(i == 0 || i == 1);
-        return data[i];
+        return entries[i];
     }
     template <typename T>
     inline T &Vec2<T>::operator[](tkInt i) {
         tkAssert(i == 0 || i == 1);
-        return data[i];
+        return entries[i];
     }
 
     template <typename T>

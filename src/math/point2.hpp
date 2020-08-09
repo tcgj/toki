@@ -36,13 +36,9 @@ namespace TK {
         explicit operator Point3<T>() const;
 
         union {
-            struct {
-                T x, y;
-            };
-            struct {
-                T s, t;
-            };
-            tkFloat data[2];
+            struct { T x, y; };
+            struct { T s, t; };
+            T entries[2];
         };
 
         static const Point2<T> zero;
@@ -68,12 +64,12 @@ namespace TK {
     template <typename T>
     inline T Point2<T>::operator[](tkInt i) const {
         tkAssert(i == 0 || i == 1);
-        return data[i];
+        return entries[i];
     }
     template <typename T>
     inline T &Point2<T>::operator[](tkInt i) {
         tkAssert(i == 0 || i == 1);
-        return data[i];
+        return entries[i];
     }
 
     template <typename T>
