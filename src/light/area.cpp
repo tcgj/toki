@@ -9,7 +9,7 @@ namespace TK {
         return radiance * area * TK_PI;
     }
 
-    tkSpectrum AreaLight::computeLe(const SurfaceInteraction &interaction,
+    tkSpectrum AreaLight::Le(const SurfaceInteraction &interaction,
                                     const tkVec3f &wo) const {
         if (dot(interaction.n, wo) <= 0)
             return 0;
@@ -24,7 +24,7 @@ namespace TK {
         *wi = -samplePt.wo;
         *occCheck = OcclusionChecker(ref, samplePt);
 
-        return computeLe(samplePt, samplePt.wo);
+        return Le(samplePt, samplePt.wo);
     }
 
     tkFloat AreaLight::getPdf(const Interaction &ref, const tkVec3f &wi) const {

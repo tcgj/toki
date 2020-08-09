@@ -9,7 +9,7 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    tkSpectrum WhittedIntegrator::computeLi(const Scene &scene, const Ray &r,
+    tkSpectrum WhittedIntegrator::Li(const Scene &scene, const Ray &r,
                                             Sampler &sampler, tkUInt depth) const {
         tkSpectrum li;
         SurfaceInteraction interaction;
@@ -27,7 +27,7 @@ namespace TK {
         tkVec3f wo = interaction.wo;
 
         // Add emission contribution if interaction with light
-        li += interaction.computeLe();
+        li += interaction.Le();
 
         // Add contribution of lighting on surface point
         for (const auto &light : scene.lights) {
@@ -50,8 +50,8 @@ namespace TK {
         // Spawn secondary rays from intersection point
         // if depth is under max depth
         if (depth < maxDepth - 1) {
-            li += computeReflectedLi(interaction, scene, r, sampler, depth);
-            li += computeRefractedLi(interaction, scene, r, sampler, depth);
+            li += reflectedLi(interaction, scene, r, sampler, depth);
+            li += refractedLi(interaction, scene, r, sampler, depth);
         }
 
         return li;

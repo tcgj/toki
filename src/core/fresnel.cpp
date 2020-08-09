@@ -1,7 +1,7 @@
 #include "fresnel.hpp"
 
 namespace TK {
-    tkFloat computeDielectricFresnel(tkFloat cosI, tkFloat etaA,
+    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaA,
                                      tkFloat etaB) {
         bool entering = cosI > 0;
         tkFloat etaI = entering ? etaA : etaB;
@@ -24,7 +24,7 @@ namespace TK {
         return (rParallel * rParallel + rPerp * rPerp) * 0.5;
     }
 
-    tkSpectrum computeConductorFresnel(tkFloat cosI, const tkSpectrum &eta,
+    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum &eta,
                                        const tkSpectrum &etaK) {
         // Only an approximation of air-conductor fresnel
         // Referenced from https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/
@@ -38,14 +38,14 @@ namespace TK {
     }
 
     tkSpectrum ConductorFresnel::evaluate(tkFloat cosI) const {
-        return computeConductorFresnel(cosI, eta, etaK);
+        return conductorFresnel(cosI, eta, etaK);
     }
 
     tkSpectrum DielectricFresnel::evaluate(tkFloat cosI) const {
-        return computeDielectricFresnel(cosI, etaA, etaB);
+        return dielectricFresnel(cosI, etaA, etaB);
     }
 
     tkSpectrum NoOpFresnel::evaluate(tkFloat cosI) const {
-        return (tkFloat)1;
+        return 1;
     }
 }  // namespace TK

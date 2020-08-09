@@ -8,7 +8,7 @@ namespace TK {
         WhittedIntegrator(tkUInt maxDepth, std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
             : SamplerIntegrator(camera, sampler), maxDepth(maxDepth) {}
 
-        tkSpectrum computeLi(const Scene &scene, const Ray &r, Sampler &sampler,
+        tkSpectrum Li(const Scene &scene, const Ray &r, Sampler &sampler,
                              tkUInt depth) const override;
 
     private:

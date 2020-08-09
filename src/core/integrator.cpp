@@ -40,7 +40,7 @@ namespace TK {
 
                         Ray ray;
                         camera->generateRay(cameraSample, &ray);
-                        li += computeLi(scene, ray, *localSampler);
+                        li += Li(scene, ray, *localSampler);
 
                         // TODO: Check if radiance is valid
                     } while (localSampler->nextSample());
@@ -55,7 +55,7 @@ namespace TK {
         camera->image->write();
     }
 
-    tkSpectrum SamplerIntegrator::computeReflectedLi(const SurfaceInteraction &interaction,
+    tkSpectrum SamplerIntegrator::reflectedLi(const SurfaceInteraction &interaction,
                                     const Scene &scene, const Ray &r,
                                     Sampler &sampler, tkUInt depth) const {
         tkVec3f wo = interaction.wo, wi;
@@ -66,10 +66,10 @@ namespace TK {
         if (pdf == 0 || f.isBlack() || cosTheta == 0)
             return 0;
         Ray reflectedRay = interaction.spawnRayTo(wi);
-        return f * computeLi(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
+        return f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
-    tkSpectrum SamplerIntegrator::computeRefractedLi(const SurfaceInteraction &interaction,
+    tkSpectrum SamplerIntegrator::refractedLi(const SurfaceInteraction &interaction,
                                     const Scene &scene, const Ray &r,
                                     Sampler &sampler, tkUInt depth) const {
         // Not implemented yet

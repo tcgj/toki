@@ -33,7 +33,7 @@ namespace TK {
             return true;
         }
         virtual tkSpectrum power() const = 0;
-        virtual tkSpectrum computeLe(const SurfaceInteraction &interaction, const tkVec3f &wo) const {
+        virtual tkSpectrum Le(const SurfaceInteraction &interaction, const tkVec3f &wo) const {
             return 0;
         };
         virtual tkSpectrum sample(const Interaction &ref, tkVec3f *wi, const tkVec2f &samp,

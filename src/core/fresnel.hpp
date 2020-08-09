@@ -4,9 +4,9 @@
 #include "spectrum.hpp"
 
 namespace TK {
-    tkFloat ComputeDielectricFresnel(tkFloat cosI, tkFloat etaI,
+    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaI,
                                      tkFloat etaT);
-    tkSpectrum ComputeConductorFresnel(tkFloat cosI, const tkSpectrum &eta,
+    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum &eta,
                                        const tkSpectrum &etaK);
 
     class Fresnel {

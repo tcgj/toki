@@ -23,11 +23,11 @@ namespace TK {
         scattering = s;
     }
 
-    tkSpectrum SurfaceInteraction::computeLe() const {
+    tkSpectrum SurfaceInteraction::Le() const {
         std::shared_ptr<Light> light = primitive->getLight();
         if (light == nullptr)
             return 0;
 
-        return light->computeLe(*this, wo);
+        return light->Le(*this, wo);
     }
 } // namespace TK

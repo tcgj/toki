@@ -18,7 +18,7 @@ namespace TK {
     class SurfaceInteraction : public Interaction {
     public:
         void computeScattering(Scattering *s);
-        tkSpectrum computeLe() const;
+        tkSpectrum Le() const;
 
         tkVec3f n;
         tkVec3f t;
