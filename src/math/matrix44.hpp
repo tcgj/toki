@@ -23,7 +23,7 @@ namespace TK {
         friend Matrix44 transpose(const Matrix44 &m);
         friend Matrix44 inverse(const Matrix44 &m);
 
-        tkFloat data[16];
+        tkFloat entries[16];
     };
 
     Matrix44 operator*(const Matrix44 &m1, const Matrix44 &m2);

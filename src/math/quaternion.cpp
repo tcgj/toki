@@ -8,33 +8,33 @@ namespace TK {
         // constructor derived from pbrt
         // Working backwards given quaternion to rotation matrix formula
         const Matrix44 &m = t.getMatrix();
-        tkFloat trace = m.data[0] + m.data[5] + m.data[10];
+        tkFloat trace = m.entries[0] + m.entries[5] + m.entries[10];
         if (trace > 0.0f) {
             // compute w from trace, then xyz
             // 4w^2 = [0,0] + [1,1] + [2,2] + [3,3] (but [3,3] == 1)
             tkFloat s = std::sqrt(trace + 1.0f);
             w = s * 0.5f;
             s = 0.5f / s;
-            xyz.x = (m.data[6] - m.data[9]) * s;
-            xyz.y = (m.data[8] - m.data[2]) * s;
-            xyz.z = (m.data[1] - m.data[4]) * s;
+            xyz.x = (m.entries[6] - m.entries[9]) * s;
+            xyz.y = (m.entries[8] - m.entries[2]) * s;
+            xyz.z = (m.entries[1] - m.entries[4]) * s;
         } else {
             const tkUInt next[3] = {1, 2, 0};
             tkFloat q[3];
             tkUInt i = 0;
-            if (m.data[5] > m.data[0])
+            if (m.entries[5] > m.entries[0])
                 i = 1;
-            if (m.data[10] > m.data[5])
+            if (m.entries[10] > m.entries[5])
                 i = 2;
             tkUInt j = next[i];
             tkUInt k = next[j];
-            tkFloat s = std::sqrt(1.0f + m.data[i * 4 + i] - m.data[j * 4 + j] - m.data[k * 4 + k]);
+            tkFloat s = std::sqrt(1.0f + m.entries[i * 4 + i] - m.entries[j * 4 + j] - m.entries[k * 4 + k]);
             q[i] = s * 0.5f;
             if (s != 0.0f)
                 s = 0.5f / s; // Should never be zero
-            q[j] = (m.data[i * 4 + j] + m.data[j * 4 + i]) * s;
-            q[k] = (m.data[i * 4 + k] + m.data[k * 4 + i]) * s;
-            w = (m.data[j * 4 + k] - m.data[k * 4 + j]) * s;
+            q[j] = (m.entries[i * 4 + j] + m.entries[j * 4 + i]) * s;
+            q[k] = (m.entries[i * 4 + k] + m.entries[k * 4 + i]) * s;
+            w = (m.entries[j * 4 + k] - m.entries[k * 4 + j]) * s;
             xyz.x = q[0];
             xyz.y = q[1];
             xyz.z = q[2];

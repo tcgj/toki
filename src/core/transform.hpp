@@ -56,10 +56,10 @@ namespace TK {
     template <typename T>
     inline Point3<T> Transform::operator()(const Point3<T> &p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = m.data[0] * px + m.data[1] * py + m.data[2] * pz + m.data[3];
-        T y = m.data[4] * px + m.data[5] * py + m.data[6] * pz + m.data[7];
-        T z = m.data[8] * px + m.data[9] * py + m.data[10] * pz + m.data[11];
-        T w = m.data[12] * px + m.data[13] * py + m.data[14] * pz + m.data[15];
+        T x = m.entries[0] * px + m.entries[1] * py + m.entries[2] * pz + m.entries[3];
+        T y = m.entries[4] * px + m.entries[5] * py + m.entries[6] * pz + m.entries[7];
+        T z = m.entries[8] * px + m.entries[9] * py + m.entries[10] * pz + m.entries[11];
+        T w = m.entries[12] * px + m.entries[13] * py + m.entries[14] * pz + m.entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
@@ -71,14 +71,14 @@ namespace TK {
 
         if (isNormal) {
             return Vec3<T>(
-                mInv.data[0] * vx + mInv.data[4] * vy + mInv.data[8] * vz,
-                mInv.data[1] * vx + mInv.data[5] * vy + mInv.data[9] * vz,
-                mInv.data[2] * vx + mInv.data[6] * vy + mInv.data[10] * vz);
+                mInv.entries[0] * vx + mInv.entries[4] * vy + mInv.entries[8] * vz,
+                mInv.entries[1] * vx + mInv.entries[5] * vy + mInv.entries[9] * vz,
+                mInv.entries[2] * vx + mInv.entries[6] * vy + mInv.entries[10] * vz);
         } else {
             return Vec3<T>(
-                m.data[0] * vx + m.data[1] * vy + m.data[2] * vz,
-                m.data[4] * vx + m.data[5] * vy + m.data[6] * vz,
-                m.data[8] * vx + m.data[9] * vy + m.data[10] * vz);
+                m.entries[0] * vx + m.entries[1] * vy + m.entries[2] * vz,
+                m.entries[4] * vx + m.entries[5] * vy + m.entries[6] * vz,
+                m.entries[8] * vx + m.entries[9] * vy + m.entries[10] * vz);
         }
     }
     template <typename T>
@@ -100,10 +100,10 @@ namespace TK {
     template <typename T>
     inline Point3<T> Transform::applyInverse(const Point3<T> &p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = mInv.data[0] * px + mInv.data[1] * py + mInv.data[2] * pz + mInv.data[3];
-        T y = mInv.data[4] * px + mInv.data[5] * py + mInv.data[6] * pz + mInv.data[7];
-        T z = mInv.data[8] * px + mInv.data[9] * py + mInv.data[10] * pz + mInv.data[11];
-        T w = mInv.data[12] * px + mInv.data[13] * py + mInv.data[14] * pz + mInv.data[15];
+        T x = mInv.entries[0] * px + mInv.entries[1] * py + mInv.entries[2] * pz + mInv.entries[3];
+        T y = mInv.entries[4] * px + mInv.entries[5] * py + mInv.entries[6] * pz + mInv.entries[7];
+        T z = mInv.entries[8] * px + mInv.entries[9] * py + mInv.entries[10] * pz + mInv.entries[11];
+        T w = mInv.entries[12] * px + mInv.entries[13] * py + mInv.entries[14] * pz + mInv.entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
@@ -115,14 +115,14 @@ namespace TK {
 
         if (isNormal) {
             return Vec3<T>(
-                m.data[0] * vx + m.data[4] * vy + m.data[8] * vz,
-                m.data[1] * vx + m.data[5] * vy + m.data[9] * vz,
-                m.data[2] * vx + m.data[6] * vy + m.data[10] * vz);
+                m.entries[0] * vx + m.entries[4] * vy + m.entries[8] * vz,
+                m.entries[1] * vx + m.entries[5] * vy + m.entries[9] * vz,
+                m.entries[2] * vx + m.entries[6] * vy + m.entries[10] * vz);
         } else {
             return Vec3<T>(
-                mInv.data[0] * vx + mInv.data[1] * vy + mInv.data[2] * vz,
-                mInv.data[4] * vx + mInv.data[5] * vy + mInv.data[6] * vz,
-                mInv.data[8] * vx + mInv.data[9] * vy + mInv.data[10] * vz);
+                mInv.entries[0] * vx + mInv.entries[1] * vy + mInv.entries[2] * vz,
+                mInv.entries[4] * vx + mInv.entries[5] * vy + mInv.entries[6] * vz,
+                mInv.entries[8] * vx + mInv.entries[9] * vy + mInv.entries[10] * vz);
         }
     }
     template <typename T>
