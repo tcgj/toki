@@ -8,7 +8,7 @@
 namespace TK {
     struct CameraSample {
         tkPoint2f imgCoord;
-        tkPoint2f lensCoord;
+        tkVec2f lens;
     };
 
     class Camera {
