@@ -83,5 +83,6 @@ namespace TK {
             ret.y = v * 0.5f;
             ret.x = u - ret.x;
         }
+        return ret;
     }
 } // namespace TK
