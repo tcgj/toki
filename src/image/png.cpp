@@ -10,7 +10,7 @@ namespace TK {
         for (tkInt y = 0; y < resolution.y; ++y) {
             for (tkInt x = 0; x < resolution.x; ++x) {
                 tkVec3f color = getPixelColor(tkPoint2i(x, y));
-                color = 255.0f * gammaCorrect(color);
+                color = gammaCorrect(color) * (tkFloat)255;
 
                 imageData[offset] = clamp(color.r, 0, 255);
                 imageData[offset + 1] = clamp(color.g, 0, 255);
