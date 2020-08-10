@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(Toki)
 
 # add sanitizers to module path
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/externals/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
 find_package(Sanitizers)
 
 # check options
