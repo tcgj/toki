@@ -16,7 +16,7 @@ namespace TK {
         Ray r = ref.spawnRayTo(wi);
         tkFloat tHit;
         SurfaceInteraction interaction;
-        if (intersect(r, &tHit, &interaction))
+        if (!intersect(r, &tHit, &interaction))
             return 0;
 
         tkFloat cosTheta = std::abs(dot(-wi, interaction.n));
