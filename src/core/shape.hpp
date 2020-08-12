@@ -21,6 +21,10 @@ namespace TK {
         virtual SurfaceInteraction sample(const Interaction &ref,
                                           const tkVec2f &samp,
                                           tkFloat *pdf) const = 0;
+        // Get solid angle pdf value of sampling surface point on shape from ref point
+        tkFloat getPdf(const Interaction &ref,
+                       const SurfaceInteraction &surface) const;
+        // Get solid angle pdf value of sampling from direction wi from ref point
         virtual tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const;
 
     protected:

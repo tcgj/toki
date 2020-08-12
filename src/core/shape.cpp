@@ -12,6 +12,17 @@ namespace TK {
         return intersect(r, &tHit, &interaction);
     }
 
+    tkFloat Shape::getPdf(const Interaction &ref,
+                          const SurfaceInteraction &surface) const {
+        tkVec3f dir = ref.p - surface.p;
+        tkFloat sampleSqrDist = dir.squaredMagnitude();
+        tkFloat cosTheta = dot(surface.wo, surface.n);
+        if (sampleSqrDist == 0 || cosTheta <= 0)
+            return 0;
+        else
+            return sampleSqrDist / (surfaceArea() * cosTheta);
+    }
+
     tkFloat Shape::getPdf(const Interaction &ref, const tkVec3f &wi) const {
         Ray r = ref.spawnRayTo(wi);
         tkFloat tHit;
@@ -19,12 +30,6 @@ namespace TK {
         if (!intersect(r, &tHit, &interaction))
             return 0;
 
-        tkFloat cosTheta = std::abs(dot(-wi, interaction.n));
-        if (cosTheta == 0)
-            return 0;
-
-        // pdf wrt area = 1 / area
-        // converted wrt to solid angle by factor of r^2 / cosTheta
-        return squaredDistance(ref.p, interaction.p) / (cosTheta * surfaceArea());
+        return getPdf(ref, interaction);
     }
 }  // namespace TK

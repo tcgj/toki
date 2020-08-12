@@ -73,17 +73,8 @@ namespace TK {
             ret.p = (*objectToWorld)(tkPoint3f(n));
             if (invertNormals)
                 ret.n = -ret.n;
-            tkVec3f dir = ref.p - ret.p;
-            ret.wo = normalize(dir);
-
-            // Similar to Shape::getPdf but skips intersection test
-            tkFloat sampleSqrDist = dir.squaredMagnitude();
-            if (sampleSqrDist == 0)
-                *pdf = 0;
-            else {
-                tkFloat cosTheta = std::abs(dot(normalize(dir), ret.n));
-                *pdf = sampleSqrDist / (cosTheta * surfaceArea());
-            }
+            ret.wo = normalize(ref.p - ret.p);
+            *pdf = Shape::getPdf(ref, ret);
             return ret;
         }
 
