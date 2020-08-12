@@ -12,6 +12,7 @@
 #include "shape/triangle.hpp"
 #include "shape/sphere.hpp"
 #include "material/matte.hpp"
+#include "material/mirror.hpp"
 #include "core/spectrum.hpp"
 #include "accelerator/bvh.hpp"
 #include "accelerator/iterator.hpp"
@@ -59,6 +60,8 @@ namespace TK {
         auto matteRed = std::make_shared<Matte>(redKd);
         tkSpectrum greenKd(tkSpectrum::fromRGB(tkVec3f(0.15f, 0.476f, 0.0f)));
         auto matteGreen = std::make_shared<Matte>(greenKd);
+        tkSpectrum mirrorKd(tkSpectrum::fromRGB(tkVec3f(0.9, 0.9, 0.9)));
+        auto mirror = std::make_shared<Mirror>(mirrorKd);
 
         std::vector<std::shared_ptr<Primitive>> prims;
 
@@ -226,6 +229,10 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri35, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri36, matteWhite, areaLight1));
         prims.push_back(std::make_shared<Primitive>(tri37, matteWhite, areaLight2));
+
+        Transform sphereTf = translate(tkVec3f(185, 397, 353));
+        auto mirrorSphere = std::make_shared<Sphere>(&sphereTf, 103);
+        prims.push_back(std::make_shared<Primitive>(mirrorSphere, mirror));
 
         lights.push_back(areaLight1);
         lights.push_back(areaLight2);
