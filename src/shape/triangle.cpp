@@ -3,6 +3,7 @@
 #include "mesh.hpp"
 #include "core/aabb.hpp"
 #include "core/ray.hpp"
+#include "util/samplingutil.hpp"
 
 namespace TK {
     inline tkAABBf Triangle::objectBoundingBox() const {
@@ -27,7 +28,7 @@ namespace TK {
         tkVec3f v01 = v1.pos - v0.pos;
         tkVec3f v02 = v2.pos - v0.pos;
 
-        return cross(v01, v02).magnitude() * 0.5f;
+        return cross(v01, v02).magnitude() * 0.5;
     }
 
     // Implementation of Möller–Trumbore Ray-Triangle algorithm from
@@ -109,7 +110,22 @@ namespace TK {
     SurfaceInteraction Triangle::sample(const Interaction &ref,
                                         const tkVec2f &samp,
                                         tkFloat *pdf) const {
-        // To be implemented
-        return SurfaceInteraction();
+        SurfaceInteraction ret;
+
+        Vertex a, b, c;
+        mesh->getTriVertices(triIndex, &a, &b, &c);
+        tkVec2f bCoord = uniformTriangleSample(samp.x, samp.y);
+        tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
+
+        ret.p = bCoord.x * a.pos + bCoord.y * b.pos + bCoordZ * c.pos;
+        if (mesh->normalBuffer != nullptr)
+            ret.n = bCoord.x * a.normal + bCoord.y * b.normal + bCoordZ * c.normal;
+        else
+            ret.n = normalize(cross(b.pos - a.pos, c.pos - a.pos));
+        if (invertNormals)
+            ret.n = -ret.n;
+        ret.wo = normalize(ref.p - ret.p);
+        *pdf = getPdf(ref, ret);
+        return ret;
     }
 }  // namespace TK
