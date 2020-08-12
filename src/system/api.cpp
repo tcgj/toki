@@ -69,13 +69,11 @@ namespace TK {
         //     translate(tkVec3f(343, 540, 227)), tkSpectrum(100000)));
         // lights.push_back(std::make_shared<PointLight>(
         //     translate(tkVec3f(213, 540, 332)), tkSpectrum(100000)));
-        Transform lightPos = translate(tkVec3f(278, 548.8, 279.5));
-        auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
-        auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight,
-                                                     tkSpectrum(10.0f));
-        lights.push_back(areaLight);
-        prims.push_back(
-            std::make_shared<Primitive>(sphereLight, nullptr, areaLight));
+        // Transform lightPos = translate(tkVec3f(278, 548.8, 279.5));
+        // auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
+        // auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(10.0f));
+        // lights.push_back(areaLight);
+        // prims.push_back(std::make_shared<Primitive>(sphereLight, nullptr, areaLight));
 
         // Geometry
         Transform tf = translate(tkVec3f::zero);
@@ -83,22 +81,22 @@ namespace TK {
             // Floor 0-1
             tkPoint3f(552.8, 0, 0), tkPoint3f(0, 0, 0), tkPoint3f(0, 0, 559.2),
             tkPoint3f(549.6, 0, 559.2),
-            // Light 2-3
+            // Light 36-37
             tkPoint3f(343, 548.8, 227), tkPoint3f(343, 548.8, 332),
             tkPoint3f(213, 548.8, 332), tkPoint3f(213, 548.8, 227),
-            // Ceiling 4-5
+            // Ceiling 2-5,32-35
             tkPoint3f(556, 548.8, 0), tkPoint3f(556, 548.8, 559.2),
             tkPoint3f(0, 548.8, 559.2), tkPoint3f(0, 548.8, 0),
-            // Back wall 67
+            // Back wall 6-7
             tkPoint3f(549.6, 0, 559.2), tkPoint3f(0, 0, 559.2),
             tkPoint3f(0, 548.8, 559.2), tkPoint3f(556, 548.8, 559.2),
-            // Right wall 89
+            // Right wall 8-9
             tkPoint3f(0, 0, 559.2), tkPoint3f(0, 0, 0), tkPoint3f(0, 548.8, 0),
             tkPoint3f(0, 548.8, 559.2),
             // Left wall 1011
             tkPoint3f(552.8, 0, 0), tkPoint3f(549.6, 0, 559.2),
             tkPoint3f(556, 548.8, 559.2), tkPoint3f(556, 548.8, 0),
-            // Short block 1221
+            // Short block 12-21
             tkPoint3f(130, 165, 65), tkPoint3f(82, 165, 225),
             tkPoint3f(240, 165, 272), tkPoint3f(290, 165, 114),
 
@@ -113,7 +111,7 @@ namespace TK {
 
             tkPoint3f(240, 0, 272), tkPoint3f(240, 165, 272),
             tkPoint3f(82, 165, 225), tkPoint3f(82, 0, 225),
-            // Tall Block 2231
+            // Tall Block 22-31
             tkPoint3f(423, 330, 247), tkPoint3f(265, 330, 296),
             tkPoint3f(314, 330, 456), tkPoint3f(472, 330, 406),
 
@@ -128,9 +126,9 @@ namespace TK {
 
             tkPoint3f(265, 0, 296), tkPoint3f(265, 330, 296),
             tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)};
-        tkUInt I[96] = {0,1,2,0,2,3,
-                        4,5,6,4,6,7,
-                        8,9,10,8,10,11,
+        tkUInt I[114] = {0,1,2,0,2,3,
+                        8,4,7,8,7,11,
+                        8,9,5,8,5,4,
                         12,13,14,12,14,15,
                         16,17,18,16,18,19,
                         20,21,22,20,22,23,
@@ -143,8 +141,11 @@ namespace TK {
                         48,49,50,48,50,51,
                         52,53,54,52,54,55,
                         56,57,58,56,58,59,
-                        60,61,62,60,62,63};
-        auto mesh = std::make_shared<Mesh>(tf, 32, I, 64, V, nullptr, nullptr);
+                        60,61,62,60,62,63,
+                        5,9,10,5,10,6,
+                        7,6,10,7,10,11,
+                        4,5,6,4,6,7};
+        auto mesh = std::make_shared<Mesh>(tf, 38, I, 64, V, nullptr, nullptr);
         auto tri0 = std::make_shared<Triangle>(&tf, mesh, 0);
         auto tri1 = std::make_shared<Triangle>(&tf, mesh, 1);
         auto tri2 = std::make_shared<Triangle>(&tf, mesh, 2);
@@ -177,6 +178,16 @@ namespace TK {
         auto tri29 = std::make_shared<Triangle>(&tf, mesh, 29);
         auto tri30 = std::make_shared<Triangle>(&tf, mesh, 30);
         auto tri31 = std::make_shared<Triangle>(&tf, mesh, 31);
+        auto tri32 = std::make_shared<Triangle>(&tf, mesh, 32);
+        auto tri33 = std::make_shared<Triangle>(&tf, mesh, 33);
+        auto tri34 = std::make_shared<Triangle>(&tf, mesh, 34);
+        auto tri35 = std::make_shared<Triangle>(&tf, mesh, 35);
+        auto tri36 = std::make_shared<Triangle>(&tf, mesh, 36);
+        auto tri37 = std::make_shared<Triangle>(&tf, mesh, 37);
+        auto areaLight1 =
+            std::make_shared<AreaLight>(tf, tri36, tkSpectrum(50.0f));
+        auto areaLight2 =
+            std::make_shared<AreaLight>(tf, tri37, tkSpectrum(50.0f));
         prims.push_back(std::make_shared<Primitive>(tri0, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri1, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri2, matteWhite));
@@ -209,6 +220,15 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri29, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri30, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri31, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri32, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri33, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri34, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri35, matteWhite));
+        prims.push_back(std::make_shared<Primitive>(tri36, matteWhite, areaLight1));
+        prims.push_back(std::make_shared<Primitive>(tri37, matteWhite, areaLight2));
+
+        lights.push_back(areaLight1);
+        lights.push_back(areaLight2);
 
         // Accel Structure
         auto accel = std::make_shared<Iterator>(prims, tkAABBf(tkPoint3f(0), tkPoint3f(560, 560, -560)));
