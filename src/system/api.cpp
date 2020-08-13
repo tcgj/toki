@@ -16,6 +16,7 @@
 #include "core/spectrum.hpp"
 #include "accelerator/bvh.hpp"
 #include "accelerator/iterator.hpp"
+#include "accelerator/bvh.hpp"
 #include "light/point.hpp"
 #include "light/directional.hpp"
 #include "light/area.hpp"
@@ -128,7 +129,8 @@ namespace TK {
             tkPoint3f(265, 330, 296), tkPoint3f(265, 0, 296),
 
             tkPoint3f(265, 0, 296), tkPoint3f(265, 330, 296),
-            tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)};
+            tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)
+        };
         tkUInt I[114] = {0,1,2,0,2,3,
                         8,4,7,8,7,11,
                         8,9,5,8,5,4,
@@ -238,7 +240,8 @@ namespace TK {
         lights.push_back(areaLight2);
 
         // Accel Structure
-        auto accel = std::make_shared<Iterator>(prims, tkAABBf(tkPoint3f(0), tkPoint3f(560, 560, -560)));
+        // auto accel = std::make_shared<Iterator>(prims, tkAABBf(tkPoint3f(0), tkPoint3f(560, 560, -560)));
+        auto accel = std::make_shared<BVH>(prims);
 
         // Scene
         Scene scene(accel, lights);
