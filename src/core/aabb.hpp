@@ -33,6 +33,7 @@ namespace TK {
 
         // Math
         Point3<T> corner(tkUInt cIndex) const;
+        Point3<T> center() const;
         Vec3<T> diagonal() const;
         T surfaceArea() const;
         T area(tkInt axis1, tkInt axis2) const;
@@ -76,6 +77,11 @@ namespace TK {
         return Point3<T>((*this)[cIndex & 1].x,
                         (*this)[(cIndex & 2) ? 1 : 0].y,
                         (*this)[(cIndex & 4) ? 1 : 0].z);
+    }
+
+    template <typename T>
+    inline Point3<T> AABB<T>::center() const {
+        return 0.5 * (minPt + maxPt);
     }
 
     template <typename T>
