@@ -17,14 +17,14 @@ namespace TK {
             : camera(camera), sampler(sampler) {}
 
         virtual tkSpectrum Li(const Scene &scene, const Ray &r,
-                                     Sampler &sampler, tkUInt depth = 0) const = 0;
+                                     Sampler &sampler, tkInt depth = 0) const = 0;
         void render(const Scene &scene) override;
         tkSpectrum reflectedLi(const SurfaceInteraction &interaction,
                                        const Scene &scene, const Ray &r,
-                                       Sampler &sampler, tkUInt depth) const;
+                                       Sampler &sampler, tkInt depth) const;
         tkSpectrum refractedLi(const SurfaceInteraction &interaction,
                                        const Scene &scene, const Ray &r,
-                                       Sampler &sampler, tkUInt depth) const;
+                                       Sampler &sampler, tkInt depth) const;
 
     private:
         std::shared_ptr<Camera> camera;

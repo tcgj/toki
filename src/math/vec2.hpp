@@ -59,7 +59,7 @@ namespace TK {
 
     template <typename T>
     inline bool isNaN(Vec2<T> &v) {
-        for (tkUInt i = 0; i < 2; ++i) {
+        for (tkInt i = 0; i < 2; ++i) {
             if (std::isnan(v.entries[i]))
                 return true;
         }

@@ -5,13 +5,13 @@
 namespace TK {
     class WhittedIntegrator : public SamplerIntegrator {
     public:
-        WhittedIntegrator(tkUInt maxDepth, std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
+        WhittedIntegrator(tkInt maxDepth, std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
             : SamplerIntegrator(camera, sampler), maxDepth(maxDepth) {}
 
         tkSpectrum Li(const Scene &scene, const Ray &r, Sampler &sampler,
-                             tkUInt depth) const override;
+                             tkInt depth) const override;
 
     private:
-        tkUInt maxDepth;
+        tkInt maxDepth;
     };
 } // namespace TK

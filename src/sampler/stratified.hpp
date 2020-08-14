@@ -5,7 +5,7 @@
 namespace TK {
     class StratifiedSampler : public Sampler {
     public:
-        StratifiedSampler(tkUInt xCount, tkUInt yCount, tkUInt dimensions);
+        StratifiedSampler(tkInt xCount, tkInt yCount, tkInt dimensions);
 
         void setPixel(const tkPoint2i &pixelCoord) override;
         tkFloat nextFloat() override;
@@ -13,6 +13,6 @@ namespace TK {
         std::unique_ptr<Sampler> getClone() override;
 
     private:
-        tkUInt xCount, yCount;
+        tkInt xCount, yCount;
     };
 } // namespace TK

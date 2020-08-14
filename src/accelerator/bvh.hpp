@@ -17,22 +17,22 @@ namespace TK {
 
     private:
         struct PrimitiveUnit {
-            PrimitiveUnit(tkUInt index, const tkAABBf &bb)
+            PrimitiveUnit(tkI64 index, const tkAABBf &bb)
                 : index(index), bb(bb), centroid(bb.center()) {}
 
-            tkUInt index;
+            tkI64 index;
             tkAABBf bb;
             tkPoint3f centroid;
         };
 
         struct Node {
-            void makeInner(const tkAABBf &nodeBB, tkUInt nLeft, tkUInt nRight, tkInt splitAxis) {
+            void makeInner(const tkAABBf &nodeBB, tkI64 nLeft, tkI64 nRight, tkInt splitAxis) {
                 bb = nodeBB;
                 left = nLeft;
                 right = nRight;
                 axis = splitAxis;
             }
-            void makeLeaf(const tkAABBf &nodeBB, tkUInt pCount, tkUInt pOffset) {
+            void makeLeaf(const tkAABBf &nodeBB, tkI64 pCount, tkI64 pOffset) {
                 bb = nodeBB;
                 count = pCount;
                 offset = pOffset;
@@ -41,19 +41,19 @@ namespace TK {
             // Common members
             tkAABBf bb;
             // Inner node only
-            tkUInt left;
-            tkUInt right;
+            tkI64 left;
+            tkI64 right;
             tkInt axis;
             // Leaf node only
-            tkUInt count = 0;
-            tkUInt offset;
+            tkI64 count = 0;
+            tkI64 offset;
         };
 
         // Stack-based BVH traversal
-        bool intersectNode(const Ray &r, tkUInt nodeIndex, SurfaceInteraction *interaction = nullptr) const;
+        bool intersectNode(const Ray &r, tkI64 nodeIndex, SurfaceInteraction *interaction = nullptr) const;
 
         // BVH Construction Functions
-        void buildSAH(tkUInt nodeIndex, tkUInt start, tkUInt end,
+        void buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end,
                       std::vector<PrimitiveUnit> &pSet,
                       std::vector<std::shared_ptr<Primitive>> &pSorted);
 

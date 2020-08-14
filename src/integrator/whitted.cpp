@@ -10,7 +10,7 @@
 
 namespace TK {
     tkSpectrum WhittedIntegrator::Li(const Scene &scene, const Ray &r,
-                                            Sampler &sampler, tkUInt depth) const {
+                                            Sampler &sampler, tkInt depth) const {
         tkSpectrum li;
         SurfaceInteraction interaction;
         if (!scene.intersect(r, &interaction)) {

@@ -85,7 +85,7 @@ namespace TK {
     inline AABB<T> Transform::operator()(const AABB<T> &bb) const {
         const Transform &mat = *this;
         AABB<T> out(mat(bb.corner(0)));
-        for (tkUInt i = 1; i < 8; ++i) {
+        for (tkInt i = 1; i < 8; ++i) {
             out = bbUnion(out, mat(bb.corner(i)));
         }
         return out;
@@ -128,7 +128,7 @@ namespace TK {
     template <typename T>
     inline AABB<T> Transform::applyInverse(const AABB<T> &bb) const {
         AABB<T> out(this->applyInverse(bb.corner(0)));
-        for (tkUInt i = 1; i < 8; ++i) {
+        for (tkInt i = 1; i < 8; ++i) {
             out = bbUnion(out, this->applyInverse(bb.corner(i)));
         }
         return out;

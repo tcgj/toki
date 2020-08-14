@@ -131,7 +131,7 @@ namespace TK {
             tkPoint3f(265, 0, 296), tkPoint3f(265, 330, 296),
             tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)
         };
-        tkUInt I[114] = {0,1,2,0,2,3,
+        tkI64 I[114] = {0,1,2,0,2,3,
                         8,4,7,8,7,11,
                         8,9,5,8,5,4,
                         12,13,14,12,14,15,
@@ -276,7 +276,7 @@ namespace TK {
 
         // Plane
         Transform tf = translate(tkVec3f::zero);
-        tkUInt I[6] = {0, 1, 3, 1, 2, 3};
+        tkI64 I[6] = {0, 1, 3, 1, 2, 3};
         tkPoint3f V[4] = {tkPoint3f(-10, 0, 10), tkPoint3f(10, 0, 10),
                           tkPoint3f(10, 0, -10), tkPoint3f(-10, 0, -10)};
         tkVec3f N[4] = {tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0),

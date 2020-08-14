@@ -22,9 +22,9 @@ namespace TK {
         tkVec3f localToWorld(const tkVec3f &v) const;
 
     private:
-        static constexpr tkUInt MAX_BXDF_COUNT = 8;
+        static constexpr tkInt MAX_BXDF_COUNT = 8;
 
-        tkUInt numBxdf = 0;
+        tkInt numBxdf = 0;
         BxDF *bxdfs[MAX_BXDF_COUNT];
         tkVec3f n;
         tkVec3f t;

@@ -32,13 +32,13 @@ namespace TK {
         bool operator!=(const AABB<T> &b) const;
 
         // Math
-        Point3<T> corner(tkUInt cIndex) const;
+        Point3<T> corner(tkInt cIndex) const;
         Point3<T> center() const;
         Vec3<T> diagonal() const;
         T surfaceArea() const;
         T area(tkInt axis1, tkInt axis2) const;
         T volume() const;
-        tkUInt maxExtent() const;
+        tkInt maxExtent() const;
         Point3<T> lerp(const tkPoint3f &t) const;
         Vec3<T> offset(const Point3<T> &p) const;
         void boundingSphere(Point3<T> *center, tkFloat *radius) const;
@@ -73,7 +73,7 @@ namespace TK {
     };
 
     template <typename T>
-    inline Point3<T> AABB<T>::corner(tkUInt cIndex) const {
+    inline Point3<T> AABB<T>::corner(tkInt cIndex) const {
         return Point3<T>((*this)[cIndex & 1].x,
                         (*this)[(cIndex & 2) ? 1 : 0].y,
                         (*this)[(cIndex & 4) ? 1 : 0].z);
@@ -104,7 +104,7 @@ namespace TK {
         return d.x * d.y * d.z;
     }
     template <typename T>
-    inline tkUInt AABB<T>::maxExtent() const {
+    inline tkInt AABB<T>::maxExtent() const {
         Vec3<T> d = diagonal();
         if (d.x > d.y && d.x > d.z)
             return 0;
@@ -192,7 +192,7 @@ namespace TK {
     template <typename T>
     inline bool AABB<T>::hasIntersect(const Ray &r) const {
         tkFloat tmin = 0, tmax = r.tMax;
-        for (tkUInt i = 0; i < 3; ++i) {
+        for (tkInt i = 0; i < 3; ++i) {
             // component-wise computation
             // p = o + t*d -----> t = (p - o) * 1/d
             tkFloat invD = 1.0 / r.d[i];

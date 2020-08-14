@@ -12,7 +12,7 @@ namespace TK {
     }
 
     Scattering::~Scattering() {
-        for (tkUInt i = 0; i < numBxdf; ++i) {
+        for (tkInt i = 0; i < numBxdf; ++i) {
             delete bxdfs[i];
         }
     }
@@ -21,7 +21,7 @@ namespace TK {
         tkVec3f wo = worldToLocal(worldWo);
         tkVec3f wi = worldToLocal(worldWi);
         tkSpectrum ret;
-        for (tkUInt i = 0; i < numBxdf; ++i) {
+        for (tkInt i = 0; i < numBxdf; ++i) {
             ret += bxdfs[i]->evaluate(wo, wi);
         }
         return ret;
@@ -33,7 +33,7 @@ namespace TK {
         std::vector<BxDF *> matching;
         *pdf = 0;
         // Collect bxdfs that match the type criteria
-        for (tkUInt i = 0; i < numBxdf; ++i) {
+        for (tkInt i = 0; i < numBxdf; ++i) {
             if (bxdfs[i]->hasType(type))
                 matching.push_back(bxdfs[i]);
         }
@@ -78,7 +78,7 @@ namespace TK {
         tkVec3f wi = worldToLocal(worldWi);
         tkFloat ret = 0;
         tkInt count = 0;
-        for (tkUInt i = 0; i < numBxdf; ++i) {
+        for (tkInt i = 0; i < numBxdf; ++i) {
             if (bxdfs[i]->hasType(type)) {
                 ret += bxdfs[i]->getPdf(wo, wi);
                 count++;

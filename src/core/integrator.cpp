@@ -57,7 +57,7 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::reflectedLi(const SurfaceInteraction &interaction,
                                     const Scene &scene, const Ray &r,
-                                    Sampler &sampler, tkUInt depth) const {
+                                    Sampler &sampler, tkInt depth) const {
         tkVec3f wo = interaction.wo, wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
@@ -71,7 +71,7 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::refractedLi(const SurfaceInteraction &interaction,
                                     const Scene &scene, const Ray &r,
-                                    Sampler &sampler, tkUInt depth) const {
+                                    Sampler &sampler, tkInt depth) const {
         // Not implemented yet
         return 0;
     }

@@ -6,7 +6,7 @@ namespace TK {
     void PNGImage::write() {
         tkUChar imageData[3 * resolution.x * resolution.y];
 
-        tkUInt offset = 0;
+        tkInt offset = 0;
         for (tkInt y = 0; y < resolution.y; ++y) {
             for (tkInt x = 0; x < resolution.x; ++x) {
                 tkVec3f color = getPixelColor(tkPoint2i(x, y));

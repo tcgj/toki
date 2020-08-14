@@ -4,28 +4,28 @@
 #include "core/random.hpp"
 
 namespace TK {
-    StratifiedSampler::StratifiedSampler(tkUInt xCount, tkUInt yCount, tkUInt dimensions)
+    StratifiedSampler::StratifiedSampler(tkInt xCount, tkInt yCount, tkInt dimensions)
         : Sampler(xCount * yCount), xCount(xCount), yCount(yCount) {
         // Pre-initialize samples with a max dimension count
-        for (tkUInt i = 0; i < dimensions; ++i) {
+        for (tkInt i = 0; i < dimensions; ++i) {
             Sampler::requestFloats(1);
             Sampler::requestVectors(1);
         }
     }
 
-    void generateFloatSamples(tkFloat *samples, tkUInt count) {
+    void generateFloatSamples(tkFloat *samples, tkInt count) {
         tkFloat invCount = (tkFloat)1 / count;
-        for (tkUInt i = 0; i < count; ++i) {
+        for (tkInt i = 0; i < count; ++i) {
             samples[i] = (i + Random::nextFloat()) * invCount;
         }
     }
 
-    void generateVectorSamples(tkVec2f *samples, tkUInt xCount, tkUInt yCount) {
+    void generateVectorSamples(tkVec2f *samples, tkInt xCount, tkInt yCount) {
         tkFloat invX = (tkFloat)1 / xCount;
         tkFloat invY = (tkFloat)1 / yCount;
         tkVec2f *currSample = samples;
-        for (tkUInt y = 0; y < yCount; ++y) {
-            for (tkUInt x = 0; x < xCount; ++x) {
+        for (tkInt y = 0; y < yCount; ++y) {
+            for (tkInt x = 0; x < xCount; ++x) {
                 currSample->x = (x + Random::nextFloat()) * invX;
                 currSample->y = (y + Random::nextFloat()) * invY;
                 currSample++;
@@ -34,10 +34,10 @@ namespace TK {
     }
 
     template <typename T>
-    void randomizeSamples(T *samples, tkUInt count) {
-        for (tkUInt i = 0; i < count; ++i) {
+    void randomizeSamples(T *samples, tkInt count) {
+        for (tkInt i = 0; i < count; ++i) {
             // Sanity check to ensure o never goes out of bounds for whatever reason
-            tkUInt o = std::min(count - 1, i + static_cast<tkUInt>(Random::nextFloat() * (count - i)));
+            tkInt o = std::min(count - 1, i + static_cast<tkInt>(Random::nextFloat() * (count - i)));
             std::swap(samples[i], samples[o]);
         }
     }
