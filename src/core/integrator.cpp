@@ -19,7 +19,7 @@ namespace TK {
         tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
                          (res.y + tileSize - 1) / tileSize);
 
-        parallelFor2D(numTiles, 1, [&](tkVec2i tile) {
+        Parallel::dispatch2D(numTiles, 1, [&](tkVec2i tile) {
             // Calculate tile bounds
             tkInt x0 = tile.x * tileSize;
             tkInt x1 = std::min(x0 + tileSize, res.x);
