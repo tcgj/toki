@@ -15,7 +15,7 @@ find_package(Sanitizers)
 # check options
 option(TK_USE_DOUBLE "Use double-precision floating point numbers." OFF)
 if (TK_USE_DOUBLE)
-    add_compile_options(-D TK_USE_DOUBLE)
+    add_compile_definitions(TK_USE_DOUBLE)
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -23,6 +23,10 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose build type." FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
         "MinSizeRel" "RelWithDebInfo")
+endif ()
+
+if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+    add_compile_definitions(TK_DEBUG_MODE)
 endif ()
 
 # add warning options

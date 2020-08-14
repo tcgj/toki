@@ -12,11 +12,8 @@
 #include <vector>
 #include <cstdint>
 
-//#define TK_DEBUG_MODE
-
 //#define TK_ENABLE_ASSERTS
 #include "error.hpp"
-//#define TK_USE_DOUBLE
 #include "types.hpp"
 
 namespace TK {
