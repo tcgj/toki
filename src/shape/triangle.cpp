@@ -6,7 +6,7 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    inline tkAABBf Triangle::objectBoundingBox() const {
+    tkAABBf Triangle::objectBoundingBox() const {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 

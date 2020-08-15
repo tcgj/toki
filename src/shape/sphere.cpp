@@ -4,7 +4,7 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    inline tkAABBf Sphere::objectBoundingBox() const {
+    tkAABBf Sphere::objectBoundingBox() const {
         return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
     }
 
