@@ -6,8 +6,8 @@
 namespace TK {
     // Construct a BVH based on the provided construction type
     BVH::BVH(const std::vector<std::shared_ptr<Primitive>> &primitiveList,
-             Strategy type) : primitives(primitiveList) {
-        tkI64 pCount = primitives.size();
+             Strategy type) {
+        tkI64 pCount = primitiveList.size();
         if (pCount == 0)
             return;
         // Initialise array to maximum number of nodes required
@@ -16,16 +16,20 @@ namespace TK {
 
         std::vector<PrimitiveUnit> pSet;
         for (tkI64 i = 0; i < pCount; ++i) {
-            pSet.emplace_back(i, primitives[i]->worldBoundingBox());
+            pSet.emplace_back(i, primitiveList[i]->worldBoundingBox());
         }
 
-        std::vector<std::shared_ptr<Primitive>> pSorted;
         switch (type) {
             case Strategy::BinnedSAH:
-                buildSAH(0, 0, pCount, pSet, pSorted);
+                buildSAH(0, 0, pCount, pSet);
                 break;
             default:
                 break;
+        }
+
+        std::vector<std::shared_ptr<Primitive>> pSorted;
+        for (tkI64 i = 0; i < pCount; ++i) {
+            pSorted.push_back(primitiveList[pSet[i].index]);
         }
         primitives.swap(pSorted);
         pSet.clear();
@@ -97,14 +101,12 @@ namespace TK {
 
     // Construct a SAH-based BVH
     void BVH::buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end,
-                       std::vector<PrimitiveUnit> &pSet,
-                       std::vector<std::shared_ptr<Primitive>> &pSorted) {
+                       std::vector<PrimitiveUnit> &pSet) {
         tkI64 count = end - start;
 
         /* Make leaf node since no subdivision required */
         if (count == 1) {
             nodes[nodeIndex].makeLeaf(pSet[start].bb, count, start);
-            pSorted.push_back(primitives[pSet[start].index]);
             return;
         }
 
@@ -121,9 +123,6 @@ namespace TK {
         // since subdivision unlikely to improve efficiency
         if (centroidBB.maxPt[axis] - centroidBB.minPt[axis] < TK_EPSILON) {
             nodes[nodeIndex].makeLeaf(bb, count, start);
-            for (tkI64 i = start; i < end; ++i) {
-                pSorted.push_back(primitives[pSet[i].index]);
-            }
             return;
         }
 
@@ -171,9 +170,6 @@ namespace TK {
         tkFloat noSplitCost = count * bb.surfaceArea();
         if (minCost > noSplitCost || count < maxPCount) {
             nodes[nodeIndex].makeLeaf(bb, count, start);
-            for (tkI64 i = start; i < end; ++i) {
-                pSorted.push_back(primitives[pSet[i].index]);
-            }
             return;
         }
 
@@ -189,7 +185,7 @@ namespace TK {
                 return binIndex <= minCostPart;
             });
         tkI64 mid = midPtr - &pSet[0];
-        buildSAH(left, start, mid, pSet, pSorted);
-        buildSAH(right, mid, end, pSet, pSorted);
+        buildSAH(left, start, mid, pSet);
+        buildSAH(right, mid, end, pSet);
     }
 } // namespace TK

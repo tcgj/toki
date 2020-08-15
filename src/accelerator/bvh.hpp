@@ -54,8 +54,7 @@ namespace TK {
 
         // BVH Construction Functions
         void buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end,
-                      std::vector<PrimitiveUnit> &pSet,
-                      std::vector<std::shared_ptr<Primitive>> &pSorted);
+                      std::vector<PrimitiveUnit> &pSet);
 
         // BVH arrays
         std::unique_ptr<Node[]> nodes = nullptr;
