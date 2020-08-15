@@ -29,7 +29,7 @@ namespace TK {
         tokiOptions = cmdLineOptions;
 
         // Initialize any other systems
-        initThreads(tokiOptions.threadCount);
+        Parallel::initThreads(tokiOptions.threadCount);
     }
 
     void tokiParse(IStream &stream) {
@@ -320,6 +320,6 @@ namespace TK {
     }
 
     void tokiShutdown() {
-        cleanupThreads();
+        Parallel::cleanupThreads();
     }
 }  // namespace TK
