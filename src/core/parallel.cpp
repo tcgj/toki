@@ -41,6 +41,7 @@ namespace TK {
                 return nextIter < iterCount;
             }
             bool done() const {
+                std::unique_lock<std::mutex> lock(jobQueueMutex);
                 return !hasWork() && activeWorkers == 0;
             }
 
@@ -97,9 +98,6 @@ namespace TK {
                     executeJob(job, split);
                     lock.lock();
                     job.activeWorkers--;
-
-                    if (job.done())
-                        delete &job;
                 }
             }
         }
@@ -161,6 +159,7 @@ namespace TK {
 
             // Wait for job
             while (!job->done());
+            delete job;
         }
 
         void initThreads(tkInt threadCount) {
