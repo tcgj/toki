@@ -25,12 +25,14 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         "MinSizeRel" "RelWithDebInfo")
 endif ()
 
-if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
     add_compile_definitions(TK_DEBUG_MODE)
 endif ()
 
-# add warning options
-add_compile_options(-Wshadow-uncaptured-local)
+# add flags
+set(CMAKE_CXX_FLAGS "-Wshadow-uncaptured-local")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # add sources
 set(TK_CORE_HEADER
