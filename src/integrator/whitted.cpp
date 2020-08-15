@@ -19,8 +19,7 @@ namespace TK {
             return li;
         }
 
-        // TODO: this is iffy, fix coupling
-        Scattering scattering(interaction);
+        Scattering scattering;
         interaction.computeScattering(&scattering);
 
         tkVec3f normal = interaction.n;

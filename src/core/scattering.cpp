@@ -5,16 +5,16 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    Scattering::Scattering(const SurfaceInteraction &interaction) {
-        n = normalize(interaction.n);
-        t = normalize(interaction.t);
-        bt = normalize(cross(n, t));
-    }
-
     Scattering::~Scattering() {
         for (tkInt i = 0; i < numBxdf; ++i) {
             delete bxdfs[i];
         }
+    }
+
+    void Scattering::initialize(const SurfaceInteraction &interaction) {
+        n = normalize(interaction.n);
+        t = normalize(interaction.t);
+        bt = normalize(cross(n, t));
     }
 
     tkSpectrum Scattering::evaluate(const tkVec3f &worldWo, const tkVec3f &worldWi) const {

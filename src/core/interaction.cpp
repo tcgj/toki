@@ -3,6 +3,7 @@
 #include "ray.hpp"
 #include "spectrum.hpp"
 #include "light.hpp"
+#include "scattering.hpp"
 #include "region/primitive.hpp"
 
 namespace TK {
@@ -19,6 +20,7 @@ namespace TK {
     }
 
     void SurfaceInteraction::computeScattering(Scattering *s) {
+        s->initialize(*this);
         primitive->computeScattering(s);
         scattering = s;
     }

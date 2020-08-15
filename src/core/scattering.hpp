@@ -7,9 +7,10 @@
 namespace TK {
     class Scattering {
     public:
-        Scattering(const SurfaceInteraction &interaction);
+        Scattering() = default;
         ~Scattering();
 
+        void initialize(const SurfaceInteraction &interaction);
         tkSpectrum evaluate(const tkVec3f &worldWo, const tkVec3f &worldWi) const;
         tkSpectrum sample(const tkVec3f &worldWo, tkVec3f *worldWi,
                           const tkVec2f &samp, tkFloat *pdf,
