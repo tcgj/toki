@@ -1,10 +1,26 @@
 #pragma once
 
 #include "system/toki.hpp"
+#include "math/math.hpp"
 #include "core/random.hpp"
 #include "geometryutil.hpp"
+#include "mathutil.hpp"
 
 namespace TK {
+    /* ----- MIS Heuristics ----- */
+    inline tkFloat balanceHeuristic(tkInt nf, tkFloat pdff, tkInt ng,
+                                    tkFloat pdfg) {
+        return nf * pdff / (nf * pdff + ng * pdfg);
+    }
+
+    inline tkFloat powerHeuristic(tkInt nf, tkFloat pdff, tkInt ng,
+                                  tkFloat pdfg) {
+        // Hard-coded exponent of 2, as empirically determined by Eric Veach
+        tkFloat qf = nf * pdff;
+        tkFloat qg = ng * pdfg;
+        return qf * qf / (qf * qf + qg * qg);
+    }
+
     /* ----- Disk Sampling ----- */
     inline tkVec2f rejectionDiskSample() {
         tkVec2f v;
@@ -85,4 +101,52 @@ namespace TK {
         }
         return ret;
     }
+
+    /* ----- Distributions ----- */
+    struct Distribution {
+        Distribution(const std::vector<tkFloat> &f)
+            : func(f), cdf(f.size() + 1) {
+            tkInt n = f.size();
+            cdf[0] = 0;
+            for (tkInt i = 1; i < n + 1; ++i) {
+                cdf[i] = cdf[i - 1] + f[i] / n;
+            }
+
+            integral = cdf[n];
+            if (integral > 0) {
+                for (tkInt i = 1; i < n + 1; ++i) {
+                    cdf[i] /= integral;
+                }
+            } else {
+                for (tkInt i = 1; i < n + 1; ++i) {
+                    cdf[i] = (tkFloat)i / n;
+                }
+            }
+        }
+
+        tkFloat sampleContinuous(tkFloat u, tkFloat *pdf) const {
+            tkInt index = getInterval(cdf.size(), [&](tkInt i) { return cdf[i] <= u; });
+            tkFloat offset = u - cdf[index];
+            tkInt diff = (cdf[index + 1] - cdf[index]);
+            if (diff > 0)
+                offset /= diff;
+            if (pdf != nullptr)
+                *pdf = func[index] / integral;
+
+            return (index + offset) / func.size();
+        }
+
+        tkFloat sampleDiscrete(tkFloat u, tkFloat *pdf = nullptr, tkFloat *uRemapped = nullptr) const {
+            tkInt index = getInterval(cdf.size(), [&](tkInt i) { return cdf[i] <= u; });
+            if (pdf != nullptr)
+                *pdf = func[index] / (integral * func.size());
+            if (uRemapped != nullptr)
+                *uRemapped = (u - cdf[index]) / (cdf[index + 1] - cdf[index]);
+
+            return index;
+        }
+
+        std::vector<tkFloat> func, cdf;
+        tkFloat integral;
+    };
 } // namespace TK

@@ -32,4 +32,19 @@ namespace TK {
 
         return true;
     }
+
+    // Obtain tightest interval [i, i + 1] in [0, size) that passes predicate(i)
+    template <typename Predicate>
+    inline tkInt getInterval(tkInt size, const Predicate &pred) {
+        tkInt start = 0, end = size - 1;
+        tkInt mid;
+        while (start < end) {
+            mid = (start + end) >> 1;
+            if (pred(mid))
+                start = mid + 1;
+            else
+                end = mid;
+        }
+        return clamp(start - 1, 0, size - 2);
+    }
 } // namespace TK
