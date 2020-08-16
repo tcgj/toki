@@ -5,6 +5,7 @@
 #include "scene.hpp"
 #include "interaction.hpp"
 #include "spectrum.hpp"
+#include "util/samplingutil.hpp"
 
 namespace TK {
     class OcclusionChecker {
@@ -45,4 +46,6 @@ namespace TK {
     protected:
         Transform lightToWorld;
     };
+
+    std::unique_ptr<Distribution> lightPowerDistribution(const Scene &scene);
 } // namespace TK

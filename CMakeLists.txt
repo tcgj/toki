@@ -62,6 +62,7 @@ set(TK_CORE_SOURCE
     src/core/image.cpp
     src/core/integrator.cpp
     src/core/interaction.cpp
+    src/core/light.cpp
     src/core/parallel.cpp
     src/core/random.cpp
     src/core/scattering.cpp
