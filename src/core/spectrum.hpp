@@ -234,9 +234,14 @@ namespace TK {
         RGBSpectrum(tkFloat f = 0.0f) : Spectrum(f) {}
         RGBSpectrum(const Spectrum<3> &s) : Spectrum(s) {}
 
+        tkFloat luminance() const;
         tkVec3f toRGB() const;
         static RGBSpectrum fromRGB(const tkVec3f &rgb);
     };
+
+    inline tkFloat RGBSpectrum::luminance() const {
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    }
 
     inline tkVec3f RGBSpectrum::toRGB() const {
         return tkVec3f(c[0], c[1], c[2]);
