@@ -49,8 +49,8 @@ namespace TK {
         // Spawn secondary rays from intersection point
         // if depth is under max depth
         if (depth < maxDepth - 1) {
-            li += reflectedLi(interaction, scene, r, sampler, depth);
-            li += refractedLi(interaction, scene, r, sampler, depth);
+            li += specularReflectedLi(interaction, scene, r, sampler, depth);
+            li += specularRefractedLi(interaction, scene, r, sampler, depth);
         }
 
         return li;

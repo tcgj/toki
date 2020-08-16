@@ -19,10 +19,10 @@ namespace TK {
         virtual tkSpectrum Li(const Scene &scene, const Ray &r,
                                      Sampler &sampler, tkInt depth = 0) const = 0;
         void render(const Scene &scene) override;
-        tkSpectrum reflectedLi(const SurfaceInteraction &interaction,
+        tkSpectrum specularReflectedLi(const SurfaceInteraction &interaction,
                                        const Scene &scene, const Ray &r,
                                        Sampler &sampler, tkInt depth) const;
-        tkSpectrum refractedLi(const SurfaceInteraction &interaction,
+        tkSpectrum specularRefractedLi(const SurfaceInteraction &interaction,
                                        const Scene &scene, const Ray &r,
                                        Sampler &sampler, tkInt depth) const;
 

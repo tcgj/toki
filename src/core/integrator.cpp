@@ -55,8 +55,8 @@ namespace TK {
         camera->image->write();
     }
 
-    tkSpectrum SamplerIntegrator::reflectedLi(const SurfaceInteraction &interaction,
-                                    const Scene &scene, const Ray &r,
+    tkSpectrum SamplerIntegrator::specularReflectedLi(
+        const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
                                     Sampler &sampler, tkInt depth) const {
         tkVec3f wo = interaction.wo, wi;
         tkFloat pdf;
@@ -69,8 +69,8 @@ namespace TK {
         return f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
-    tkSpectrum SamplerIntegrator::refractedLi(const SurfaceInteraction &interaction,
-                                    const Scene &scene, const Ray &r,
+    tkSpectrum SamplerIntegrator::specularRefractedLi(
+        const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
                                     Sampler &sampler, tkInt depth) const {
         // Not implemented yet
         return 0;
