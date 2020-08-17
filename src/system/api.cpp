@@ -8,6 +8,7 @@
 #include "image/png.hpp"
 #include "sampler/stratified.hpp"
 #include "integrator/whitted.hpp"
+#include "integrator/path.hpp"
 #include "region/primitive.hpp"
 #include "shape/triangle.hpp"
 #include "shape/sphere.hpp"
@@ -41,7 +42,7 @@ namespace TK {
         // TODO: Read required data from stream
 
         // Resolution default
-        tokiOptions.resolution = tkVec2i(512, 512);
+        tokiOptions.resolution = tkVec2i(800, 800);
 
         // testScene();
 
@@ -53,7 +54,7 @@ namespace TK {
         auto camera = std::make_shared<PerspectiveCamera>(
             cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
         // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
-        auto sampler = std::make_shared<StratifiedSampler>(4, 4, 5);
+        auto sampler = std::make_shared<StratifiedSampler>(4, 4, 10);
 
         tkSpectrum whiteKd(tkSpectrum::fromRGB(tkVec3f(0.75f, 0.75f, 0.75f)));
         auto matteWhite = std::make_shared<Matte>(whiteKd);
@@ -150,7 +151,7 @@ namespace TK {
                         5,9,10,5,10,6,
                         7,6,10,7,10,11,
                         4,5,6,4,6,7};
-        auto mesh = std::make_shared<Mesh>(tf, 38, I, 64, V, nullptr, nullptr);
+        auto mesh = std::make_shared<Mesh>(tf, 64, 38, V, I, nullptr, nullptr);
         auto tri0 = std::make_shared<Triangle>(&tf, mesh, 0);
         auto tri1 = std::make_shared<Triangle>(&tf, mesh, 1);
         auto tri2 = std::make_shared<Triangle>(&tf, mesh, 2);
@@ -246,7 +247,8 @@ namespace TK {
         // Scene
         Scene scene(accel, lights);
 
-        WhittedIntegrator integrator(3, camera, sampler);
+        // WhittedIntegrator integrator(3, camera, sampler);
+        PathTracingIntegrator integrator(5, camera, sampler);
         integrator.render(scene);
     }
 
@@ -281,7 +283,7 @@ namespace TK {
                           tkPoint3f(10, 0, -10), tkPoint3f(-10, 0, -10)};
         tkVec3f N[4] = {tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0),
                         tkVec3f(0, 1, 0)};
-        auto mesh = std::make_shared<Mesh>(tf, 2, I, 4, V, N, nullptr);
+        auto mesh = std::make_shared<Mesh>(tf, 4, 2, V, I, N, nullptr);
         auto tri1 = std::make_shared<Triangle>(&tf, mesh, 0);
         auto tri2 = std::make_shared<Triangle>(&tf, mesh, 1);
         prims.push_back(std::make_shared<Primitive>(tri1, matteGrey));

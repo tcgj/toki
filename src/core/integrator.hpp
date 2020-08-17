@@ -1,6 +1,8 @@
 #pragma once
 
 #include "system/toki.hpp"
+#include "light.hpp"
+#include "util/samplingutil.hpp"
 
 namespace TK {
     class Integrator {
@@ -30,4 +32,11 @@ namespace TK {
         std::shared_ptr<Camera> camera;
         std::shared_ptr<Sampler> sampler;
     };
+
+    std::shared_ptr<Light> getLightByDist(const Scene &scene, Sampler &sampler,
+                                          const Distribution &dist,
+                                          tkFloat *pdf);
+    tkSpectrum miSampleLd(const SurfaceInteraction &ref, const Scene &scene,
+                          const std::shared_ptr<Light> &light,
+                          Sampler &sampler);
 } // namespace TK

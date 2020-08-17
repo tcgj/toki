@@ -8,6 +8,8 @@
 #include "sampler.hpp"
 #include "parallel.hpp"
 #include "random.hpp"
+#include "scene.hpp"
+#include "region/primitive.hpp"
 
 namespace TK {
     void SamplerIntegrator::render(const Scene &scene) {
@@ -57,11 +59,11 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::specularReflectedLi(
         const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
-                                    Sampler &sampler, tkInt depth) const {
+        Sampler &sampler, tkInt depth) const {
         tkVec3f wo = interaction.wo, wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
-        tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, type);
+        tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
         tkFloat cosTheta = std::abs(dot(interaction.n, wi));
         if (pdf == 0 || f.isBlack() || cosTheta == 0)
             return 0;
@@ -71,8 +73,72 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::specularRefractedLi(
         const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
-                                    Sampler &sampler, tkInt depth) const {
+        Sampler &sampler, tkInt depth) const {
         // Not implemented yet
         return 0;
+    }
+
+    std::shared_ptr<Light> getLightByDist(const Scene &scene, Sampler &sampler,
+                                          const Distribution &dist, tkFloat *pdf) {
+        tkFloat lightIndex = dist.sampleDiscrete(sampler.nextFloat(), pdf);
+
+        return scene.lights[lightIndex];
+    }
+
+    tkSpectrum miSampleLd(const SurfaceInteraction &ref, const Scene &scene,
+                          const std::shared_ptr<Light> &light,
+                          Sampler &sampler) {
+        tkSpectrum ld;
+
+        tkVec3f wi;
+        tkFloat lightPdf, scatterPdf;
+        OcclusionChecker occCheck;
+
+        // Sampling the light
+        tkSpectrum lightLd = light->sample(ref, &wi, sampler.nextVector(), &lightPdf, &occCheck);
+        if (lightPdf > 0 && !lightLd.isBlack()) {
+            tkSpectrum f = ref.scattering->evaluate(ref.wo, wi);
+            if (!f.isBlack() && occCheck.notOccluded(scene)) {
+                tkFloat weight = 1;
+                // If light is delta, don't use MIS
+                if (!light->isDelta()) {
+                    scatterPdf =
+                        ref.scattering->getPdf(ref.wo, wi);
+                    weight = powerHeuristic(1, lightPdf, 1, scatterPdf);
+                }
+
+                ld += f * lightLd * weight * std::abs(dot(wi, ref.n)) / lightPdf;
+            }
+        }
+
+        // Sampling the BSDF
+        if (!light->isDelta()) {
+            BxDFType sampledType;
+            tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(),
+                                                  &scatterPdf, &sampledType);
+            if (scatterPdf > 0 && !f.isBlack()) {
+                tkFloat weight = 1;
+                // If specular(delta) bxdf sampled, don't use MIS
+                if (!(sampledType & BXDF_SPECULAR)) {
+                    lightPdf = light->getPdf(ref, wi);
+                    // Bypass trying to trace light if pdf is 0
+                    if (lightPdf == 0)
+                        return ld;
+                    weight = powerHeuristic(1, scatterPdf, 1, lightPdf);
+                }
+                SurfaceInteraction lightInteraction;
+                Ray r = ref.spawnRayTo(wi);
+                tkSpectrum scatterLd;
+                if (scene.intersect(r, &lightInteraction) &&
+                    lightInteraction.primitive->getLight() == light)
+                    scatterLd += lightInteraction.Le();
+
+                if (!scatterLd.isBlack()) {
+                    ld += f * scatterLd * weight * std::abs(dot(wi, ref.n)) / scatterPdf;
+                }
+            }
+        }
+
+        return ld;
     }
 } // namespace TK
