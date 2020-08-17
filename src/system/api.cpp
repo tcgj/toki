@@ -247,8 +247,8 @@ namespace TK {
         // Scene
         Scene scene(accel, lights);
 
-        // WhittedIntegrator integrator(3, camera, sampler);
-        PathTracingIntegrator integrator(5, camera, sampler);
+        WhittedIntegrator integrator(3, camera, sampler);
+        // PathTracingIntegrator integrator(5, camera, sampler);
         integrator.render(scene);
     }
 

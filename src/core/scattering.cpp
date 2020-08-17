@@ -63,7 +63,8 @@ namespace TK {
             return 0;
 
         *worldWi = localToWorld(wi);
-        *sampledType = sampleBxDF->type;
+        if (sampledType != nullptr)
+            *sampledType = sampleBxDF->type;
 
         // Compute pdf and bxdf values using matching bxdf contributions
         if (size > 1) {
