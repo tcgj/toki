@@ -21,7 +21,7 @@ namespace TK {
         virtual tkSpectrum evaluate(const tkVec3f &wo, const tkVec3f &wi) const = 0;
         virtual tkSpectrum sample(const tkVec3f &wo, tkVec3f *wi,
                                   const tkVec2f &samp, tkFloat *pdf) const;
-        bool hasType(BxDFType t) const;
+        bool matchesType(BxDFType t) const;
         virtual tkFloat getPdf(const tkVec3f &wo, const tkVec3f &wi) const;
 
         BxDFType type;

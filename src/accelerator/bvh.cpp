@@ -20,7 +20,7 @@ namespace TK {
         }
 
         switch (type) {
-            case Strategy::BinnedSAH:
+            case BINNED_SAH:
                 buildSAH(0, 0, pCount, pSet);
                 break;
             default:

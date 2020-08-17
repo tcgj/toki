@@ -6,10 +6,10 @@
 namespace TK {
     class BVH : public Region {
     public:
-        enum class Strategy { BinnedSAH };
+        enum Strategy { BINNED_SAH };
 
         BVH(const std::vector<std::shared_ptr<Primitive>> &primitives,
-            Strategy type = Strategy::BinnedSAH);
+            Strategy type = BINNED_SAH);
 
         tkAABBf worldBoundingBox() const override;
         bool hasIntersect(const Ray &r) const override;
