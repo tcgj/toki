@@ -49,7 +49,7 @@ namespace TK {
         tkVec2f newSamp(samp[0] * size - randIndex, samp[1]);
         tkVec3f wo = worldToLocal(worldWo), wi;
         tkSpectrum ret = sampleBxDF->sample(wo, &wi, newSamp, pdf);
-        if (pdf == 0)
+        if (*pdf == 0)
             return 0;
         *worldWi = localToWorld(wi);
 
