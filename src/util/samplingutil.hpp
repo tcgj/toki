@@ -109,7 +109,7 @@ namespace TK {
             tkInt n = f.size();
             cdf[0] = 0;
             for (tkInt i = 1; i < n + 1; ++i) {
-                cdf[i] = cdf[i - 1] + f[i] / n;
+                cdf[i] = cdf[i - 1] + f[i - 1] / n;
             }
 
             integral = cdf[n];
