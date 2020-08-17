@@ -21,7 +21,8 @@ namespace TK {
         tkSpectrum Le() const;
 
         tkVec3f n;
-        tkVec3f t;
+        tkVec3f dpdu;
+        tkVec3f dpdv;
         tkVec3f wo;
         const Shape *shape = nullptr;
         const Primitive *primitive = nullptr;

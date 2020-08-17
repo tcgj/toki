@@ -29,10 +29,13 @@ namespace TK {
             t0 = t1;
 
         *tHit = t0;
-        tkVec3f normal = normalize(tkVec3f(oRay(*tHit)));
+        tkVec3f normal = tkVec3f(oRay(*tHit));
+        tkVec3f tangent = cross(tkVec3f(0, 0, 1), normal);
         normal = (*objectToWorld)(normal, true);
+        tangent = (*objectToWorld)(tangent);
         interaction->p = r(*tHit);
-        interaction->n = invertNormals ? -normal : normal;
+        interaction->n = normalize(invertNormals ? -normal : normal);
+        interaction->dpdu = normalize(tangent);
         interaction->wo = -r.d;
         interaction->shape = this;
         return true;

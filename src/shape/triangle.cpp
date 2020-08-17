@@ -10,23 +10,23 @@ namespace TK {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.pos),
-                               objectToWorld->applyInverse(v1.pos)),
-                       objectToWorld->applyInverse(v2.pos));
+        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.p),
+                               objectToWorld->applyInverse(v1.p)),
+                       objectToWorld->applyInverse(v2.p));
     }
 
     tkAABBf Triangle::worldBoundingBox() const {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
-        return bbUnion(tkAABBf(v0.pos, v1.pos), v2.pos);
+        return bbUnion(tkAABBf(v0.p, v1.p), v2.p);
     }
 
     tkFloat Triangle::surfaceArea() const {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f v01 = v1.pos - v0.pos;
-        tkVec3f v02 = v2.pos - v0.pos;
+        tkVec3f v01 = v1.p - v0.p;
+        tkVec3f v02 = v2.p - v0.p;
 
         return cross(v01, v02).magnitude() * 0.5;
     }
@@ -38,8 +38,8 @@ namespace TK {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f e1 = v1.pos - v0.pos;
-        tkVec3f e2 = v2.pos - v0.pos;
+        tkVec3f e1 = v1.p - v0.p;
+        tkVec3f e2 = v2.p - v0.p;
 
         tkVec3f p = cross(r.d, e2);
         tkFloat det = dot(e1, p);
@@ -47,7 +47,7 @@ namespace TK {
             return false;
         tkFloat invDet = 1.0 / det;
 
-        tkVec3f t = r.o - v0.pos;
+        tkVec3f t = r.o - v0.p;
 
         // Calculate barycentric coords (u,v)
         tkFloat u = dot(t, p) * invDet;
@@ -66,9 +66,24 @@ namespace TK {
 
         tkVec3f normal = cross(e1, e2).normalized();
 
+        tkVec2f duv1 = v1.uv - v0.uv;
+        tkVec2f duv2 = v2.uv - v0.uv;
+        tkFloat uvDet = duv1[0] * duv2[1] - duv1[1] * duv2[0];
+        tkVec3f tangent;
+        tkVec3f bitangent;
+        if (uvDet == 0)
+            coordinateSystem(normal, &tangent, &bitangent);
+        else {
+            tkFloat invDet = 1 / uvDet;
+            tangent = (duv2[1] * e1 - duv1[1] * e2) * invDet;
+            bitangent = (duv1[0] * e2 - duv2[0] * e1) * invDet;
+        }
+
         *tHit = tempT;
         interaction->p = r(*tHit);
         interaction->n = invertNormals ? -normal : normal;
+        interaction->dpdu = normalize(tangent);
+        interaction->dpdv = normalize(bitangent);
         interaction->wo = -r.d;
         interaction->shape = this;
         return true;
@@ -78,8 +93,8 @@ namespace TK {
         Vertex v0, v1, v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f e1 = v1.pos - v0.pos;
-        tkVec3f e2 = v2.pos - v0.pos;
+        tkVec3f e1 = v1.p - v0.p;
+        tkVec3f e2 = v2.p - v0.p;
 
         tkVec3f p = cross(r.d, e2);
         tkFloat det = dot(e1, p);
@@ -87,7 +102,7 @@ namespace TK {
             return false;
         tkFloat invDet = 1.0 / det;
 
-        tkVec3f t = r.o - v0.pos;
+        tkVec3f t = r.o - v0.p;
 
         // Calculate barycentric coords (u,v)
         tkFloat u = dot(t, p) * invDet;
@@ -114,14 +129,14 @@ namespace TK {
 
         Vertex a, b, c;
         mesh->getTriVertices(triIndex, &a, &b, &c);
-        tkVec2f bCoord = uniformTriangleSample(samp.x, samp.y);
+        tkVec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
-        ret.p = bCoord.x * a.pos + bCoord.y * b.pos + bCoordZ * c.pos;
+        ret.p = bCoord.x * a.p + bCoord.y * b.p + bCoordZ * c.p;
         if (mesh->normalBuffer != nullptr)
-            ret.n = bCoord.x * a.normal + bCoord.y * b.normal + bCoordZ * c.normal;
+            ret.n = bCoord.x * a.n + bCoord.y * b.n + bCoordZ * c.n;
         else
-            ret.n = normalize(cross(b.pos - a.pos, c.pos - a.pos));
+            ret.n = normalize(cross(b.p - a.p, c.p - a.p));
         if (invertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);

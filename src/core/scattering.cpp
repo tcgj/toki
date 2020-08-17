@@ -12,8 +12,8 @@ namespace TK {
     }
 
     void Scattering::initialize(const SurfaceInteraction &interaction) {
-        n = normalize(interaction.n);
-        t = normalize(interaction.t);
+        n = interaction.n;
+        t = interaction.dpdu;
         bt = normalize(cross(n, t));
     }
 
