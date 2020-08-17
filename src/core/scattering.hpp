@@ -11,9 +11,11 @@ namespace TK {
         ~Scattering();
 
         void initialize(const SurfaceInteraction &interaction);
-        tkSpectrum evaluate(const tkVec3f &worldWo, const tkVec3f &worldWi) const;
+        tkSpectrum evaluate(const tkVec3f &worldWo, const tkVec3f &worldWi,
+                            BxDFType type = BXDF_ALL) const;
         tkSpectrum sample(const tkVec3f &worldWo, tkVec3f *worldWi,
                           const tkVec2f &samp, tkFloat *pdf,
+                          BxDFType *sampledType = nullptr,
                           BxDFType type = BXDF_ALL) const;
         tkFloat getPdf(const tkVec3f &worldWo, const tkVec3f &worldWi,
                        BxDFType type = BXDF_ALL) const;
