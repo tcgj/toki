@@ -75,15 +75,15 @@ namespace TK {
             coordinateSystem(normal, &tangent, &bitangent);
         else {
             tkFloat invDet = 1 / uvDet;
-            tangent = (duv2[1] * e1 - duv1[1] * e2) * invDet;
-            bitangent = (duv1[0] * e2 - duv2[0] * e1) * invDet;
+            tangent = normalize((duv2[1] * e1 - duv1[1] * e2) * invDet);
+            bitangent = normalize((duv1[0] * e2 - duv2[0] * e1) * invDet);
         }
 
         *tHit = tempT;
-        interaction->p = r(*tHit);
+        interaction->p = v0.p * (1 - u - v) + v1.p * u + v2.p * v;
         interaction->n = invertNormals ? -normal : normal;
-        interaction->dpdu = normalize(tangent);
-        interaction->dpdv = normalize(bitangent);
+        interaction->dpdu = tangent;
+        interaction->dpdv = bitangent;
         interaction->wo = -r.d;
         interaction->shape = this;
         return true;
