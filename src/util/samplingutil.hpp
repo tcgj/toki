@@ -37,7 +37,8 @@ namespace TK {
         if (a == 0 && b == 0)
             return tkVec2f::zero;
 
-        tkFloat phi, r;
+        tkFloat phi;
+        tkFloat r;
         if (a * a > b * b) {
             r = a;
             phi = TK_PIOVER4 * b / a;
@@ -146,7 +147,8 @@ namespace TK {
             return index;
         }
 
-        std::vector<tkFloat> func, cdf;
+        std::vector<tkFloat> func;
+        std::vector<tkFloat> cdf;
         tkFloat integral;
     };
 } // namespace TK

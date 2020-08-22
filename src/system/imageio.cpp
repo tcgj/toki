@@ -17,7 +17,9 @@ namespace TK {
                     tkInt *numComponents) {
         stbi_set_flip_vertically_on_load(true);
 
-        tkInt w, h, t;
+        tkInt w;
+        tkInt h;
+        tkInt t;
         tkUChar *data = stbi_load(filename, &w, &h, &t, 0);
 
         if (data == nullptr) {

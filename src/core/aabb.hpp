@@ -48,7 +48,8 @@ namespace TK {
         bool hasIntersect(const Ray &r, const tkVec3f &invD,
                           const tkInt dirNegative[3]) const;
 
-        Point3<T> minPt, maxPt;
+        Point3<T> minPt;
+        Point3<T> maxPt;
     };
 
     template <typename T>

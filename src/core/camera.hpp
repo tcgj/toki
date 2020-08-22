@@ -41,6 +41,7 @@ namespace TK {
 
     // protected:
         Transform imageToCamera;
-        tkFloat lensRadius, focalLength;
+        tkFloat lensRadius;
+        tkFloat focalLength;
     };
 } // namespace TK

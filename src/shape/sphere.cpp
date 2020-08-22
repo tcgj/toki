@@ -20,7 +20,8 @@ namespace TK {
         tkFloat b = 2 * dot(oRay.d, r0);
         tkFloat c = dot(r0, r0) - radius * radius;
 
-        tkFloat t0, t1;
+        tkFloat t0;
+        tkFloat t1;
         if (!quadratic(a, b, c, &t0, &t1))
             return false;
         if (t1 < TK_EPSILON || t0 > r.tMax)
@@ -48,7 +49,8 @@ namespace TK {
         tkFloat b = 2 * dot(oRay.d, r0);
         tkFloat c = dot(r0, r0) - radius * radius;
 
-        tkFloat t0, t1;
+        tkFloat t0;
+        tkFloat t1;
         if (!quadratic(a, b, c, &t0, &t1))
             return false;
         if (t1 < TK_EPSILON || t0 > r.tMax)
@@ -62,7 +64,8 @@ namespace TK {
         tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
         tkVec3f centerToRef = ref.p - center;
         tkVec3f z = normalize(centerToRef);
-        tkVec3f x, y;
+        tkVec3f x;
+        tkVec3f y;
         coordinateSystem(z, &x, &y);
         SurfaceInteraction ret;
 

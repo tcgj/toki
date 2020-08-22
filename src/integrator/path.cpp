@@ -21,7 +21,8 @@ namespace TK {
 
     tkSpectrum PathTracingIntegrator::Li(const Scene &scene, const Ray &r,
                                             Sampler &sampler, tkInt depth) const {
-        tkSpectrum li, throughput(1);
+        tkSpectrum li;
+        tkSpectrum throughput(1);
         Ray ray(r);
         SurfaceInteraction interaction;
 
@@ -29,7 +30,7 @@ namespace TK {
             bool hit = scene.intersect(ray, &interaction);
             // Emission is not included in computation as we compute direct lighting during each bounce
             // and we want to avoid sampling the same surface again if it was reached on the next bounce.
-            // However, include emission contribution for bounce 0 as no direct lighting was done prior.
+            // However, emission contribution is included for bounce 0 as no direct lighting was done prior.
             if (bounces == 0) {
                 if (hit)
                     li += throughput * interaction.Le();

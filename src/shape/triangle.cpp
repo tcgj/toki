@@ -7,7 +7,9 @@
 
 namespace TK {
     tkAABBf Triangle::objectBoundingBox() const {
-        Vertex v0, v1, v2;
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.p),
@@ -16,13 +18,17 @@ namespace TK {
     }
 
     tkAABBf Triangle::worldBoundingBox() const {
-        Vertex v0, v1, v2;
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
         return bbUnion(tkAABBf(v0.p, v1.p), v2.p);
     }
 
     tkFloat Triangle::surfaceArea() const {
-        Vertex v0, v1, v2;
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         tkVec3f v01 = v1.p - v0.p;
@@ -35,7 +41,9 @@ namespace TK {
     // https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
     bool Triangle::intersect(const Ray &r, tkFloat *tHit,
                              SurfaceInteraction *interaction) const {
-        Vertex v0, v1, v2;
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         tkVec3f e1 = v1.p - v0.p;
@@ -90,7 +98,9 @@ namespace TK {
     }
 
     bool Triangle::hasIntersect(const Ray &r) const {
-        Vertex v0, v1, v2;
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
         tkVec3f e1 = v1.p - v0.p;
@@ -127,16 +137,18 @@ namespace TK {
                                         tkFloat *pdf) const {
         SurfaceInteraction ret;
 
-        Vertex a, b, c;
-        mesh->getTriVertices(triIndex, &a, &b, &c);
+        Vertex v0;
+        Vertex v1;
+        Vertex v2;
+        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
         tkVec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
-        ret.p = bCoord.x * a.p + bCoord.y * b.p + bCoordZ * c.p;
+        ret.p = bCoord.x * v0.p + bCoord.y * v1.p + bCoordZ * v2.p;
         if (mesh->normalBuffer != nullptr)
-            ret.n = bCoord.x * a.n + bCoord.y * b.n + bCoordZ * c.n;
+            ret.n = bCoord.x * v0.n + bCoord.y * v1.n + bCoordZ * v2.n;
         else
-            ret.n = normalize(cross(b.p - a.p, c.p - a.p));
+            ret.n = normalize(cross(v1.p - v0.p, v2.p - v0.p));
         if (invertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);

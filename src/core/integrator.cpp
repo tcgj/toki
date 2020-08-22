@@ -60,7 +60,8 @@ namespace TK {
     tkSpectrum SamplerIntegrator::specularReflectedLi(
         const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
         Sampler &sampler, tkInt depth) const {
-        tkVec3f wo = interaction.wo, wi;
+        tkVec3f wo = interaction.wo;
+        tkVec3f wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
         tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
@@ -91,7 +92,8 @@ namespace TK {
         tkSpectrum ld;
 
         tkVec3f wi;
-        tkFloat lightPdf, scatterPdf;
+        tkFloat lightPdf;
+        tkFloat scatterPdf;
         OcclusionChecker occCheck;
 
         // Sampling the light
@@ -112,30 +114,32 @@ namespace TK {
         }
 
         // Sampling the BSDF
-        if (!light->isDelta()) {
-            BxDFType sampledType;
-            tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(),
-                                                  &scatterPdf, &sampledType);
-            if (scatterPdf > 0 && !f.isBlack()) {
-                tkFloat weight = 1;
-                // If specular(delta) bxdf sampled, don't use MIS
-                if (!(sampledType & BXDF_SPECULAR)) {
-                    lightPdf = light->getPdf(ref, wi);
-                    // Bypass trying to trace light if pdf is 0
-                    if (lightPdf == 0)
-                        return ld;
-                    weight = powerHeuristic(1, scatterPdf, 1, lightPdf);
-                }
-                SurfaceInteraction lightInteraction;
-                Ray r = ref.spawnRayTo(wi);
-                tkSpectrum scatterLd;
-                if (scene.intersect(r, &lightInteraction) &&
-                    lightInteraction.primitive->getLight() == light)
-                    scatterLd += lightInteraction.Le();
+        if (light->isDelta()) {
+            return ld;
+        }
 
-                if (!scatterLd.isBlack()) {
-                    ld += f * scatterLd * weight * std::abs(dot(wi, ref.n)) / scatterPdf;
-                }
+        BxDFType sampledType;
+        tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(),
+                                                &scatterPdf, &sampledType);
+        if (scatterPdf > 0 && !f.isBlack()) {
+            tkFloat weight = 1;
+            // If specular(delta) bxdf sampled, don't use MIS
+            if (!(sampledType & BXDF_SPECULAR)) {
+                lightPdf = light->getPdf(ref, wi);
+                // Bypass trying to trace light if pdf is 0
+                if (lightPdf == 0)
+                    return ld;
+                weight = powerHeuristic(1, scatterPdf, 1, lightPdf);
+            }
+            SurfaceInteraction lightInteraction;
+            Ray r = ref.spawnRayTo(wi);
+            tkSpectrum scatterLd;
+            if (scene.intersect(r, &lightInteraction) &&
+                lightInteraction.primitive->getLight() == light)
+                scatterLd += lightInteraction.Le();
+
+            if (!scatterLd.isBlack()) {
+                ld += f * scatterLd * weight * std::abs(dot(wi, ref.n)) / scatterPdf;
             }
         }
 

@@ -21,7 +21,8 @@ namespace TK {
 
         tkSpectrum evaluate(tkFloat cosI) const override;
     private:
-        tkSpectrum eta, etaK;
+        tkSpectrum eta;
+        tkSpectrum etaK;
     };
 
     class DielectricFresnel : public Fresnel {
@@ -32,7 +33,8 @@ namespace TK {
         tkSpectrum evaluate(tkFloat cosI) const override;
 
     private:
-        tkFloat etaA, etaB;
+        tkFloat etaA;
+        tkFloat etaB;
     };
 
     class NoOpFresnel : public Fresnel {

@@ -18,6 +18,7 @@ namespace TK {
     private:
         tkSpectrum dht; // directional-hemispherical transmittance
         DielectricFresnel fresnel;
-        tkFloat etaA, etaB;
+        tkFloat etaA;
+        tkFloat etaB;
     };
 } // namespace TK

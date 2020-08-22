@@ -19,7 +19,8 @@ namespace TK {
         }
 
     private:
-        Interaction p0, p1;
+        Interaction p0;
+        Interaction p1;
     };
 
     class Light {

@@ -24,8 +24,10 @@ namespace TK {
         // --Sampler state values--
         tkPoint2i currentPixel;
         tkI64 currentSample;
-        tkInt currentFloatSet, currentVectorSet;
-        std::vector<tkInt> floatSetSizes, vectorSetSizes;
+        tkInt currentFloatSet;
+        tkInt currentVectorSet;
+        std::vector<tkInt> floatSetSizes;
+        std::vector<tkInt> vectorSetSizes;
         std::vector<std::vector<tkFloat>> floatSet;
         std::vector<std::vector<tkVec2f>> vectorSet;
     };
