@@ -32,21 +32,21 @@ namespace TK {
     }
 
     inline tkVec2f concentricDiskSample(tkFloat u, tkFloat v) {
-        tkVec2f offset = (tkFloat)2 * tkVec2f(u, v) - tkVec2f(1);
-        if (offset == tkVec2f::zero) {
+        tkFloat a = 2 * u - 1;
+        tkFloat b = 2 * v - 1;
+        if (a == 0 && b == 0)
             return tkVec2f::zero;
-        }
 
-        tkFloat theta, r;
-        if (std::abs(offset.x) > std::abs(offset.y)) {
-            r = offset.x;
-            theta = TK_PIOVER4 * (offset.y / offset.x);
+        tkFloat phi, r;
+        if (a * a > b * b) {
+            r = a;
+            phi = TK_PIOVER4 * b / a;
         } else {
-            r = offset.y;
-            theta = TK_PIOVER2 - TK_PIOVER4 * (offset.x / offset.y);
+            r = b;
+            phi = TK_PIOVER2 - TK_PIOVER4 * a / b;
         }
 
-        return r * tkVec2f(std::cos(theta), std::sin(theta));
+        return tkVec2f(r * std::cos(phi), r * std::sin(phi));
     }
 
     inline tkVec2f uniformDiskSample(tkFloat u, tkFloat v) {
@@ -56,7 +56,7 @@ namespace TK {
     }
 
     /* ----- Hemisphere Sampling ----- */
-    inline tkVec3f cosHemisphereSample(tkFloat u, tkFloat v) {
+    inline tkVec3f cosineHemisphereSample(tkFloat u, tkFloat v) {
         tkVec2f d = concentricDiskSample(u, v);
         tkFloat z = std::sqrt(std::max((tkFloat)0, 1 - d.x * d.x - d.y * d.y));
         return tkVec3f(d, z);
@@ -97,7 +97,7 @@ namespace TK {
             ret.y = v - ret.x;
         } else {
             ret.y = v * 0.5f;
-            ret.x = u - ret.x;
+            ret.x = u - ret.y;
         }
         return ret;
     }

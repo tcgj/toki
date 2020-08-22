@@ -8,7 +8,7 @@
 namespace TK {
     tkSpectrum BxDF::sample(const tkVec3f &wo, tkVec3f *wi, const tkVec2f &samp,
                             tkFloat *pdf) const {
-        *wi = cosHemisphereSample(samp[0], samp[1]);
+        *wi = cosineHemisphereSample(samp[0], samp[1]);
         if (wo.z < 0)
             wi->z = -(wi->z);
         *pdf = getPdf(wo, *wi);
