@@ -9,7 +9,7 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    void PathTracingIntegrator::preprocess(const Scene &scene) {
+    void PathTracingIntegrator::preprocess(const Scene& scene) {
         switch (strategy) {
             case POWER:
                 lightDist = lightPowerDistribution(scene);
@@ -19,14 +19,14 @@ namespace TK {
         }
     }
 
-    tkSpectrum PathTracingIntegrator::Li(const Scene &scene, const Ray &r,
-                                            Sampler &sampler, tkInt depth) const {
+    tkSpectrum PathTracingIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler,
+                                         tkInt depth) const {
         tkSpectrum li;
         tkSpectrum throughput(1);
         Ray ray(r);
         SurfaceInteraction interaction;
 
-        for (tkInt bounces = 0; ; ++bounces) {
+        for (tkInt bounces = 0;; ++bounces) {
             bool hit = scene.intersect(ray, &interaction);
             // Emission is not included in computation as we compute direct lighting during each bounce
             // and we want to avoid sampling the same surface again if it was reached on the next bounce.
@@ -35,7 +35,7 @@ namespace TK {
                 if (hit)
                     li += throughput * interaction.Le();
                 // else
-                    // li += scene.Le();
+                // li += scene.Le();
             }
 
             // Break at max depth or if we hit nothing
@@ -54,8 +54,7 @@ namespace TK {
             tkVec3f wi;
             tkFloat pdf;
             BxDFType sampledType;
-            tkSpectrum f = scattering.sample(interaction.wo, &wi, sampler.nextVector(),
-                                             &pdf, &sampledType);
+            tkSpectrum f = scattering.sample(interaction.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
             if (pdf == 0 || f.isBlack())
                 break;
             throughput *= f * std::abs(dot(wi, interaction.n)) / pdf;

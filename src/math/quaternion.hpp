@@ -6,37 +6,37 @@
 namespace TK {
     struct Quaternion {
         Quaternion() : xyz(0, 0, 0), w(1) {}
-        Quaternion(const Transform &t);
+        Quaternion(const Transform& t);
 
         // Unary operators
         Quaternion operator-() const;
 
         // Assignment operators
-        Quaternion &operator+=(const Quaternion &q);
-        Quaternion &operator-=(const Quaternion &q);
-        Quaternion &operator*=(tkFloat f);
-        Quaternion &operator/=(tkFloat f);
+        Quaternion& operator+=(const Quaternion& q);
+        Quaternion& operator-=(const Quaternion& q);
+        Quaternion& operator*=(tkFloat f);
+        Quaternion& operator/=(tkFloat f);
 
         // Binary operators
-        Quaternion operator+(const Quaternion &q) const;
-        Quaternion operator-(const Quaternion &q) const;
+        Quaternion operator+(const Quaternion& q) const;
+        Quaternion operator-(const Quaternion& q) const;
         Quaternion operator*(tkFloat f) const;
         Quaternion operator/(tkFloat f) const;
 
-        Quaternion &normalized();
+        Quaternion& normalized();
         Transform toTransform() const;
 
         tkVec3f xyz;
         tkFloat w;
     };
 
-    Quaternion slerp(tkFloat t, const Quaternion &q1, const Quaternion &q2);
+    Quaternion slerp(tkFloat t, const Quaternion& q1, const Quaternion& q2);
 
     // Quaternion operations
-    inline tkFloat dot(const Quaternion &q1, const Quaternion &q2) {
+    inline tkFloat dot(const Quaternion& q1, const Quaternion& q2) {
         return dot(q1.xyz, q2.xyz) + q1.w * q2.w;
     }
-    inline Quaternion normalize(const Quaternion &q) {
+    inline Quaternion normalize(const Quaternion& q) {
         tkFloat sm = dot(q, q);
         if (sm > 0)
             return q / std::sqrt(sm);
@@ -51,33 +51,33 @@ namespace TK {
         return ret;
     }
 
-    inline Quaternion &Quaternion::operator+=(const Quaternion &q) {
+    inline Quaternion& Quaternion::operator+=(const Quaternion& q) {
         xyz += q.xyz;
         w += q.w;
         return *this;
     }
-    inline Quaternion &Quaternion::operator-=(const Quaternion &q) {
+    inline Quaternion& Quaternion::operator-=(const Quaternion& q) {
         xyz -= q.xyz;
         w -= q.w;
         return *this;
     }
-    inline Quaternion &Quaternion::operator*=(tkFloat f) {
+    inline Quaternion& Quaternion::operator*=(tkFloat f) {
         xyz *= f;
         w *= f;
         return *this;
     }
-    inline Quaternion &Quaternion::operator/=(tkFloat f) {
+    inline Quaternion& Quaternion::operator/=(tkFloat f) {
         tkFloat r = 1.0 / f;
         xyz *= r;
         w *= r;
         return *this;
     }
 
-    inline Quaternion Quaternion::operator+(const Quaternion &q) const {
+    inline Quaternion Quaternion::operator+(const Quaternion& q) const {
         Quaternion ret = *this;
         return ret += q;
     }
-    inline Quaternion Quaternion::operator-(const Quaternion &q) const {
+    inline Quaternion Quaternion::operator-(const Quaternion& q) const {
         Quaternion ret = *this;
         return ret -= q;
     }
@@ -95,7 +95,7 @@ namespace TK {
         return ret;
     }
 
-    inline Quaternion &Quaternion::normalized() {
+    inline Quaternion& Quaternion::normalized() {
         tkFloat sm = dot(*this, *this);
         if (sm > 0)
             *this /= std::sqrt(sm);
@@ -104,10 +104,10 @@ namespace TK {
     }
 
     // Binary operators
-    inline Quaternion operator*(tkFloat f, const Quaternion &q) {
+    inline Quaternion operator*(tkFloat f, const Quaternion& q) {
         Quaternion ret = q;
         ret.xyz *= f;
         ret.w *= f;
         return ret;
     }
-} // namespace TK
+}  // namespace TK

@@ -16,21 +16,37 @@ namespace TK {
         virtual IStream& read(tkChar* data, tkUInt size) = 0;
 
         // Pre-defined output streaming operators
-        IStream& operator>>(tkVec2f& v) { return *this >> v.x >> v.y; }
+        IStream& operator>>(tkVec2f& v) {
+            return *this >> v.x >> v.y;
+        }
 
-        IStream& operator>>(tkVec3f& v) { return *this >> v.x >> v.y >> v.z; }
+        IStream& operator>>(tkVec3f& v) {
+            return *this >> v.x >> v.y >> v.z;
+        }
 
-        IStream& operator>>(tkVec2i& v) { return *this >> v.x >> v.y; }
+        IStream& operator>>(tkVec2i& v) {
+            return *this >> v.x >> v.y;
+        }
 
-        IStream& operator>>(tkVec3i& v) { return *this >> v.x >> v.y >> v.z; }
+        IStream& operator>>(tkVec3i& v) {
+            return *this >> v.x >> v.y >> v.z;
+        }
 
-        IStream& operator>>(tkPoint2f& p) { return *this >> p.x >> p.y; }
+        IStream& operator>>(tkPoint2f& p) {
+            return *this >> p.x >> p.y;
+        }
 
-        IStream& operator>>(tkPoint3f& p) { return *this >> p.x >> p.y >> p.z; }
+        IStream& operator>>(tkPoint3f& p) {
+            return *this >> p.x >> p.y >> p.z;
+        }
 
-        IStream& operator>>(tkPoint2i& p) { return *this >> p.x >> p.y; }
+        IStream& operator>>(tkPoint2i& p) {
+            return *this >> p.x >> p.y;
+        }
 
-        IStream& operator>>(tkPoint3i& p) { return *this >> p.x >> p.y >> p.z; }
+        IStream& operator>>(tkPoint3i& p) {
+            return *this >> p.x >> p.y >> p.z;
+        }
 
         IStream& operator>>(Matrix44& m) {
             for (tkInt i = 0; i < 16; ++i) {
@@ -66,21 +82,37 @@ namespace TK {
         virtual void flush() {}
 
         // Pre-defined output streaming operators
-        OStream& operator<<(const tkVec2f& v) { return *this << v.x << v.y; }
+        OStream& operator<<(const tkVec2f& v) {
+            return *this << v.x << v.y;
+        }
 
-        OStream& operator<<(const tkVec3f& v) { return *this << v.x << v.y << v.z; }
+        OStream& operator<<(const tkVec3f& v) {
+            return *this << v.x << v.y << v.z;
+        }
 
-        OStream& operator<<(const tkVec2i& v) { return *this << v.x << v.y; }
+        OStream& operator<<(const tkVec2i& v) {
+            return *this << v.x << v.y;
+        }
 
-        OStream& operator<<(const tkVec3i& v) { return *this << v.x << v.y << v.z; }
+        OStream& operator<<(const tkVec3i& v) {
+            return *this << v.x << v.y << v.z;
+        }
 
-        OStream& operator<<(const tkPoint2f& p) { return *this << p.x << p.y; }
+        OStream& operator<<(const tkPoint2f& p) {
+            return *this << p.x << p.y;
+        }
 
-        OStream& operator<<(const tkPoint3f& p) { return *this << p.x << p.y << p.z; }
+        OStream& operator<<(const tkPoint3f& p) {
+            return *this << p.x << p.y << p.z;
+        }
 
-        OStream& operator<<(const tkPoint2i& p) { return *this << p.x << p.y; }
+        OStream& operator<<(const tkPoint2i& p) {
+            return *this << p.x << p.y;
+        }
 
-        OStream& operator<<(const tkPoint3i& p) { return *this << p.x << p.y << p.z; }
+        OStream& operator<<(const tkPoint3i& p) {
+            return *this << p.x << p.y << p.z;
+        }
 
         OStream& operator<<(const Matrix44& m) {
             for (tkInt i = 0; i < 16; ++i)
@@ -89,9 +121,13 @@ namespace TK {
             return *this;
         }
 
-        OStream& operator<<(const Transform& t) { return *this << t.getMatrix(); }
+        OStream& operator<<(const Transform& t) {
+            return *this << t.getMatrix();
+        }
 
-        OStream& operator<<(const tkSpectrum& s) { return *this << s.toRGB(); }
+        OStream& operator<<(const tkSpectrum& s) {
+            return *this << s.toRGB();
+        }
     };
 
     class IOStream : public IStream, public OStream {};

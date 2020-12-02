@@ -5,9 +5,8 @@
 namespace TK {
     // mesh is initialized in world space to eliminate need for transformation
     // during ray intersection check
-    Mesh::Mesh(const Transform &objectToWorld, tkI64 numVert, tkI64 numTri,
-               const tkPoint3f *V, const tkI64 *I, const tkVec3f *N,
-               const tkVec3f *UV)
+    Mesh::Mesh(const Transform& objectToWorld, tkI64 numVert, tkI64 numTri, const tkPoint3f* V,
+               const tkI64* I, const tkVec3f* N, const tkVec3f* UV)
         : numTri(numTri), numVert(numVert), indexBuffer(I, I + 3 * numTri) {
         // clear ptr and set ownership
         vertexBuffer.reset(new tkPoint3f[numVert]);
@@ -25,8 +24,7 @@ namespace TK {
         }
     }
 
-    bool Mesh::getTriVertices(tkI64 triIndex, Vertex *v0, Vertex *v1,
-                              Vertex *v2) const {
+    bool Mesh::getTriVertices(tkI64 triIndex, Vertex* v0, Vertex* v1, Vertex* v2) const {
         if (triIndex >= numTri)
             return false;
 

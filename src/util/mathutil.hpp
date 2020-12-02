@@ -4,12 +4,12 @@
 
 namespace TK {
     template <typename T, typename U>
-    inline T lerp(const T &a, const T &b, U t) {
+    inline T lerp(const T& a, const T& b, U t) {
         return (static_cast<U>(1) - t) * a + t * b;
     }
 
     template <typename T, typename U, typename V>
-    inline T clamp(const T &val, const U &lo, const V &hi) {
+    inline T clamp(const T& val, const U& lo, const V& hi) {
         if (val < lo)
             return lo;
         else if (val > hi)
@@ -18,7 +18,7 @@ namespace TK {
             return val;
     }
 
-    inline bool quadratic(tkFloat a, tkFloat b, tkFloat c, tkFloat *t0, tkFloat *t1) {
+    inline bool quadratic(tkFloat a, tkFloat b, tkFloat c, tkFloat* t0, tkFloat* t1) {
         tkF64 discriminant = (tkF64)b * (tkF64)b - 4 * (tkF64)a * (tkF64)c;
         if (discriminant < 0)
             return false;
@@ -35,7 +35,7 @@ namespace TK {
 
     // Obtain tightest interval [i, i + 1] in [0, size) that passes predicate(i)
     template <typename Predicate>
-    inline tkInt getInterval(tkInt size, const Predicate &pred) {
+    inline tkInt getInterval(tkInt size, const Predicate& pred) {
         tkInt start = 0, end = size - 1;
         tkInt mid;
         while (start < end) {
@@ -47,4 +47,4 @@ namespace TK {
         }
         return clamp(start - 1, 0, size - 2);
     }
-} // namespace TK
+}  // namespace TK

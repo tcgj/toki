@@ -13,52 +13,52 @@ namespace TK {
             }
         }
 
-        const Spectrum &operator+() const;
+        const Spectrum& operator+() const;
         Spectrum operator-() const;
         tkFloat operator[](tkInt i) const;
-        tkFloat &operator[](tkInt i);
+        tkFloat& operator[](tkInt i);
 
-        Spectrum operator+(const Spectrum &s) const;
-        Spectrum operator-(const Spectrum &s) const;
-        Spectrum operator*(const Spectrum &s) const;
-        Spectrum operator/(const Spectrum &s) const;
+        Spectrum operator+(const Spectrum& s) const;
+        Spectrum operator-(const Spectrum& s) const;
+        Spectrum operator*(const Spectrum& s) const;
+        Spectrum operator/(const Spectrum& s) const;
         Spectrum operator*(tkFloat f) const;
         Spectrum operator/(tkFloat f) const;
 
-        Spectrum &operator+=(const Spectrum &s);
-        Spectrum &operator-=(const Spectrum &s);
-        Spectrum &operator*=(const Spectrum &s);
-        Spectrum &operator/=(const Spectrum &s);
-        Spectrum &operator*=(tkFloat f);
-        Spectrum &operator/=(tkFloat f);
+        Spectrum& operator+=(const Spectrum& s);
+        Spectrum& operator-=(const Spectrum& s);
+        Spectrum& operator*=(const Spectrum& s);
+        Spectrum& operator/=(const Spectrum& s);
+        Spectrum& operator*=(tkFloat f);
+        Spectrum& operator/=(tkFloat f);
 
-        bool operator==(const Spectrum &s) const;
-        bool operator!=(const Spectrum &s) const;
+        bool operator==(const Spectrum& s) const;
+        bool operator!=(const Spectrum& s) const;
 
         bool isBlack() const;
 
-        friend Spectrum operator*(tkFloat f, const Spectrum &s) {
+        friend Spectrum operator*(tkFloat f, const Spectrum& s) {
             Spectrum ret = s;
             for (tkInt i = 0; i < NCoefficients; ++i)
                 ret.c[i] *= f;
 
             return ret;
         }
-        inline Spectrum sqrt(const Spectrum &s) {
+        inline Spectrum sqrt(const Spectrum& s) {
             Spectrum ret;
             for (tkInt i = 0; i < NCoefficients; ++i)
                 ret.c[i] = std::sqrt(s.c[i]);
 
             return ret;
         }
-        friend Spectrum pow(const Spectrum &s, tkFloat p) {
+        friend Spectrum pow(const Spectrum& s, tkFloat p) {
             Spectrum ret;
             for (tkInt i = 0; i < NCoefficients; ++i)
                 ret.c[i] = std::pow(s.c[i], p);
 
             return ret;
         }
-        friend Spectrum exp(const Spectrum &s) {
+        friend Spectrum exp(const Spectrum& s) {
             Spectrum ret;
             for (tkInt i = 0; i < NCoefficients; ++i)
                 ret.c[i] = std::exp(s.c[i]);
@@ -71,7 +71,7 @@ namespace TK {
     };
 
     template <tkInt N>
-    inline bool isNaN(Spectrum<N> &s) {
+    inline bool isNaN(Spectrum<N>& s) {
         for (tkInt i = 0; i < N; ++i) {
             if (std::isnan(s.c[i]))
                 return true;
@@ -80,7 +80,7 @@ namespace TK {
     }
 
     template <tkInt N>
-    inline const Spectrum<N> &Spectrum<N>::operator+() const {
+    inline const Spectrum<N>& Spectrum<N>::operator+() const {
         return *this;
     }
     template <tkInt N>
@@ -97,13 +97,13 @@ namespace TK {
         return c[i];
     }
     template <tkInt N>
-    inline tkFloat &Spectrum<N>::operator[](tkInt i) {
+    inline tkFloat& Spectrum<N>::operator[](tkInt i) {
         tkAssert(i >= 0 && i < N);
         return c[i];
     }
 
     template <tkInt N>
-    inline Spectrum<N> Spectrum<N>::operator+(const Spectrum<N> &s) const {
+    inline Spectrum<N> Spectrum<N>::operator+(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
         for (tkInt i = 0; i < N; ++i)
             ret.c[i] += s.c[i];
@@ -111,7 +111,7 @@ namespace TK {
         return ret;
     }
     template <tkInt N>
-    inline Spectrum<N> Spectrum<N>::operator-(const Spectrum<N> &s) const {
+    inline Spectrum<N> Spectrum<N>::operator-(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
         for (tkInt i = 0; i < N; ++i)
             ret.c[i] -= s.c[i];
@@ -119,7 +119,7 @@ namespace TK {
         return ret;
     }
     template <tkInt N>
-    inline Spectrum<N> Spectrum<N>::operator*(const Spectrum<N> &s) const {
+    inline Spectrum<N> Spectrum<N>::operator*(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
         for (tkInt i = 0; i < N; ++i)
             ret.c[i] *= s.c[i];
@@ -127,7 +127,7 @@ namespace TK {
         return ret;
     }
     template <tkInt N>
-    inline Spectrum<N> Spectrum<N>::operator/(const Spectrum<N> &s) const {
+    inline Spectrum<N> Spectrum<N>::operator/(const Spectrum<N>& s) const {
         tkAssert(!isNaN(s));
         Spectrum<N> ret = *this;
         for (tkInt i = 0; i < N; ++i)
@@ -156,28 +156,28 @@ namespace TK {
     }
 
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator+=(const Spectrum<N> &s) {
+    inline Spectrum<N>& Spectrum<N>::operator+=(const Spectrum<N>& s) {
         for (tkInt i = 0; i < N; ++i)
             c[i] += s.c[i];
 
         return *this;
     }
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator-=(const Spectrum<N> &s) {
+    inline Spectrum<N>& Spectrum<N>::operator-=(const Spectrum<N>& s) {
         for (tkInt i = 0; i < N; ++i)
             c[i] -= s.c[i];
 
         return *this;
     }
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator*=(const Spectrum<N> &s) {
+    inline Spectrum<N>& Spectrum<N>::operator*=(const Spectrum<N>& s) {
         for (tkInt i = 0; i < N; ++i)
             c[i] *= s.c[i];
 
         return *this;
     }
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator/=(const Spectrum<N> &s) {
+    inline Spectrum<N>& Spectrum<N>::operator/=(const Spectrum<N>& s) {
         tkAssert(!isNaN(s));
         for (tkInt i = 0; i < N; ++i)
             c[i] /= s.c[i];
@@ -185,14 +185,14 @@ namespace TK {
         return *this;
     }
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator*=(tkFloat f) {
+    inline Spectrum<N>& Spectrum<N>::operator*=(tkFloat f) {
         for (tkInt i = 0; i < N; ++i)
             c[i] *= f;
 
         return *this;
     }
     template <tkInt N>
-    inline Spectrum<N> &Spectrum<N>::operator/=(tkFloat f) {
+    inline Spectrum<N>& Spectrum<N>::operator/=(tkFloat f) {
         tkAssert(f != 0);
         tkFloat invF = 1.0 / f;
         for (tkInt i = 0; i < N; ++i)
@@ -202,7 +202,7 @@ namespace TK {
     }
 
     template <tkInt N>
-    inline bool Spectrum<N>::operator==(const Spectrum<N> &s) const {
+    inline bool Spectrum<N>::operator==(const Spectrum<N>& s) const {
         for (tkInt i = 0; i < N; ++i)
             if (c[i] != s.c[i])
                 return false;
@@ -210,7 +210,7 @@ namespace TK {
         return true;
     }
     template <tkInt N>
-    inline bool Spectrum<N>::operator!=(const Spectrum<N> &s) const {
+    inline bool Spectrum<N>::operator!=(const Spectrum<N>& s) const {
         for (tkInt i = 0; i < N; ++i)
             if (c[i] == s.c[i])
                 return false;
@@ -228,15 +228,14 @@ namespace TK {
         return true;
     }
 
-
     class RGBSpectrum : public Spectrum<3> {
     public:
         RGBSpectrum(tkFloat f = 0.0f) : Spectrum(f) {}
-        RGBSpectrum(const Spectrum<3> &s) : Spectrum(s) {}
+        RGBSpectrum(const Spectrum<3>& s) : Spectrum(s) {}
 
         tkFloat luminance() const;
         tkVec3f toRGB() const;
-        static RGBSpectrum fromRGB(const tkVec3f &rgb);
+        static RGBSpectrum fromRGB(const tkVec3f& rgb);
     };
 
     inline tkFloat RGBSpectrum::luminance() const {
@@ -247,11 +246,11 @@ namespace TK {
         return tkVec3f(c[0], c[1], c[2]);
     }
 
-    inline RGBSpectrum RGBSpectrum::fromRGB(const tkVec3f &rgb) {
+    inline RGBSpectrum RGBSpectrum::fromRGB(const tkVec3f& rgb) {
         RGBSpectrum ret;
         ret.c[0] = rgb.r;
         ret.c[1] = rgb.g;
         ret.c[2] = rgb.b;
         return ret;
     }
-} // namespace TK
+}  // namespace TK

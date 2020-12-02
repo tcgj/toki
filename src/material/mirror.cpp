@@ -5,8 +5,8 @@
 #include "scattering/specularreflection.hpp"
 
 namespace TK {
-    void Mirror::computeScattering(Scattering *scattering) const {
+    void Mirror::computeScattering(Scattering* scattering) const {
         if (!kr.isBlack())
             scattering->addContribution(new SpecularReflection(kr, new NoOpFresnel()));
     }
-} // namespace TK
+}  // namespace TK

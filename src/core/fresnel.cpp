@@ -1,8 +1,7 @@
 #include "fresnel.hpp"
 
 namespace TK {
-    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaA,
-                                     tkFloat etaB) {
+    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaA, tkFloat etaB) {
         bool entering = cosI > 0;
         tkFloat etaI = entering ? etaA : etaB;
         tkFloat etaT = entering ? etaB : etaA;
@@ -17,15 +16,12 @@ namespace TK {
         }
         tkFloat cosT = std::sqrt(std::max((tkFloat)0, 1 - sinT * sinT));
 
-        tkFloat rParallel = ((etaT * cosI) - (etaI * cosT)) /
-                            ((etaT * cosI) + (etaI * cosT));
-        tkFloat rPerp = ((etaI * cosI) - (etaT * cosT)) /
-                        ((etaI * cosI) + (etaT * cosT));
+        tkFloat rParallel = ((etaT * cosI) - (etaI * cosT)) / ((etaT * cosI) + (etaI * cosT));
+        tkFloat rPerp = ((etaI * cosI) - (etaT * cosT)) / ((etaI * cosI) + (etaT * cosT));
         return (rParallel * rParallel + rPerp * rPerp) * 0.5;
     }
 
-    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum &eta,
-                                       const tkSpectrum &etaK) {
+    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum& eta, const tkSpectrum& etaK) {
         // Only an approximation of air-conductor fresnel
         // Referenced from https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/
         tkFloat cosISqr = cosI * cosI;

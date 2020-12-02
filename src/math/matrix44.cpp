@@ -34,30 +34,31 @@ namespace TK {
         entries[15] = f33;
     }
 
-    Matrix44 &Matrix44::operator*=(const Matrix44 &m) {
+    Matrix44& Matrix44::operator*=(const Matrix44& m) {
         for (tkInt i = 0; i < 4; ++i) {
             for (tkInt j = 0; j < 4; ++j) {
-                entries[i * 4 + j] = entries[i * 4] * m.entries[j] +
-                                entries[i * 4 + 1] * m.entries[4 + j] +
-                                entries[i * 4 + 2] * m.entries[8 + j] +
-                                entries[i * 4 + 3] * m.entries[12 + j];
+                entries[i * 4 + j] = entries[i * 4] * m.entries[j] + entries[i * 4 + 1] * m.entries[4 + j] +
+                                     entries[i * 4 + 2] * m.entries[8 + j] +
+                                     entries[i * 4 + 3] * m.entries[12 + j];
             }
         }
         return *this;
     }
-    bool Matrix44::operator==(const Matrix44 &m) const {
+    bool Matrix44::operator==(const Matrix44& m) const {
         for (tkInt i = 0; i < 16; ++i)
-            if (entries[i] != m.entries[i]) return false;
+            if (entries[i] != m.entries[i])
+                return false;
         return true;
     }
-    bool Matrix44::operator!=(const Matrix44 &m) const {
+    bool Matrix44::operator!=(const Matrix44& m) const {
         for (tkInt i = 0; i < 16; ++i)
-            if (entries[i] != m.entries[i]) return true;
+            if (entries[i] != m.entries[i])
+                return true;
         return false;
     }
 
     // Binary operators
-    Matrix44 operator*(const Matrix44 &m1, const Matrix44 &m2) {
+    Matrix44 operator*(const Matrix44& m1, const Matrix44& m2) {
         Matrix44 m;
         for (tkInt i = 0; i < 4; ++i) {
             for (tkInt j = 0; j < 4; ++j) {
@@ -72,26 +73,25 @@ namespace TK {
     // Matrix operations
     tkFloat Matrix44::determinant() const {
         return (entries[0] * entries[5] - entries[1] * entries[4]) *
-                (entries[10] * entries[15] - entries[11] * entries[14]) -
-            (entries[0] * entries[6] - entries[2] * entries[4]) *
-                (entries[9] * entries[15] - entries[11] * entries[13]) +
-            (entries[0] * entries[7] - entries[3] * entries[4]) *
-                (entries[9] * entries[14] - entries[10] * entries[13]) +
-            (entries[1] * entries[6] - entries[2] * entries[5]) *
-                (entries[8] * entries[15] - entries[11] * entries[12]) -
-            (entries[1] * entries[7] - entries[3] * entries[5]) *
-                (entries[8] * entries[14] - entries[10] * entries[12]) +
-            (entries[2] * entries[7] - entries[3] * entries[6]) *
-                (entries[8] * entries[13] - entries[9] * entries[12]);
+                   (entries[10] * entries[15] - entries[11] * entries[14]) -
+               (entries[0] * entries[6] - entries[2] * entries[4]) *
+                   (entries[9] * entries[15] - entries[11] * entries[13]) +
+               (entries[0] * entries[7] - entries[3] * entries[4]) *
+                   (entries[9] * entries[14] - entries[10] * entries[13]) +
+               (entries[1] * entries[6] - entries[2] * entries[5]) *
+                   (entries[8] * entries[15] - entries[11] * entries[12]) -
+               (entries[1] * entries[7] - entries[3] * entries[5]) *
+                   (entries[8] * entries[14] - entries[10] * entries[12]) +
+               (entries[2] * entries[7] - entries[3] * entries[6]) *
+                   (entries[8] * entries[13] - entries[9] * entries[12]);
     }
 
-    Matrix44 transpose(const Matrix44 &m) {
-        return Matrix44(m.entries[0], m.entries[4], m.entries[8], m.entries[12],
-                        m.entries[1], m.entries[5], m.entries[9], m.entries[13],
-                        m.entries[2], m.entries[6], m.entries[10], m.entries[14],
+    Matrix44 transpose(const Matrix44& m) {
+        return Matrix44(m.entries[0], m.entries[4], m.entries[8], m.entries[12], m.entries[1], m.entries[5],
+                        m.entries[9], m.entries[13], m.entries[2], m.entries[6], m.entries[10], m.entries[14],
                         m.entries[3], m.entries[7], m.entries[11], m.entries[15]);
     }
-    Matrix44 inverse(const Matrix44 &m) {
+    Matrix44 inverse(const Matrix44& m) {
         tkFloat d = m.determinant();
         if (std::abs(d) < TK_EPSILON)
             return Matrix44();
@@ -101,78 +101,80 @@ namespace TK {
         Matrix44 result;
         result.entries[0] =
             d * (m.entries[5] * (m.entries[10] * m.entries[15] - m.entries[11] * m.entries[14]) +
-                m.entries[6] * (m.entries[11] * m.entries[13] - m.entries[9] * m.entries[15]) +
-                m.entries[7] * (m.entries[9] * m.entries[14] - m.entries[10] * m.entries[13]));
+                 m.entries[6] * (m.entries[11] * m.entries[13] - m.entries[9] * m.entries[15]) +
+                 m.entries[7] * (m.entries[9] * m.entries[14] - m.entries[10] * m.entries[13]));
         result.entries[1] =
             d * (m.entries[9] * (m.entries[2] * m.entries[15] - m.entries[3] * m.entries[14]) +
-                m.entries[10] * (m.entries[3] * m.entries[13] - m.entries[1] * m.entries[15]) +
-                m.entries[11] * (m.entries[1] * m.entries[14] - m.entries[2] * m.entries[13]));
-        result.entries[2] =
-            d * (m.entries[13] * (m.entries[2] * m.entries[7] - m.entries[3] * m.entries[6]) +
-                m.entries[14] * (m.entries[3] * m.entries[5] - m.entries[1] * m.entries[7]) +
-                m.entries[15] * (m.entries[1] * m.entries[6] - m.entries[2] * m.entries[5]));
+                 m.entries[10] * (m.entries[3] * m.entries[13] - m.entries[1] * m.entries[15]) +
+                 m.entries[11] * (m.entries[1] * m.entries[14] - m.entries[2] * m.entries[13]));
+        result.entries[2] = d * (m.entries[13] * (m.entries[2] * m.entries[7] - m.entries[3] * m.entries[6]) +
+                                 m.entries[14] * (m.entries[3] * m.entries[5] - m.entries[1] * m.entries[7]) +
+                                 m.entries[15] * (m.entries[1] * m.entries[6] - m.entries[2] * m.entries[5]));
         result.entries[3] =
             d * (m.entries[1] * (m.entries[7] * m.entries[10] - m.entries[6] * m.entries[11]) +
-                m.entries[2] * (m.entries[5] * m.entries[11] - m.entries[7] * m.entries[9]) +
-                m.entries[3] * (m.entries[6] * m.entries[9] - m.entries[5] * m.entries[10]));
+                 m.entries[2] * (m.entries[5] * m.entries[11] - m.entries[7] * m.entries[9]) +
+                 m.entries[3] * (m.entries[6] * m.entries[9] - m.entries[5] * m.entries[10]));
         result.entries[4] =
             d * (m.entries[6] * (m.entries[8] * m.entries[15] - m.entries[11] * m.entries[12]) +
-                m.entries[7] * (m.entries[10] * m.entries[12] - m.entries[8] * m.entries[14]) +
-                m.entries[4] * (m.entries[11] * m.entries[14] - m.entries[10] * m.entries[15]));
+                 m.entries[7] * (m.entries[10] * m.entries[12] - m.entries[8] * m.entries[14]) +
+                 m.entries[4] * (m.entries[11] * m.entries[14] - m.entries[10] * m.entries[15]));
         result.entries[5] =
             d * (m.entries[10] * (m.entries[0] * m.entries[15] - m.entries[3] * m.entries[12]) +
-                m.entries[11] * (m.entries[2] * m.entries[12] - m.entries[0] * m.entries[14]) +
-                m.entries[8] * (m.entries[3] * m.entries[14] - m.entries[2] * m.entries[15]));
-        result.entries[6] =
-            d * (m.entries[14] * (m.entries[0] * m.entries[7] - m.entries[3] * m.entries[4]) +
-                m.entries[15] * (m.entries[2] * m.entries[4] - m.entries[0] * m.entries[6]) +
-                m.entries[12] * (m.entries[3] * m.entries[6] - m.entries[2] * m.entries[7]));
+                 m.entries[11] * (m.entries[2] * m.entries[12] - m.entries[0] * m.entries[14]) +
+                 m.entries[8] * (m.entries[3] * m.entries[14] - m.entries[2] * m.entries[15]));
+        result.entries[6] = d * (m.entries[14] * (m.entries[0] * m.entries[7] - m.entries[3] * m.entries[4]) +
+                                 m.entries[15] * (m.entries[2] * m.entries[4] - m.entries[0] * m.entries[6]) +
+                                 m.entries[12] * (m.entries[3] * m.entries[6] - m.entries[2] * m.entries[7]));
         result.entries[7] =
             d * (m.entries[2] * (m.entries[7] * m.entries[8] - m.entries[4] * m.entries[11]) +
-                m.entries[3] * (m.entries[4] * m.entries[10] - m.entries[6] * m.entries[8]) +
-                m.entries[0] * (m.entries[6] * m.entries[11] - m.entries[7] * m.entries[10]));
+                 m.entries[3] * (m.entries[4] * m.entries[10] - m.entries[6] * m.entries[8]) +
+                 m.entries[0] * (m.entries[6] * m.entries[11] - m.entries[7] * m.entries[10]));
         result.entries[8] =
             d * (m.entries[7] * (m.entries[8] * m.entries[13] - m.entries[9] * m.entries[12]) +
-                m.entries[4] * (m.entries[9] * m.entries[15] - m.entries[11] * m.entries[13]) +
-                m.entries[5] * (m.entries[11] * m.entries[12] - m.entries[8] * m.entries[15]));
+                 m.entries[4] * (m.entries[9] * m.entries[15] - m.entries[11] * m.entries[13]) +
+                 m.entries[5] * (m.entries[11] * m.entries[12] - m.entries[8] * m.entries[15]));
         result.entries[9] =
             d * (m.entries[11] * (m.entries[0] * m.entries[13] - m.entries[1] * m.entries[12]) +
-                m.entries[8] * (m.entries[1] * m.entries[15] - m.entries[3] * m.entries[13]) +
-                m.entries[9] * (m.entries[3] * m.entries[12] - m.entries[0] * m.entries[15]));
+                 m.entries[8] * (m.entries[1] * m.entries[15] - m.entries[3] * m.entries[13]) +
+                 m.entries[9] * (m.entries[3] * m.entries[12] - m.entries[0] * m.entries[15]));
         result.entries[10] =
             d * (m.entries[15] * (m.entries[0] * m.entries[5] - m.entries[1] * m.entries[4]) +
-                m.entries[12] * (m.entries[1] * m.entries[7] - m.entries[3] * m.entries[5]) +
-                m.entries[13] * (m.entries[3] * m.entries[4] - m.entries[0] * m.entries[7]));
+                 m.entries[12] * (m.entries[1] * m.entries[7] - m.entries[3] * m.entries[5]) +
+                 m.entries[13] * (m.entries[3] * m.entries[4] - m.entries[0] * m.entries[7]));
         result.entries[11] =
             d * (m.entries[3] * (m.entries[5] * m.entries[8] - m.entries[4] * m.entries[9]) +
-                m.entries[0] * (m.entries[7] * m.entries[9] - m.entries[5] * m.entries[11]) +
-                m.entries[1] * (m.entries[4] * m.entries[11] - m.entries[7] * m.entries[8]));
+                 m.entries[0] * (m.entries[7] * m.entries[9] - m.entries[5] * m.entries[11]) +
+                 m.entries[1] * (m.entries[4] * m.entries[11] - m.entries[7] * m.entries[8]));
         result.entries[12] =
             d * (m.entries[4] * (m.entries[10] * m.entries[13] - m.entries[9] * m.entries[14]) +
-                m.entries[5] * (m.entries[8] * m.entries[14] - m.entries[10] * m.entries[12]) +
-                m.entries[6] * (m.entries[9] * m.entries[12] - m.entries[8] * m.entries[13]));
+                 m.entries[5] * (m.entries[8] * m.entries[14] - m.entries[10] * m.entries[12]) +
+                 m.entries[6] * (m.entries[9] * m.entries[12] - m.entries[8] * m.entries[13]));
         result.entries[13] =
             d * (m.entries[8] * (m.entries[2] * m.entries[13] - m.entries[1] * m.entries[14]) +
-                m.entries[9] * (m.entries[0] * m.entries[14] - m.entries[2] * m.entries[12]) +
-                m.entries[10] * (m.entries[1] * m.entries[12] - m.entries[0] * m.entries[13]));
+                 m.entries[9] * (m.entries[0] * m.entries[14] - m.entries[2] * m.entries[12]) +
+                 m.entries[10] * (m.entries[1] * m.entries[12] - m.entries[0] * m.entries[13]));
         result.entries[14] =
             d * (m.entries[12] * (m.entries[2] * m.entries[5] - m.entries[1] * m.entries[6]) +
-                m.entries[13] * (m.entries[0] * m.entries[6] - m.entries[2] * m.entries[4]) +
-                m.entries[14] * (m.entries[1] * m.entries[4] - m.entries[0] * m.entries[5]));
+                 m.entries[13] * (m.entries[0] * m.entries[6] - m.entries[2] * m.entries[4]) +
+                 m.entries[14] * (m.entries[1] * m.entries[4] - m.entries[0] * m.entries[5]));
         result.entries[15] =
             d * (m.entries[0] * (m.entries[5] * m.entries[10] - m.entries[6] * m.entries[9]) +
-                m.entries[1] * (m.entries[6] * m.entries[8] - m.entries[4] * m.entries[10]) +
-                m.entries[2] * (m.entries[4] * m.entries[9] - m.entries[5] * m.entries[8]));
+                 m.entries[1] * (m.entries[6] * m.entries[8] - m.entries[4] * m.entries[10]) +
+                 m.entries[2] * (m.entries[4] * m.entries[9] - m.entries[5] * m.entries[8]));
 
         return result;
     }
 
     // IO stream operators
-    std::ostream &operator<<(std::ostream &os, const Matrix44 &m) {
-        os << "[ [ " << m.entries[0] << " " << m.entries[1] << " " << m.entries[2] << " " << m.entries[3] << " ]\n"
-           << "  [ " << m.entries[4] << " " << m.entries[5] << " " << m.entries[6] << " " << m.entries[7] << " ]\n"
-           << "  [ " << m.entries[8] << " " << m.entries[9] << " " << m.entries[10] << " " << m.entries[11] << " ]\n"
-           << "  [ " << m.entries[12] << " " << m.entries[13] << " " << m.entries[14] << " " << m.entries[15] << " ] ]";
+    std::ostream& operator<<(std::ostream& os, const Matrix44& m) {
+        os << "[ [ " << m.entries[0] << " " << m.entries[1] << " " << m.entries[2] << " " << m.entries[3]
+           << " ]\n"
+           << "  [ " << m.entries[4] << " " << m.entries[5] << " " << m.entries[6] << " " << m.entries[7]
+           << " ]\n"
+           << "  [ " << m.entries[8] << " " << m.entries[9] << " " << m.entries[10] << " " << m.entries[11]
+           << " ]\n"
+           << "  [ " << m.entries[12] << " " << m.entries[13] << " " << m.entries[14] << " " << m.entries[15]
+           << " ] ]";
         return os;
     }
-} // namespace TK
+}  // namespace TK

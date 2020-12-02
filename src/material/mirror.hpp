@@ -6,11 +6,11 @@
 namespace TK {
     class Mirror : public Material {
     public:
-        Mirror(const tkSpectrum &kr) : kr(kr) {}
+        Mirror(const tkSpectrum& kr) : kr(kr) {}
 
-        void computeScattering(Scattering *scattering) const override;
+        void computeScattering(Scattering* scattering) const override;
 
     private:
         tkSpectrum kr;
     };
-} // namespace TK
+}  // namespace TK

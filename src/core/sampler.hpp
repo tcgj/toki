@@ -10,8 +10,8 @@ namespace TK {
         Sampler(tkI64 samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
         virtual ~Sampler() = default;
 
-        virtual void setPixel(const tkPoint2i &pixelCoord);
-        CameraSample getCameraSample(const tkPoint2i &pixelCoord);
+        virtual void setPixel(const tkPoint2i& pixelCoord);
+        CameraSample getCameraSample(const tkPoint2i& pixelCoord);
         virtual void requestFloats(tkInt count);
         virtual void requestVectors(tkInt count);
         virtual tkFloat nextFloat() = 0;
@@ -20,6 +20,7 @@ namespace TK {
         virtual std::unique_ptr<Sampler> getClone() = 0;
 
         tkI64 samplesPerPixel;
+
     protected:
         // --Sampler state values--
         tkPoint2i currentPixel;
@@ -32,14 +33,14 @@ namespace TK {
         std::vector<std::vector<tkVec2f>> vectorSet;
     };
 
-    inline void Sampler::setPixel(const tkPoint2i &pixelCoord) {
+    inline void Sampler::setPixel(const tkPoint2i& pixelCoord) {
         currentPixel = pixelCoord;
         currentSample = 0;
         currentFloatSet = 0;
         currentVectorSet = 0;
     }
 
-    inline CameraSample Sampler::getCameraSample(const tkPoint2i &pixelCoord) {
+    inline CameraSample Sampler::getCameraSample(const tkPoint2i& pixelCoord) {
         CameraSample ret;
         ret.imgCoord = (tkPoint2f)pixelCoord + nextVector();
         ret.lens = nextVector();
@@ -62,4 +63,4 @@ namespace TK {
         currentVectorSet = 0;
         return currentSample < samplesPerPixel;
     }
-} // namespace TK
+}  // namespace TK

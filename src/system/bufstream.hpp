@@ -6,11 +6,13 @@ namespace TK {
     class BufferedStream : public IOStream {
     public:
         BufferedStream(tkUInt initCapacity = 1024U) {
-            if (initCapacity > 0) resize(initCapacity);
+            if (initCapacity > 0)
+                resize(initCapacity);
         }
 
         void resize(tkUInt size) {
-            if (size <= capacity) return;
+            if (size <= capacity)
+                return;
 
             std::unique_ptr<tkChar[]> newBuf = std::make_unique<tkChar[]>(size);
             memcpy(newBuf.get(), buf.get(), capacity);
@@ -55,7 +57,8 @@ namespace TK {
             tkChar c;
             while (rOffset < capacity) {
                 c = buf[rOffset++];
-                if (c == 0) break;
+                if (c == 0)
+                    break;
                 s += c;
             }
             return *this;

@@ -48,4 +48,4 @@ namespace TK {
         RenderAPI::tokiShutdown();
         return 0;
     }
-} // namespace TK
+}  // namespace TK

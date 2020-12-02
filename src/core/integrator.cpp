@@ -12,14 +12,13 @@
 #include "region/primitive.hpp"
 
 namespace TK {
-    void SamplerIntegrator::render(const Scene &scene) {
+    void SamplerIntegrator::render(const Scene& scene) {
         preprocess(scene);
 
         // Split image into tiles 16px x 16px wide to process in parallel
         tkInt tileSize = 16;
         tkVec2i res = camera->image->resolution;
-        tkVec2i numTiles((res.x + tileSize - 1) / tileSize,
-                         (res.y + tileSize - 1) / tileSize);
+        tkVec2i numTiles((res.x + tileSize - 1) / tileSize, (res.y + tileSize - 1) / tileSize);
 
         Parallel::dispatch2D(numTiles, 1, [&](tkVec2i tile) {
             // Calculate tile bounds
@@ -57,9 +56,9 @@ namespace TK {
         camera->image->write();
     }
 
-    tkSpectrum SamplerIntegrator::specularReflectedLi(
-        const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
-        Sampler &sampler, tkInt depth) const {
+    tkSpectrum SamplerIntegrator::specularReflectedLi(const SurfaceInteraction& interaction,
+                                                      const Scene& scene, const Ray& r, Sampler& sampler,
+                                                      tkInt depth) const {
         tkVec3f wo = interaction.wo;
         tkVec3f wi;
         tkFloat pdf;
@@ -72,23 +71,22 @@ namespace TK {
         return f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
-    tkSpectrum SamplerIntegrator::specularRefractedLi(
-        const SurfaceInteraction &interaction, const Scene &scene, const Ray &r,
-        Sampler &sampler, tkInt depth) const {
+    tkSpectrum SamplerIntegrator::specularRefractedLi(const SurfaceInteraction& interaction,
+                                                      const Scene& scene, const Ray& r, Sampler& sampler,
+                                                      tkInt depth) const {
         // Not implemented yet
         return 0;
     }
 
-    std::shared_ptr<Light> getLightByDist(const Scene &scene, Sampler &sampler,
-                                          const Distribution &dist, tkFloat *pdf) {
+    std::shared_ptr<Light> getLightByDist(const Scene& scene, Sampler& sampler, const Distribution& dist,
+                                          tkFloat* pdf) {
         tkFloat lightIndex = dist.sampleDiscrete(sampler.nextFloat(), pdf);
 
         return scene.lights[lightIndex];
     }
 
-    tkSpectrum miSampleLd(const SurfaceInteraction &ref, const Scene &scene,
-                          const std::shared_ptr<Light> &light,
-                          Sampler &sampler) {
+    tkSpectrum miSampleLd(const SurfaceInteraction& ref, const Scene& scene,
+                          const std::shared_ptr<Light>& light, Sampler& sampler) {
         tkSpectrum ld;
 
         tkVec3f wi;
@@ -104,8 +102,7 @@ namespace TK {
                 tkFloat weight = 1;
                 // If light is delta, don't use MIS
                 if (!light->isDelta()) {
-                    scatterPdf =
-                        ref.scattering->getPdf(ref.wo, wi);
+                    scatterPdf = ref.scattering->getPdf(ref.wo, wi);
                     weight = powerHeuristic(1, lightPdf, 1, scatterPdf);
                 }
 
@@ -119,8 +116,7 @@ namespace TK {
         }
 
         BxDFType sampledType;
-        tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(),
-                                                &scatterPdf, &sampledType);
+        tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(), &scatterPdf, &sampledType);
         if (scatterPdf > 0 && !f.isBlack()) {
             tkFloat weight = 1;
             // If specular(delta) bxdf sampled, don't use MIS
@@ -134,8 +130,7 @@ namespace TK {
             SurfaceInteraction lightInteraction;
             Ray r = ref.spawnRayTo(wi);
             tkSpectrum scatterLd;
-            if (scene.intersect(r, &lightInteraction) &&
-                lightInteraction.primitive->getLight() == light)
+            if (scene.intersect(r, &lightInteraction) && lightInteraction.primitive->getLight() == light)
                 scatterLd += lightInteraction.Le();
 
             if (!scatterLd.isBlack()) {
@@ -145,4 +140,4 @@ namespace TK {
 
         return ld;
     }
-} // namespace TK
+}  // namespace TK

@@ -12,8 +12,7 @@ namespace TK {
         return 4 * TK_PI * radius * radius;
     }
 
-    bool Sphere::intersect(const Ray &r, tkFloat *tHit,
-                           SurfaceInteraction *interaction) const {
+    bool Sphere::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
         Ray oRay = objectToWorld->applyInverse(r);
         tkVec3f r0 = tkVec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
@@ -42,7 +41,7 @@ namespace TK {
         return true;
     }
 
-    bool Sphere::hasIntersect(const Ray &r) const {
+    bool Sphere::hasIntersect(const Ray& r) const {
         Ray oRay = objectToWorld->applyInverse(r);
         tkVec3f r0 = tkVec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
@@ -59,8 +58,7 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Sphere::sample(const Interaction &ref,
-                                      const tkVec2f &samp, tkFloat *pdf) const {
+    SurfaceInteraction Sphere::sample(const Interaction& ref, const tkVec2f& samp, tkFloat* pdf) const {
         tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
         tkVec3f centerToRef = ref.p - center;
         tkVec3f z = normalize(centerToRef);
@@ -108,7 +106,7 @@ namespace TK {
         return ret;
     }
 
-    tkFloat Sphere::getPdf(const Interaction &ref, const tkVec3f &wi) const {
+    tkFloat Sphere::getPdf(const Interaction& ref, const tkVec3f& wi) const {
         tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
         tkFloat sqrRadius = radius * radius;
         tkFloat sqrDist = squaredDistance(ref.p, center);
@@ -119,4 +117,4 @@ namespace TK {
         tkFloat cosMaxTheta = std::sqrt(clamp(cosSqrTheta, 0, 1));
         return uniformConePdf(cosMaxTheta);
     }
-} // namespspace TK
+}  // namespace TK

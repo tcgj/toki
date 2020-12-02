@@ -21,4 +21,4 @@ namespace TK {
         }
         writeToPngFile(filename.c_str(), imageData, resolution.x, resolution.y, 3);
     }
-} // namespace TK
+}  // namespace TK

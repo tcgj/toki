@@ -17,10 +17,9 @@ namespace TK {
             return dist_float(*gen);
         }
 
-        static size_t systemRand(void *dst, size_t dstlen) {
-            char *buffer = reinterpret_cast<char *>(dst);
-            std::ifstream stream("/dev/urandom",
-                                 std::ios_base::binary | std::ios_base::in);
+        static size_t systemRand(void* dst, size_t dstlen) {
+            char* buffer = reinterpret_cast<char*>(dst);
+            std::ifstream stream("/dev/urandom", std::ios_base::binary | std::ios_base::in);
             stream.read(buffer, dstlen);
 
             return dstlen;
@@ -30,4 +29,4 @@ namespace TK {
         Random() = default;
         static std::uniform_real_distribution<tkFloat> dist_float;
     };
-} // namespace TK
+}  // namespace TK

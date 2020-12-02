@@ -24,6 +24,16 @@
 #include "core/random.hpp"
 
 namespace TK {
+    // Options
+    std::string RenderAPI::outFile;
+    tkInt RenderAPI::threadCount = -1;
+    bool RenderAPI::fastRender = false;
+
+    // Render Settings
+    tkInt RenderAPI::tileSize = 16;
+    tkInt RenderAPI::samplesPerPixel = 16;
+    tkVec2i RenderAPI::resolution = { 800, 800 };
+
     void RenderAPI::tokiConfigure(const Options& options) {
         outFile = options.outFile;
         threadCount = options.threadCount;
@@ -35,9 +45,6 @@ namespace TK {
 
     void RenderAPI::tokiParse(std::string inputFile) {
         // TODO: Read required data from file
-
-        // Resolution temp
-        resolution = tkVec2i(800, 800);
 
         // testScene(resolution, outFile);
 
@@ -300,5 +307,7 @@ namespace TK {
 
     void RenderAPI::tokiRun() {}
 
-    void RenderAPI::tokiShutdown() { Parallel::cleanupThreads(); }
+    void RenderAPI::tokiShutdown() {
+        Parallel::cleanupThreads();
+    }
 }  // namespace TK

@@ -10,7 +10,7 @@ namespace TK {
         return shape->worldBoundingBox();
     }
 
-    bool Primitive::intersect(const Ray &r, SurfaceInteraction *interaction) const {
+    bool Primitive::intersect(const Ray& r, SurfaceInteraction* interaction) const {
         tkFloat tHit;
         if (!shape->intersect(r, &tHit, interaction))
             return false;
@@ -20,7 +20,7 @@ namespace TK {
         return true;
     }
 
-    bool Primitive::hasIntersect(const Ray &r) const {
+    bool Primitive::hasIntersect(const Ray& r) const {
         return shape->hasIntersect(r);
     }
 
@@ -32,8 +32,8 @@ namespace TK {
         return light;
     }
 
-    void Primitive::computeScattering(Scattering *scattering) const {
+    void Primitive::computeScattering(Scattering* scattering) const {
         if (material != nullptr)
             material->computeScattering(scattering);
     }
-} // namespace TK
+}  // namespace TK

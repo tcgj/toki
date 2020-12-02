@@ -5,8 +5,7 @@
 
 namespace TK {
     // Construct a BVH based on the provided construction type
-    BVH::BVH(const std::vector<std::shared_ptr<Primitive>> &primitiveList,
-             Strategy type) {
+    BVH::BVH(const std::vector<std::shared_ptr<Primitive>>& primitiveList, Strategy type) {
         tkI64 pCount = primitiveList.size();
         if (pCount == 0)
             return;
@@ -40,20 +39,20 @@ namespace TK {
     }
 
     // Traverse the BVH until intersection with a primitive
-    bool BVH::hasIntersect(const Ray &r) const {
+    bool BVH::hasIntersect(const Ray& r) const {
         return intersectNode(r, 0, nullptr);
     }
 
     // Traverse the BVH to find the closest surface interaction
-    bool BVH::intersect(const Ray &r, SurfaceInteraction *interaction) const {
+    bool BVH::intersect(const Ray& r, SurfaceInteraction* interaction) const {
         return intersectNode(r, 0, interaction);
     }
 
     // Start traversal from particular node
-    bool BVH::intersectNode(const Ray &r, tkI64 nodeIndex, SurfaceInteraction *interaction) const {
+    bool BVH::intersectNode(const Ray& r, tkI64 nodeIndex, SurfaceInteraction* interaction) const {
         // Pre-calculation for aabb intersection test
         tkVec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
-        tkInt dirNegative[3] = {invD.x < 0, invD.y < 0, invD.z < 0};
+        tkInt dirNegative[3] = { invD.x < 0, invD.y < 0, invD.z < 0 };
 
         bool hit = false;
         tkInt sp = 0;
@@ -100,8 +99,7 @@ namespace TK {
     };
 
     // Construct a SAH-based BVH
-    void BVH::buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end,
-                       std::vector<PrimitiveUnit> &pSet) {
+    void BVH::buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end, std::vector<PrimitiveUnit>& pSet) {
         tkI64 count = end - start;
 
         /* Make leaf node since no subdivision required */
@@ -158,8 +156,8 @@ namespace TK {
         tkFloat minCost = TK_INFINITY;
         tkInt minCostPart = 0;
         for (tkInt i = 0; i < binCount - 1; ++i) {
-            tkFloat cost = lPart[i].count * lPart[i].bb.surfaceArea() +
-                           rPart[i].count * rPart[i].bb.surfaceArea();
+            tkFloat cost =
+                lPart[i].count * lPart[i].bb.surfaceArea() + rPart[i].count * rPart[i].bb.surfaceArea();
             if (cost < minCost) {
                 minCost = cost;
                 minCostPart = i;
@@ -178,14 +176,12 @@ namespace TK {
         tkI64 left = nodeIndex + 1;
         tkI64 right = left + maxNodesLeft;
         nodes[nodeIndex].makeInner(bb, left, right, axis);
-        PrimitiveUnit *midPtr = std::partition(
-            &pSet[start], &pSet[end - 1] + 1,
-            [=](const PrimitiveUnit &p) {
-                tkInt binIndex = k1 * (p.centroid[axis] - k0);
-                return binIndex <= minCostPart;
-            });
+        PrimitiveUnit* midPtr = std::partition(&pSet[start], &pSet[end - 1] + 1, [=](const PrimitiveUnit& p) {
+            tkInt binIndex = k1 * (p.centroid[axis] - k0);
+            return binIndex <= minCostPart;
+        });
         tkI64 mid = midPtr - &pSet[0];
         buildSAH(left, start, mid, pSet);
         buildSAH(right, mid, end, pSet);
     }
-} // namespace TK
+}  // namespace TK

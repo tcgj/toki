@@ -9,8 +9,7 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    tkSpectrum WhittedIntegrator::Li(const Scene &scene, const Ray &r,
-                                            Sampler &sampler, tkInt depth) const {
+    tkSpectrum WhittedIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler, tkInt depth) const {
         tkSpectrum li;
         SurfaceInteraction interaction;
         if (!scene.intersect(r, &interaction)) {
@@ -29,10 +28,10 @@ namespace TK {
         li += interaction.Le();
 
         // Add contribution of lighting on surface point
-        for (const auto &light : scene.lights) {
+        for (const auto& light : scene.lights) {
             // Ignore non-delta light source as whitted integrator does not handle
             // if (!light->isDelta())
-                // continue;
+            // continue;
 
             tkVec3f wi;
             tkFloat pdf;

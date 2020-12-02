@@ -8,7 +8,7 @@ namespace TK {
         // Parallel global variables
         static std::vector<std::thread> threads;
         static bool shutdownThreads = false;
-        static Job *jobQueue = nullptr;
+        static Job* jobQueue = nullptr;
         static std::mutex jobQueueMutex;
         static std::condition_variable jobQueueCond;
 
@@ -27,15 +27,12 @@ namespace TK {
         class Job {
         public:
             Job(tkI64 workSize, tkInt batchSize, std::function<void(tkI64)> func)
-                : func1D(std::move(func)),
-                iterCount(workSize),
-                batchSize(batchSize) {}
-            Job(const tkVec2i &workSize, tkInt batchSize,
-                std::function<void(tkVec2i)> func)
+                : func1D(std::move(func)), iterCount(workSize), batchSize(batchSize) {}
+            Job(const tkVec2i& workSize, tkInt batchSize, std::function<void(tkVec2i)> func)
                 : func2D(std::move(func)),
-                iterCount(workSize.x * workSize.y),
-                batchSize(batchSize),
-                iterX(workSize.x) {}
+                  iterCount(workSize.x * workSize.y),
+                  batchSize(batchSize),
+                  iterX(workSize.x) {}
 
             bool hasWork() const {
                 return nextIter < iterCount;
@@ -52,10 +49,10 @@ namespace TK {
             tkInt batchSize;
             tkI64 nextIter = 0;
             tkInt activeWorkers = 0;
-            Job *nextJob = nullptr;
+            Job* nextJob = nullptr;
         };
 
-        WorkSplit getWork(Job &job) {
+        WorkSplit getWork(Job& job) {
             WorkSplit ret;
             ret.start = job.nextIter;
             job.nextIter = std::min(ret.start + job.batchSize, job.iterCount);
@@ -65,7 +62,7 @@ namespace TK {
         }
 
         // Job execution function
-        void executeJob(const Job &job, const WorkSplit &split) {
+        void executeJob(const Job& job, const WorkSplit& split) {
             if (job.func1D != nullptr) {
                 for (tkI64 i = split.start; i < split.end; ++i) {
                     job.func1D(i);
@@ -86,7 +83,7 @@ namespace TK {
                 if (jobQueue == nullptr)
                     jobQueueCond.wait(lock);
                 else {
-                    Job &job = *jobQueue;
+                    Job& job = *jobQueue;
                     WorkSplit split = getWork(job);
                     if (!job.hasWork()) {
                         jobQueue = job.nextJob;
@@ -103,8 +100,7 @@ namespace TK {
         }
 
         // Parallel for loop initialization function
-        void dispatch(tkI64 workSize, tkInt batchSize,
-                        std::function<void(tkI64)> func) {
+        void dispatch(tkI64 workSize, tkInt batchSize, std::function<void(tkI64)> func) {
             if (func == nullptr)
                 return;
 
@@ -117,7 +113,7 @@ namespace TK {
             }
 
             // Add job to list
-            Job *job = new Job(workSize, batchSize, func);
+            Job* job = new Job(workSize, batchSize, func);
             {
                 std::lock_guard<std::mutex> lock(jobQueueMutex);
                 job->nextJob = jobQueue;
@@ -128,16 +124,16 @@ namespace TK {
             jobQueueCond.notify_all();
 
             // Wait for job
-            while (!job->done());
+            while (!job->done())
+                ;
         }
 
-        void dispatch2D(const tkVec2i &workSize, tkInt batchSize,
-                        std::function<void(tkVec2i)> func) {
+        void dispatch2D(const tkVec2i& workSize, tkInt batchSize, std::function<void(tkVec2i)> func) {
             if (func == nullptr)
                 return;
 
             // Running on single thread, use standard for loop
-            if (threads.empty() || workSize.x * workSize.y  <= batchSize) {
+            if (threads.empty() || workSize.x * workSize.y <= batchSize) {
                 for (tkInt y = 0; y < workSize.y; ++y) {
                     for (tkInt x = 0; x < workSize.x; ++x) {
                         func(tkVec2i(x, y));
@@ -147,7 +143,7 @@ namespace TK {
             }
 
             // Add job to list
-            Job *job = new Job(workSize, batchSize, func);
+            Job* job = new Job(workSize, batchSize, func);
             {
                 std::lock_guard<std::mutex> lock(jobQueueMutex);
                 job->nextJob = jobQueue;
@@ -158,7 +154,8 @@ namespace TK {
             jobQueueCond.notify_all();
 
             // Wait for job
-            while (!job->done());
+            while (!job->done())
+                ;
             delete job;
         }
 
@@ -185,7 +182,7 @@ namespace TK {
                 jobQueueCond.notify_all();
             }
 
-            for (auto &thread : threads) {
+            for (auto& thread : threads) {
                 thread.join();
             }
 
@@ -193,5 +190,5 @@ namespace TK {
             threads.erase(threads.begin(), threads.end());
             shutdownThreads = false;
         }
-    } // namespace Parallel
+    }  // namespace Parallel
 }  // namespace TK

@@ -9,8 +9,8 @@ namespace TK {
     public:
         virtual ~Integrator() = default;
 
-        virtual void preprocess(const Scene &scene) {}
-        virtual void render(const Scene &scene) = 0;
+        virtual void preprocess(const Scene& scene) {}
+        virtual void render(const Scene& scene) = 0;
     };
 
     class SamplerIntegrator : public Integrator {
@@ -18,25 +18,20 @@ namespace TK {
         SamplerIntegrator(std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
             : camera(camera), sampler(sampler) {}
 
-        virtual tkSpectrum Li(const Scene &scene, const Ray &r,
-                                     Sampler &sampler, tkInt depth = 0) const = 0;
-        void render(const Scene &scene) override;
-        tkSpectrum specularReflectedLi(const SurfaceInteraction &interaction,
-                                       const Scene &scene, const Ray &r,
-                                       Sampler &sampler, tkInt depth) const;
-        tkSpectrum specularRefractedLi(const SurfaceInteraction &interaction,
-                                       const Scene &scene, const Ray &r,
-                                       Sampler &sampler, tkInt depth) const;
+        virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, tkInt depth = 0) const = 0;
+        void render(const Scene& scene) override;
+        tkSpectrum specularReflectedLi(const SurfaceInteraction& interaction, const Scene& scene,
+                                       const Ray& r, Sampler& sampler, tkInt depth) const;
+        tkSpectrum specularRefractedLi(const SurfaceInteraction& interaction, const Scene& scene,
+                                       const Ray& r, Sampler& sampler, tkInt depth) const;
 
     private:
         std::shared_ptr<Camera> camera;
         std::shared_ptr<Sampler> sampler;
     };
 
-    std::shared_ptr<Light> getLightByDist(const Scene &scene, Sampler &sampler,
-                                          const Distribution &dist,
-                                          tkFloat *pdf);
-    tkSpectrum miSampleLd(const SurfaceInteraction &ref, const Scene &scene,
-                          const std::shared_ptr<Light> &light,
-                          Sampler &sampler);
-} // namespace TK
+    std::shared_ptr<Light> getLightByDist(const Scene& scene, Sampler& sampler, const Distribution& dist,
+                                          tkFloat* pdf);
+    tkSpectrum miSampleLd(const SurfaceInteraction& ref, const Scene& scene,
+                          const std::shared_ptr<Light>& light, Sampler& sampler);
+}  // namespace TK

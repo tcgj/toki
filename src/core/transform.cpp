@@ -6,49 +6,37 @@ namespace TK {
     bool Transform::willSwapHandedness() const {
         // Coordinate system swaps handedness only when
         // determinant of upper left 3x3 matrix is negative
-        tkFloat det =
-            m.entries[0] * (m.entries[5] * m.entries[10] - m.entries[6] * m.entries[9]) -
-            m.entries[1] * (m.entries[4] * m.entries[10] - m.entries[6] * m.entries[8]) +
-            m.entries[2] * (m.entries[4] * m.entries[9] - m.entries[5] * m.entries[8]);
+        tkFloat det = m.entries[0] * (m.entries[5] * m.entries[10] - m.entries[6] * m.entries[9]) -
+                      m.entries[1] * (m.entries[4] * m.entries[10] - m.entries[6] * m.entries[8]) +
+                      m.entries[2] * (m.entries[4] * m.entries[9] - m.entries[5] * m.entries[8]);
         return det < 0;
     }
     bool Transform::isIdentity() const {
-        return (m.entries[0] == 1.0f && m.entries[1] == 0.0f && m.entries[2] == 0.0f && m.entries[3] == 0.0f &&
-                m.entries[4] == 0.0f && m.entries[5] == 1.0f && m.entries[6] == 0.0f && m.entries[7] == 0.0f &&
-                m.entries[8] == 0.0f && m.entries[9] == 0.0f && m.entries[10] == 1.0f && m.entries[11] == 0.0f &&
-                m.entries[12] == 0.0f && m.entries[13] == 0.0f && m.entries[14] == 0.0f && m.entries[15] == 1.0f);
+        return (
+            m.entries[0] == 1.0f && m.entries[1] == 0.0f && m.entries[2] == 0.0f && m.entries[3] == 0.0f &&
+            m.entries[4] == 0.0f && m.entries[5] == 1.0f && m.entries[6] == 0.0f && m.entries[7] == 0.0f &&
+            m.entries[8] == 0.0f && m.entries[9] == 0.0f && m.entries[10] == 1.0f && m.entries[11] == 0.0f &&
+            m.entries[12] == 0.0f && m.entries[13] == 0.0f && m.entries[14] == 0.0f && m.entries[15] == 1.0f);
     }
-    const Matrix44 &Transform::getMatrix() const {
+    const Matrix44& Transform::getMatrix() const {
         return m;
     }
-    const Matrix44 &Transform::getInverse() const {
+    const Matrix44& Transform::getInverse() const {
         return mInv;
     }
 
     // Transform operations
-    Transform translate(const tkVec3f &offset) {
-        Matrix44 translationMatrix(1, 0, 0, offset.x,
-                                   0, 1, 0, offset.y,
-                                   0, 0, 1, offset.z,
-                                   0, 0, 0, 1);
-        Matrix44 invMatrix(1, 0, 0, -offset.x,
-                           0, 1, 0, -offset.y,
-                           0, 0, 1, -offset.z,
-                           0, 0, 0, 1);
+    Transform translate(const tkVec3f& offset) {
+        Matrix44 translationMatrix(1, 0, 0, offset.x, 0, 1, 0, offset.y, 0, 0, 1, offset.z, 0, 0, 0, 1);
+        Matrix44 invMatrix(1, 0, 0, -offset.x, 0, 1, 0, -offset.y, 0, 0, 1, -offset.z, 0, 0, 0, 1);
         return Transform(translationMatrix, invMatrix);
     }
     Transform scale(tkFloat x, tkFloat y, tkFloat z) {
-        Matrix44 scalingMatrix(x, 0, 0, 0,
-                               0, y, 0, 0,
-                               0, 0, z, 0,
-                               0, 0, 0, 1);
-        Matrix44 invMatrix(1/x, 0, 0, 0,
-                           0, 1/y, 0, 0,
-                           0, 0, 1/z, 0,
-                           0, 0, 0, 1);
+        Matrix44 scalingMatrix(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
+        Matrix44 invMatrix(1 / x, 0, 0, 0, 0, 1 / y, 0, 0, 0, 0, 1 / z, 0, 0, 0, 0, 1);
         return Transform(scalingMatrix, invMatrix);
     }
-    Transform rotate(const tkVec3f &axis, tkFloat theta) {
+    Transform rotate(const tkVec3f& axis, tkFloat theta) {
         tkVec3f a = normalize(axis);
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
@@ -71,32 +59,23 @@ namespace TK {
     Transform rotateX(tkFloat theta) {
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
-        Matrix44 m(1, 0, 0, 0,
-                   0, cosTheta, -sinTheta, 0,
-                   0, sinTheta, cosTheta, 0,
-                   0, 0, 0, 1);
+        Matrix44 m(1, 0, 0, 0, 0, cosTheta, -sinTheta, 0, 0, sinTheta, cosTheta, 0, 0, 0, 0, 1);
         return Transform(m, transpose(m));
     }
     Transform rotateY(tkFloat theta) {
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
-        Matrix44 m(cosTheta, 0, sinTheta, 0,
-                   0, 1, 0, 0,
-                   -sinTheta, 0, cosTheta, 0,
-                   0, 0, 0, 1);
+        Matrix44 m(cosTheta, 0, sinTheta, 0, 0, 1, 0, 0, -sinTheta, 0, cosTheta, 0, 0, 0, 0, 1);
         return Transform(m, transpose(m));
     }
     Transform rotateZ(tkFloat theta) {
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
-        Matrix44 m(cosTheta, -sinTheta, 0, 0,
-                   sinTheta, cosTheta, 0, 0,
-                   0, 0, 1, 0,
-                   0, 0, 0, 1);
+        Matrix44 m(cosTheta, -sinTheta, 0, 0, sinTheta, cosTheta, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
         return Transform(m, transpose(m));
     }
     // View Transform (Camera To World)
-    Transform lookAt(const tkPoint3f &eye, const tkPoint3f &at, const tkVec3f &up) {
+    Transform lookAt(const tkPoint3f& eye, const tkPoint3f& at, const tkVec3f& up) {
         Matrix44 viewMatrix;
         tkVec3f eyeVec = tkVec3f(eye);
         tkVec3f camZ = normalize(eye - at);
@@ -124,10 +103,8 @@ namespace TK {
     Transform perspective(tkFloat fovy, tkFloat aspect, tkFloat near, tkFloat far) {
         tkFloat fMinusN = far - near;
         tkFloat oneOverTan = -1 / std::tan(degToRad(fovy) * 0.5);
-        Matrix44 persp(oneOverTan / aspect, 0, 0, 0,
-                       0, oneOverTan, 0, 0,
-                       0, 0, far / fMinusN, near * far / fMinusN,
-                       0, 0, 1, 0);
+        Matrix44 persp(oneOverTan / aspect, 0, 0, 0, 0, oneOverTan, 0, 0, 0, 0, far / fMinusN,
+                       near * far / fMinusN, 0, 0, 1, 0);
         return Transform(persp);
     }
-} // namespace TK
+}  // namespace TK

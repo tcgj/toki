@@ -4,8 +4,8 @@
 #include "scattering/lambert.hpp"
 
 namespace TK {
-    void Matte::computeScattering(Scattering *scattering) const {
+    void Matte::computeScattering(Scattering* scattering) const {
         if (!kd.isBlack())
             scattering->addContribution(new Lambert(kd));
     }
-} // namespace TK
+}  // namespace TK

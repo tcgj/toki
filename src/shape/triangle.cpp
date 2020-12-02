@@ -12,8 +12,7 @@ namespace TK {
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.p),
-                               objectToWorld->applyInverse(v1.p)),
+        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.p), objectToWorld->applyInverse(v1.p)),
                        objectToWorld->applyInverse(v2.p));
     }
 
@@ -39,8 +38,7 @@ namespace TK {
 
     // Implementation of Möller–Trumbore Ray-Triangle algorithm from
     // https://cadxfem.org/inf/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf
-    bool Triangle::intersect(const Ray &r, tkFloat *tHit,
-                             SurfaceInteraction *interaction) const {
+    bool Triangle::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
         Vertex v0;
         Vertex v1;
         Vertex v2;
@@ -97,7 +95,7 @@ namespace TK {
         return true;
     }
 
-    bool Triangle::hasIntersect(const Ray &r) const {
+    bool Triangle::hasIntersect(const Ray& r) const {
         Vertex v0;
         Vertex v1;
         Vertex v2;
@@ -132,9 +130,7 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Triangle::sample(const Interaction &ref,
-                                        const tkVec2f &samp,
-                                        tkFloat *pdf) const {
+    SurfaceInteraction Triangle::sample(const Interaction& ref, const tkVec2f& samp, tkFloat* pdf) const {
         SurfaceInteraction ret;
 
         Vertex v0;

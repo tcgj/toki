@@ -73,4 +73,4 @@ namespace TK {
     inline Point3<T>::operator Vec3<T>() const {
         return Vec3<T>(x, y, z);
     }
-} // namespace TK
+}  // namespace TK

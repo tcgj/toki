@@ -30,7 +30,8 @@ namespace TK {
         }
 
         bool close() {
-            if (!file.is_open()) return false;
+            if (!file.is_open())
+                return false;
             file.close();
             return true;
         }
@@ -56,7 +57,8 @@ namespace TK {
             tkChar c;
             do {
                 file.read(&c, sizeof(c));
-                if (c == 0) break;
+                if (c == 0)
+                    break;
                 s += c;
             } while (file.good());
             return *this;
@@ -103,7 +105,9 @@ namespace TK {
             return *this;
         }
 
-        void flush() override { file.flush(); }
+        void flush() override {
+            file.flush();
+        }
 
     private:
         std::fstream file;

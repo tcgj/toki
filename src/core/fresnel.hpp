@@ -4,10 +4,8 @@
 #include "spectrum.hpp"
 
 namespace TK {
-    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaI,
-                                     tkFloat etaT);
-    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum &eta,
-                                       const tkSpectrum &etaK);
+    tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaI, tkFloat etaT);
+    tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum& eta, const tkSpectrum& etaK);
 
     class Fresnel {
     public:
@@ -16,10 +14,10 @@ namespace TK {
 
     class ConductorFresnel : public Fresnel {
     public:
-        ConductorFresnel(const tkSpectrum &eta, const tkSpectrum &etaK)
-            : eta(eta), etaK(etaK) {}
+        ConductorFresnel(const tkSpectrum& eta, const tkSpectrum& etaK) : eta(eta), etaK(etaK) {}
 
         tkSpectrum evaluate(tkFloat cosI) const override;
+
     private:
         tkSpectrum eta;
         tkSpectrum etaK;
@@ -27,8 +25,7 @@ namespace TK {
 
     class DielectricFresnel : public Fresnel {
     public:
-        DielectricFresnel(tkFloat etaA, tkFloat etaB)
-            : etaA(etaA), etaB(etaB) {}
+        DielectricFresnel(tkFloat etaA, tkFloat etaB) : etaA(etaA), etaB(etaB) {}
 
         tkSpectrum evaluate(tkFloat cosI) const override;
 

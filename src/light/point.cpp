@@ -7,9 +7,8 @@ namespace TK {
         return 4 * TK_PI * intensity;
     }
 
-    tkSpectrum PointLight::sample(const Interaction &ref, tkVec3f *wi,
-                                  const tkVec2f &samp, tkFloat *pdf,
-                                  OcclusionChecker *occCheck) const {
+    tkSpectrum PointLight::sample(const Interaction& ref, tkVec3f* wi, const tkVec2f& samp, tkFloat* pdf,
+                                  OcclusionChecker* occCheck) const {
         // Manually calculate normalized direction wi to reuse invSqrLen
         tkVec3f dir = pos - ref.p;
         tkFloat invSqrLen = 1 / dir.squaredMagnitude();
@@ -19,4 +18,4 @@ namespace TK {
 
         return intensity * invSqrLen;
     }
-} // namespace TK
+}  // namespace TK

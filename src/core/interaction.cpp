@@ -7,19 +7,19 @@
 #include "region/primitive.hpp"
 
 namespace TK {
-    Ray Interaction::spawnRayTo(const tkVec3f &d) const {
+    Ray Interaction::spawnRayTo(const tkVec3f& d) const {
         tkPoint3f o = p + d * TK_EPSILON;
         return Ray(o, d);
     }
 
-    Ray Interaction::spawnRayTo(const Interaction &ref) const {
+    Ray Interaction::spawnRayTo(const Interaction& ref) const {
         tkVec3f d = normalize(ref.p - p);
         tkPoint3f o = p + d * TK_EPSILON;
         tkPoint3f end = ref.p - d * TK_EPSILON;
         return Ray(o, end - o, 1.0f - TK_EPSILON);
     }
 
-    void SurfaceInteraction::computeScattering(Scattering *s) {
+    void SurfaceInteraction::computeScattering(Scattering* s) {
         s->initialize(*this);
         primitive->computeScattering(s);
         scattering = s;
@@ -32,4 +32,4 @@ namespace TK {
 
         return light->Le(*this, wo);
     }
-} // namespace TK
+}  // namespace TK

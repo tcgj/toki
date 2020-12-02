@@ -4,10 +4,10 @@
 
 // All implementations here follow the right-hand coordinate system
 namespace TK {
-    Quaternion::Quaternion(const Transform &t) {
+    Quaternion::Quaternion(const Transform& t) {
         // constructor derived from pbrt
         // Working backwards given quaternion to rotation matrix formula
-        const Matrix44 &m = t.getMatrix();
+        const Matrix44& m = t.getMatrix();
         tkFloat trace = m.entries[0] + m.entries[5] + m.entries[10];
         if (trace > 0.0f) {
             // compute w from trace, then xyz
@@ -19,7 +19,7 @@ namespace TK {
             xyz.y = (m.entries[8] - m.entries[2]) * s;
             xyz.z = (m.entries[1] - m.entries[4]) * s;
         } else {
-            const tkInt next[3] = {1, 2, 0};
+            const tkInt next[3] = { 1, 2, 0 };
             tkFloat q[3];
             tkInt i = 0;
             if (m.entries[5] > m.entries[0])
@@ -31,7 +31,7 @@ namespace TK {
             tkFloat s = std::sqrt(1.0f + m.entries[i * 4 + i] - m.entries[j * 4 + j] - m.entries[k * 4 + k]);
             q[i] = s * 0.5f;
             if (s != 0.0f)
-                s = 0.5f / s; // Should never be zero
+                s = 0.5f / s;  // Should never be zero
             q[j] = (m.entries[i * 4 + j] + m.entries[j * 4 + i]) * s;
             q[k] = (m.entries[i * 4 + k] + m.entries[k * 4 + i]) * s;
             w = (m.entries[j * 4 + k] - m.entries[k * 4 + j]) * s;
@@ -55,15 +55,13 @@ namespace TK {
         tkFloat wy = w * xyz.y;
         tkFloat wz = w * xyz.z;
 
-        Matrix44 m(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy), 0,
-                   2 * (xy - wz), 1 - 2 * (xx + zz), 2 * (yz + wx), 0,
-                   2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy), 0,
-                   0, 0, 0, 1);
+        Matrix44 m(1 - 2 * (yy + zz), 2 * (xy + wz), 2 * (xz - wy), 0, 2 * (xy - wz), 1 - 2 * (xx + zz),
+                   2 * (yz + wx), 0, 2 * (xz + wy), 2 * (yz - wx), 1 - 2 * (xx + yy), 0, 0, 0, 0, 1);
         return Transform(m, transpose(m));
     }
 
     // Assumes that both q1 and q2 are unit quaternions
-    Quaternion slerp(tkFloat t, const Quaternion &q1, const Quaternion &q2) {
+    Quaternion slerp(tkFloat t, const Quaternion& q1, const Quaternion& q2) {
         tkFloat cosTheta = dot(q1, q2);
 
         // dot product threshold of 0.9995
@@ -78,4 +76,4 @@ namespace TK {
             return q1 * std::cos(theta) + qOrtho * std::sin(theta);
         }
     }
-} // namespace TK
+}  // namespace TK
