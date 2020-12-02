@@ -17,5 +17,5 @@
 #include "types.hpp"
 
 namespace TK {
-    tkInt startToki(tkInt argc, tkChar *argv[]);
+    tkInt startToki(tkInt argc, tkChar* argv[]);
 }  // namespace TK

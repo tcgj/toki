@@ -6,13 +6,11 @@ namespace TK {
     class BufferedStream : public IOStream {
     public:
         BufferedStream(tkUInt initCapacity = 1024U) {
-            if (initCapacity > 0)
-                resize(initCapacity);
+            if (initCapacity > 0) resize(initCapacity);
         }
 
         void resize(tkUInt size) {
-            if (size <= capacity)
-                return;
+            if (size <= capacity) return;
 
             std::unique_ptr<tkChar[]> newBuf = std::make_unique<tkChar[]>(size);
             memcpy(newBuf.get(), buf.get(), capacity);
@@ -22,7 +20,7 @@ namespace TK {
         }
 
         // IStream operators
-        BufferedStream &operator>>(tkFloat &f) override {
+        BufferedStream& operator>>(tkFloat& f) override {
             if (rOffset + sizeof(f) > capacity)
                 f = 0;
             else {
@@ -32,7 +30,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator>>(tkInt &i) override {
+        BufferedStream& operator>>(tkInt& i) override {
             if (rOffset + sizeof(i) > capacity)
                 i = 0;
             else {
@@ -42,7 +40,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator>>(tkUInt &u) override {
+        BufferedStream& operator>>(tkUInt& u) override {
             if (rOffset + sizeof(u) > capacity)
                 u = 0;
             else {
@@ -52,19 +50,18 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator>>(std::string &s) override {
+        BufferedStream& operator>>(std::string& s) override {
             s = "";
             tkChar c;
             while (rOffset < capacity) {
                 c = buf[rOffset++];
-                if (c == 0)
-                    break;
+                if (c == 0) break;
                 s += c;
             }
             return *this;
         }
 
-        BufferedStream &operator>>(bool &b) override {
+        BufferedStream& operator>>(bool& b) override {
             if (rOffset + sizeof(b) > capacity)
                 b = 0;
             else {
@@ -74,7 +71,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &read(tkChar *data, tkUInt size) override {
+        BufferedStream& read(tkChar* data, tkUInt size) override {
             if (rOffset + size > capacity)
                 memset(data, 0, size);
             else {
@@ -85,7 +82,7 @@ namespace TK {
         }
 
         // OStream operators
-        BufferedStream &operator<<(tkFloat f) override {
+        BufferedStream& operator<<(tkFloat f) override {
             if (wOffset + sizeof(f) > capacity) {
                 resize(2 * capacity);
                 return *this << f;
@@ -96,7 +93,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator<<(tkInt i) override {
+        BufferedStream& operator<<(tkInt i) override {
             if (wOffset + sizeof(i) > capacity) {
                 resize(2 * capacity);
                 return *this << i;
@@ -107,7 +104,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator<<(tkUInt u) override {
+        BufferedStream& operator<<(tkUInt u) override {
             if (wOffset + sizeof(u) > capacity) {
                 resize(2 * capacity);
                 return *this << u;
@@ -118,7 +115,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator<<(const std::string &s) override {
+        BufferedStream& operator<<(const std::string& s) override {
             size_t charCount = s.size() + 1;
             if (wOffset + charCount > capacity) {
                 resize(2 * capacity);
@@ -130,7 +127,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &operator<<(bool b) override {
+        BufferedStream& operator<<(bool b) override {
             if (wOffset + sizeof(b) > capacity) {
                 resize(2 * capacity);
                 return *this << b;
@@ -141,7 +138,7 @@ namespace TK {
             return *this;
         }
 
-        BufferedStream &write(const tkChar *data, tkUInt size) override {
+        BufferedStream& write(const tkChar* data, tkUInt size) override {
             if (wOffset + size > capacity) {
                 resize(2 * capacity);
                 return write(data, size);
@@ -158,4 +155,4 @@ namespace TK {
         tkUInt capacity;
         std::unique_ptr<tkChar[]> buf;
     };
-} // namespace TK
+}  // namespace TK

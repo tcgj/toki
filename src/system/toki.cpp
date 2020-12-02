@@ -1,20 +1,19 @@
 #include "toki.hpp"
 
 #include "api.hpp"
-#include "filestream.hpp"
 
 namespace TK {
-    void printUsage(const char *message = nullptr) {
+    void printUsage(const char* message = nullptr) {
         if (message != nullptr)
             fprintf(stderr, "toki: %s\n", message);
         exit(message == nullptr ? 0 : 1);
     }
 
-    tkInt startToki(tkInt argc, tkChar *argv[]) {
-        TK::Options options;
+    tkInt startToki(tkInt argc, tkChar* argv[]) {
+        Options options;
         std::string inputFile;
         for (int i = 1; i < argc; ++i) {
-            char *str = argv[i];
+            char* str = argv[i];
             if (strcmp(str, "-nt") == 0) {
                 i++;
                 if (i == argc)
@@ -39,15 +38,14 @@ namespace TK {
 #endif
 
         // Init
-        FileStream stream(inputFile, FSM_IN);
-        tokiConfigure(options);
-        tokiParse(stream);
+        RenderAPI::tokiConfigure(options);
+        RenderAPI::tokiParse(inputFile);
 
         // Run
-        tokiRun();
+        RenderAPI::tokiRun();
 
         // Cleanup
-        tokiShutdown();
+        RenderAPI::tokiShutdown();
         return 0;
     }
 } // namespace TK

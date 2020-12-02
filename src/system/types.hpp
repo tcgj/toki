@@ -1,11 +1,16 @@
 #pragma once
 
 namespace TK {
-    template <typename T> class Vec2;
-    template <typename T> class Vec3;
-    template <typename T> class Point2;
-    template <typename T> class Point3;
-    template <typename T> class AABB;
+    template <typename T>
+    class Vec2;
+    template <typename T>
+    class Vec3;
+    template <typename T>
+    class Point2;
+    template <typename T>
+    class Point3;
+    template <typename T>
+    class AABB;
     struct Matrix44;
     struct Mesh;
     struct Interaction;
@@ -35,10 +40,9 @@ namespace TK {
     typedef double tkFloat;
 #else
     typedef float tkFloat;
-#endif // TK_USE_DOUBLE
+#endif  // TK_USE_DOUBLE
     typedef float tkF32;
     typedef double tkF64;
-    typedef std::string tkString;
     typedef Vec2<tkFloat> tkVec2f;
     typedef Vec2<tkInt> tkVec2i;
     typedef Vec3<tkFloat> tkVec3f;
@@ -50,4 +54,4 @@ namespace TK {
     typedef AABB<tkFloat> tkAABBf;
     typedef AABB<tkInt> tkAABBi;
     typedef RGBSpectrum tkSpectrum;
-} // namespace TK
+}  // namespace TK

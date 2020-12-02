@@ -6,22 +6,29 @@
 
 namespace TK {
     struct Options {
-        // Command-line options
         std::string outFile;
         tkInt threadCount = -1;
         bool fastRender = false;
-
-        // File-specific options
-        tkInt tileSize;
-        tkInt samplesPerPixel;
-        tkVec2i resolution;
     };
 
-    // Rendering API
-    void tokiConfigure(const Options &cmdLineOptions);
-    void tokiParse(IStream &stream);
-    void tokiRun();
-    void tokiShutdown();
+    class RenderAPI {
+    public:
+        static void tokiConfigure(const Options& options);
+        static void tokiParse(std::string inputFile);
+        static void tokiRun();
+        static void tokiShutdown();
+
+    private:
+        // Options
+        static std::string outFile;
+        static tkInt threadCount;
+        static bool fastRender;
+
+        // Render Settings
+        static tkInt tileSize;
+        static tkInt samplesPerPixel;
+        static tkVec2i resolution;
+    };
 
     // Serializing API
-} // namespace TK
+}  // namespace TK

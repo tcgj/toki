@@ -4,4 +4,4 @@
 #define tkAssert(expr) ((void)0)
 #else
 #define tkAssert(expr) assert(expr)
-#endif // TK_ENABLE_ASSERTS
+#endif  // TK_ENABLE_ASSERTS
