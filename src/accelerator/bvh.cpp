@@ -91,8 +91,8 @@ namespace TK {
     }
 
     /* ----- SAH-based Binned BVH Construction ----- */
-    static constexpr tkInt binCount = 16;
-    static constexpr tkInt maxPCount = 2;
+    constexpr tkInt binCount = 16;
+    constexpr tkInt maxPCount = 2;
 
     struct SAHBin {
         tkI64 count = 0;

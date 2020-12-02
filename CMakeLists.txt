@@ -96,8 +96,8 @@ add_executable(toki_exe src/main.cpp)
 add_sanitizers(toki_exe)
 
 # set include directories
-target_include_directories(toki_lib PUBLIC include)
-target_include_directories(toki_lib PUBLIC src)
+target_include_directories(toki_lib PRIVATE include)
+target_include_directories(toki_lib PRIVATE src)
 
 set_target_properties(toki_exe PROPERTIES OUTPUT_NAME toki)
-target_link_libraries(toki_exe PUBLIC toki_lib)
+target_link_libraries(toki_exe PRIVATE toki_lib)
