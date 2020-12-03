@@ -1,7 +1,7 @@
 #include "matte.hpp"
 
 #include "core/scattering.hpp"
-#include "scattering/lambert.hpp"
+#include "bsdf/lambert.hpp"
 
 namespace TK {
     void Matte::computeScattering(Scattering* scattering) const {

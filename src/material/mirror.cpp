@@ -2,7 +2,7 @@
 
 #include "core/scattering.hpp"
 #include "core/fresnel.hpp"
-#include "scattering/specularreflection.hpp"
+#include "bsdf/specularreflection.hpp"
 
 namespace TK {
     void Mirror::computeScattering(Scattering* scattering) const {

@@ -202,11 +202,6 @@ namespace TK {
         return v1.x * v2.y - v1.y * v2.x;
     }
     template <typename T>
-    inline tkFloat angleBetween(const Vec2<T>& v1, const Vec2<T>& v2) {
-        tkFloat cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
-        return std::acos(clamp(cosTheta, -1, 1));
-    }
-    template <typename T>
     inline Vec2<T> normalize(const Vec2<T>& v) {
         tkFloat sm = v.squaredMagnitude();
         if (sm > 0)

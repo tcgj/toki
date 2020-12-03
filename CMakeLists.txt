@@ -72,6 +72,7 @@ set(TK_CORE_SOURCE
 
 file(GLOB TK_SOURCE
     src/accelerator/*
+    src/bsdf/*
     src/camera/*
     src/image/*
     src/integrator/*
@@ -80,7 +81,6 @@ file(GLOB TK_SOURCE
     src/math/*
     src/region/*
     src/sampler/*
-    src/scattering/*
     src/shape/*
     src/system/*
     src/util/*)

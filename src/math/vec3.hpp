@@ -218,11 +218,6 @@ namespace TK {
         return Vec3<T>(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
     }
     template <typename T>
-    inline tkFloat angleBetween(const Vec3<T>& v1, const Vec3<T>& v2) {
-        tkFloat cosTheta = dot(v1, v2) / (v1.magnitude() * v2.magnitude());
-        return std::acos(clamp(cosTheta, -1, 1));
-    }
-    template <typename T>
     inline Vec3<T> normalize(const Vec3<T>& v) {
         tkFloat sm = v.squaredMagnitude();
         if (sm > 0)
