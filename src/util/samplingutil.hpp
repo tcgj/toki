@@ -4,7 +4,6 @@
 #include "math/math.hpp"
 #include "core/random.hpp"
 #include "geometryutil.hpp"
-#include "mathutil.hpp"
 
 namespace TK {
     /* ----- MIS Heuristics ----- */
