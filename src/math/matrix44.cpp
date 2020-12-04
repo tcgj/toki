@@ -35,8 +35,8 @@ namespace TK {
     }
 
     Matrix44& Matrix44::operator*=(const Matrix44& m) {
-        for (tkInt i = 0; i < 4; ++i) {
-            for (tkInt j = 0; j < 4; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
                 entries[i * 4 + j] = entries[i * 4] * m.entries[j] + entries[i * 4 + 1] * m.entries[4 + j] +
                                      entries[i * 4 + 2] * m.entries[8 + j] +
                                      entries[i * 4 + 3] * m.entries[12 + j];
@@ -45,13 +45,13 @@ namespace TK {
         return *this;
     }
     bool Matrix44::operator==(const Matrix44& m) const {
-        for (tkInt i = 0; i < 16; ++i)
+        for (int i = 0; i < 16; ++i)
             if (entries[i] != m.entries[i])
                 return false;
         return true;
     }
     bool Matrix44::operator!=(const Matrix44& m) const {
-        for (tkInt i = 0; i < 16; ++i)
+        for (int i = 0; i < 16; ++i)
             if (entries[i] != m.entries[i])
                 return true;
         return false;
@@ -60,8 +60,8 @@ namespace TK {
     // Binary operators
     Matrix44 operator*(const Matrix44& m1, const Matrix44& m2) {
         Matrix44 m;
-        for (tkInt i = 0; i < 4; ++i) {
-            for (tkInt j = 0; j < 4; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
                 m.entries[i * 4 + j] =
                     m1.entries[i * 4] * m2.entries[j] + m1.entries[i * 4 + 1] * m2.entries[4 + j] +
                     m1.entries[i * 4 + 2] * m2.entries[8 + j] + m1.entries[i * 4 + 3] * m2.entries[12 + j];

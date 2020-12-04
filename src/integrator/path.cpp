@@ -20,13 +20,13 @@ namespace TK {
     }
 
     tkSpectrum PathTracingIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler,
-                                         tkInt depth) const {
+                                         int depth) const {
         tkSpectrum li;
         tkSpectrum throughput(1);
         Ray ray(r);
         SurfaceInteraction interaction;
 
-        for (tkInt bounces = 0;; ++bounces) {
+        for (int bounces = 0;; ++bounces) {
             bool hit = scene.intersect(ray, &interaction);
             // Emission is not included in computation as we compute direct lighting during each bounce
             // and we want to avoid sampling the same surface again if it was reached on the next bounce.
@@ -51,7 +51,7 @@ namespace TK {
             li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
 
             // Spawn ray for next bounce
-            tkVec3f wi;
+            Vec3f wi;
             tkFloat pdf;
             BxDFType sampledType;
             tkSpectrum f = scattering.sample(interaction.wo, &wi, sampler.nextVector(), &pdf, &sampledType);

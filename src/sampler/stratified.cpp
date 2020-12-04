@@ -4,28 +4,28 @@
 #include "core/random.hpp"
 
 namespace TK {
-    StratifiedSampler::StratifiedSampler(tkInt xCount, tkInt yCount, tkInt dimensions)
+    StratifiedSampler::StratifiedSampler(int xCount, int yCount, int dimensions)
         : Sampler(xCount * yCount), xCount(xCount), yCount(yCount) {
         // Pre-initialize samples with a max dimension count
-        for (tkInt i = 0; i < dimensions; ++i) {
+        for (int i = 0; i < dimensions; ++i) {
             Sampler::requestFloats(1);
             Sampler::requestVectors(1);
         }
     }
 
-    void generateFloatSamples(tkFloat *samples, tkInt count) {
+    void generateFloatSamples(tkFloat *samples, int count) {
         tkFloat invCount = (tkFloat)1 / count;
-        for (tkInt i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i) {
             samples[i] = (i + Random::nextFloat()) * invCount;
         }
     }
 
-    void generateVectorSamples(tkVec2f *samples, tkInt xCount, tkInt yCount) {
+    void generateVectorSamples(Vec2f *samples, int xCount, int yCount) {
         tkFloat invX = (tkFloat)1 / xCount;
         tkFloat invY = (tkFloat)1 / yCount;
-        tkVec2f *currSample = samples;
-        for (tkInt y = 0; y < yCount; ++y) {
-            for (tkInt x = 0; x < xCount; ++x) {
+        Vec2f *currSample = samples;
+        for (int y = 0; y < yCount; ++y) {
+            for (int x = 0; x < xCount; ++x) {
                 currSample->x = (x + Random::nextFloat()) * invX;
                 currSample->y = (y + Random::nextFloat()) * invY;
                 currSample++;
@@ -34,15 +34,15 @@ namespace TK {
     }
 
     template <typename T>
-    void randomizeSamples(T *samples, tkInt count) {
-        for (tkInt i = 0; i < count; ++i) {
+    void randomizeSamples(T *samples, int count) {
+        for (int i = 0; i < count; ++i) {
             // Sanity check to ensure o never goes out of bounds for whatever reason
-            tkInt o = std::min(count - 1, i + static_cast<tkInt>(Random::nextFloat() * (count - i)));
+            int o = std::min(count - 1, i + static_cast<int>(Random::nextFloat() * (count - i)));
             std::swap(samples[i], samples[o]);
         }
     }
 
-    void StratifiedSampler::setPixel(const tkPoint2i &pixelCoord) {
+    void StratifiedSampler::setPixel(const Point2i &pixelCoord) {
         // Set up float set
         for (auto &f : floatSet) {
             generateFloatSamples(f.data(), samplesPerPixel);
@@ -64,11 +64,11 @@ namespace TK {
         }
     }
 
-    tkVec2f StratifiedSampler::nextVector() {
+    Vec2f StratifiedSampler::nextVector() {
         if (currentVectorSet < vectorSet.size()) {
             return vectorSet[currentVectorSet++][currentSample];
         } else {
-            return tkVec2f(Random::nextFloat(), Random::nextFloat());
+            return Vec2f(Random::nextFloat(), Random::nextFloat());
         }
     }
 

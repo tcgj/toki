@@ -1,7 +1,7 @@
 #include "image.hpp"
 
 namespace TK {
-    Image::Image(const tkVec2i& res, const std::string& filename) : resolution(res), filename(filename) {
+    Image::Image(const Vec2i& res, const std::string& filename) : resolution(res), filename(filename) {
         pixels = std::make_unique<tkSpectrum[]>(res.x * res.y);
     }
 
@@ -9,17 +9,17 @@ namespace TK {
         return (tkFloat)resolution.x / resolution.y;
     }
 
-    tkVec3f Image::getPixelColor(const tkPoint2i& pixelCoord) const {
+    Vec3f Image::getPixelColor(const Point2i& pixelCoord) const {
         return pixels[pixelCoord.y * resolution.x + pixelCoord.x].toRGB();
     }
 
-    void Image::updatePixelColor(const tkPoint2i& pixelCoord, const tkSpectrum& colorContribution) {
+    void Image::updatePixelColor(const Point2i& pixelCoord, const tkSpectrum& colorContribution) {
         pixels[pixelCoord.y * resolution.x + pixelCoord.x] += colorContribution;
     }
 
-    tkVec3f Image::gammaCorrect(const tkVec3f& rgb) const {
-        tkVec3f ret;
-        for (tkInt i = 0; i < 3; ++i) {
+    Vec3f Image::gammaCorrect(const Vec3f& rgb) const {
+        Vec3f ret;
+        for (int i = 0; i < 3; ++i) {
             if (rgb[i] <= 0.0031308f)
                 ret[i] = 12.92f * rgb[i];
             else

@@ -26,7 +26,7 @@ namespace TK {
     }
 
     // Transform operations
-    Transform translate(const tkVec3f& offset) {
+    Transform translate(const Vec3f& offset) {
         Matrix44 translationMatrix(1, 0, 0, offset.x, 0, 1, 0, offset.y, 0, 0, 1, offset.z, 0, 0, 0, 1);
         Matrix44 invMatrix(1, 0, 0, -offset.x, 0, 1, 0, -offset.y, 0, 0, 1, -offset.z, 0, 0, 0, 1);
         return Transform(translationMatrix, invMatrix);
@@ -36,8 +36,8 @@ namespace TK {
         Matrix44 invMatrix(1 / x, 0, 0, 0, 0, 1 / y, 0, 0, 0, 0, 1 / z, 0, 0, 0, 0, 1);
         return Transform(scalingMatrix, invMatrix);
     }
-    Transform rotate(const tkVec3f& axis, tkFloat theta) {
-        tkVec3f a = normalize(axis);
+    Transform rotate(const Vec3f& axis, tkFloat theta) {
+        Vec3f a = normalize(axis);
         tkFloat sinTheta = std::sin(theta);
         tkFloat cosTheta = std::cos(theta);
         Matrix44 m;
@@ -75,12 +75,12 @@ namespace TK {
         return Transform(m, transpose(m));
     }
     // View Transform (Camera To World)
-    Transform lookAt(const tkPoint3f& eye, const tkPoint3f& at, const tkVec3f& up) {
+    Transform lookAt(const Point3f& eye, const Point3f& at, const Vec3f& up) {
         Matrix44 viewMatrix;
-        tkVec3f eyeVec = tkVec3f(eye);
-        tkVec3f camZ = normalize(eye - at);
-        tkVec3f camX = normalize(cross(normalize(up), camZ));
-        tkVec3f camY = cross(camZ, camX);
+        Vec3f eyeVec = Vec3f(eye);
+        Vec3f camZ = normalize(eye - at);
+        Vec3f camX = normalize(cross(normalize(up), camZ));
+        Vec3f camY = cross(camZ, camX);
         viewMatrix.entries[0] = camX.x;
         viewMatrix.entries[1] = camX.y;
         viewMatrix.entries[2] = camX.z;
@@ -98,7 +98,7 @@ namespace TK {
     }
     // Projection Transform
     Transform orthographic(tkFloat near, tkFloat far) {
-        return scale(1, 1, 1 / (far - near)) * translate(tkVec3f(0, 0, near));
+        return scale(1, 1, 1 / (far - near)) * translate(Vec3f(0, 0, near));
     }
     Transform perspective(tkFloat fovy, tkFloat aspect, tkFloat near, tkFloat far) {
         tkFloat fMinusN = far - near;

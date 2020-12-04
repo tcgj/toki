@@ -7,54 +7,54 @@
 namespace TK {
     class Sampler {
     public:
-        Sampler(tkI64 samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
+        Sampler(int64_t samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
         virtual ~Sampler() = default;
 
-        virtual void setPixel(const tkPoint2i& pixelCoord);
-        CameraSample getCameraSample(const tkPoint2i& pixelCoord);
-        virtual void requestFloats(tkInt count);
-        virtual void requestVectors(tkInt count);
+        virtual void setPixel(const Point2i& pixelCoord);
+        CameraSample getCameraSample(const Point2i& pixelCoord);
+        virtual void requestFloats(int count);
+        virtual void requestVectors(int count);
         virtual tkFloat nextFloat() = 0;
-        virtual tkVec2f nextVector() = 0;
+        virtual Vec2f nextVector() = 0;
         virtual bool nextSample();
         virtual std::unique_ptr<Sampler> getClone() = 0;
 
-        tkI64 samplesPerPixel;
+        int64_t samplesPerPixel;
 
     protected:
         // --Sampler state values--
-        tkPoint2i currentPixel;
-        tkI64 currentSample;
-        tkInt currentFloatSet;
-        tkInt currentVectorSet;
-        std::vector<tkInt> floatSetSizes;
-        std::vector<tkInt> vectorSetSizes;
+        Point2i currentPixel;
+        int64_t currentSample;
+        int currentFloatSet;
+        int currentVectorSet;
+        std::vector<int> floatSetSizes;
+        std::vector<int> vectorSetSizes;
         std::vector<std::vector<tkFloat>> floatSet;
-        std::vector<std::vector<tkVec2f>> vectorSet;
+        std::vector<std::vector<Vec2f>> vectorSet;
     };
 
-    inline void Sampler::setPixel(const tkPoint2i& pixelCoord) {
+    inline void Sampler::setPixel(const Point2i& pixelCoord) {
         currentPixel = pixelCoord;
         currentSample = 0;
         currentFloatSet = 0;
         currentVectorSet = 0;
     }
 
-    inline CameraSample Sampler::getCameraSample(const tkPoint2i& pixelCoord) {
+    inline CameraSample Sampler::getCameraSample(const Point2i& pixelCoord) {
         CameraSample ret;
-        ret.imgCoord = (tkPoint2f)pixelCoord + nextVector();
+        ret.imgCoord = (Point2f)pixelCoord + nextVector();
         ret.lens = nextVector();
         return ret;
     }
 
-    inline void Sampler::requestFloats(tkInt count) {
+    inline void Sampler::requestFloats(int count) {
         floatSetSizes.push_back(count);
         floatSet.push_back(std::vector<tkFloat>(count * samplesPerPixel));
     }
 
-    inline void Sampler::requestVectors(tkInt count) {
+    inline void Sampler::requestVectors(int count) {
         vectorSetSizes.push_back(count);
-        vectorSet.push_back(std::vector<tkVec2f>(count * samplesPerPixel));
+        vectorSet.push_back(std::vector<Vec2f>(count * samplesPerPixel));
     }
 
     inline bool Sampler::nextSample() {

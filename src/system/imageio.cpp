@@ -9,19 +9,19 @@
 #include <stb_image_write.h>
 
 namespace TK {
-    void releaseData(tkUChar** imageData) {
+    void releaseData(unsigned char** imageData) {
         stbi_image_free(*imageData);
         *imageData = nullptr;
     }
 
-    tkInt readFromFile(const tkChar* filename, tkUChar** imageData, tkInt* imageWidth, tkInt* imageHeight,
-                       tkInt* numComponents) {
+    int readFromFile(const char* filename, unsigned char** imageData, int* imageWidth, int* imageHeight,
+                       int* numComponents) {
         stbi_set_flip_vertically_on_load(true);
 
-        tkInt w;
-        tkInt h;
-        tkInt t;
-        tkUChar* data = stbi_load(filename, &w, &h, &t, 0);
+        int w;
+        int h;
+        int t;
+        unsigned char* data = stbi_load(filename, &w, &h, &t, 0);
 
         if (data == nullptr) {
             fprintf(stderr, "Error: Image file cannot be read: %s\n", filename);
@@ -35,11 +35,11 @@ namespace TK {
         return 0;
     }
 
-    tkInt writeToPngFile(const tkChar* filename, const tkUChar* imageData, tkInt imageWidth,
-                         tkInt imageHeight, tkInt numComponents) {
+    int writeToPngFile(const char* filename, const unsigned char* imageData, int imageWidth,
+                         int imageHeight, int numComponents) {
         stbi_flip_vertically_on_write(true);
 
-        tkInt result = stbi_write_png(filename, imageWidth, imageHeight, numComponents, imageData, 0);
+        int result = stbi_write_png(filename, imageWidth, imageHeight, numComponents, imageData, 0);
 
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n", filename);
@@ -48,11 +48,11 @@ namespace TK {
         return 0;
     }
 
-    tkInt writeToJpgFile(const tkChar* filename, const tkUChar* imageData, tkInt imageWidth,
-                         tkInt imageHeight, tkInt numComponents, tkInt quality) {
+    int writeToJpgFile(const char* filename, const unsigned char* imageData, int imageWidth,
+                         int imageHeight, int numComponents, int quality) {
         stbi_flip_vertically_on_write(true);
 
-        tkInt result = stbi_write_jpg(filename, imageWidth, imageHeight, numComponents, imageData, quality);
+        int result = stbi_write_jpg(filename, imageWidth, imageHeight, numComponents, imageData, quality);
 
         if (!result) {
             fprintf(stderr, "Error: Image file cannot be written: %s\n", filename);

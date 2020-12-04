@@ -10,6 +10,7 @@
 #include <cmath>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <cstdint>
 
 //#define TK_ENABLE_ASSERTS
@@ -17,5 +18,5 @@
 #include "types.hpp"
 
 namespace TK {
-    tkInt startToki(tkInt argc, tkChar* argv[]);
+    int startToki(int argc, char* argv[]);
 }  // namespace TK

@@ -9,7 +9,7 @@ namespace TK {
         exit(message == nullptr ? 0 : 1);
     }
 
-    tkInt startToki(tkInt argc, tkChar* argv[]) {
+    int startToki(int argc, char* argv[]) {
         Options options;
         std::string inputFile;
         for (int i = 1; i < argc; ++i) {

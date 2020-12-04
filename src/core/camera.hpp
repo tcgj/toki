@@ -7,8 +7,8 @@
 
 namespace TK {
     struct CameraSample {
-        tkPoint2f imgCoord;
-        tkVec2f lens;
+        Point2f imgCoord;
+        Vec2f lens;
     };
 
     class Camera {
@@ -32,7 +32,7 @@ namespace TK {
                          Image* image)
             : Camera(cameraToWorld /*, medium*/, image), lensRadius(lensRadius), focalLength(focalLength) {
             // image space has boundaries from (0, 0) to (res.x, res.y)
-            Transform imageToNDC = translate(tkVec3f(-1, -1, 0)) * scale((tkFloat)2 / image->resolution.x,
+            Transform imageToNDC = translate(Vec3f(-1, -1, 0)) * scale((tkFloat)2 / image->resolution.x,
                                                                          (tkFloat)2 / image->resolution.y, 1);
             imageToCamera = inverse(cameraToNDC) * imageToNDC;
         }

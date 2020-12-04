@@ -4,8 +4,8 @@
 
 namespace TK {
     tkFloat OrthographicCamera::generateRay(const CameraSample& sample, Ray* r) const {
-        tkPoint3f cs_pos = imageToCamera(tkPoint3f(sample.imgCoord));
-        *r = Ray(cs_pos, tkVec3f(0, 0, -1));  // camera space ray
+        Point3f cs_pos = imageToCamera(Point3f(sample.imgCoord));
+        *r = Ray(cs_pos, Vec3f(0, 0, -1));  // camera space ray
         // TODO: Handle depth of field here
 
         // r->medium = medium;

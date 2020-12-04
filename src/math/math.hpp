@@ -48,12 +48,12 @@ namespace TK {
     }
 
     inline bool quadratic(tkFloat a, tkFloat b, tkFloat c, tkFloat* t0, tkFloat* t1) {
-        tkF64 discriminant = (tkF64)b * (tkF64)b - 4 * (tkF64)a * (tkF64)c;
+        double discriminant = (double)b * (double)b - 4 * (double)a * (double)c;
         if (discriminant < 0)
             return false;
 
-        tkF64 rootDiscriminant = std::sqrt(discriminant);
-        tkF64 x = -0.5 * (b < 0 ? b - rootDiscriminant : b + rootDiscriminant);
+        double rootDiscriminant = std::sqrt(discriminant);
+        double x = -0.5 * (b < 0 ? b - rootDiscriminant : b + rootDiscriminant);
         *t0 = x / a;
         *t1 = c / x;
         if (*t0 > *t1)
@@ -64,9 +64,9 @@ namespace TK {
 
     // Obtain tightest interval [i, i + 1] in [0, size) that passes predicate(i)
     template <typename Predicate>
-    inline tkInt getInterval(tkInt size, const Predicate& pred) {
-        tkInt start = 0, end = size - 1;
-        tkInt mid;
+    inline int getInterval(int size, const Predicate& pred) {
+        int start = 0, end = size - 1;
+        int mid;
         while (start < end) {
             mid = (start + end) >> 1;
             if (pred(mid))

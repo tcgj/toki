@@ -13,9 +13,9 @@ namespace TK {
               etaA(etaA),
               etaB(etaB) {}
 
-        tkSpectrum evaluate(const tkVec3f& wo, const tkVec3f& wi) const override;
-        tkSpectrum sample(const tkVec3f& wo, tkVec3f* wi, const tkVec2f& samp, tkFloat* pdf) const override;
-        tkFloat getPdf(const tkVec3f& wo, const tkVec3f& wi) const override;
+        tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const override;
+        tkSpectrum sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp, tkFloat* pdf) const override;
+        tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const override;
 
     private:
         tkSpectrum dht;  // directional-hemispherical transmittance

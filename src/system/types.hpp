@@ -31,27 +31,20 @@ namespace TK {
     class IStream;
     class OStream;
 
-    typedef unsigned char tkUChar;
-    typedef char tkChar;
-    typedef unsigned int tkUInt;
-    typedef int tkInt;
-    typedef int64_t tkI64;
 #ifdef TK_USE_DOUBLE
     typedef double tkFloat;
 #else
     typedef float tkFloat;
 #endif  // TK_USE_DOUBLE
-    typedef float tkF32;
-    typedef double tkF64;
-    typedef Vec2<tkFloat> tkVec2f;
-    typedef Vec2<tkInt> tkVec2i;
-    typedef Vec3<tkFloat> tkVec3f;
-    typedef Vec3<tkInt> tkVec3i;
-    typedef Point2<tkFloat> tkPoint2f;
-    typedef Point2<tkInt> tkPoint2i;
-    typedef Point3<tkFloat> tkPoint3f;
-    typedef Point3<tkInt> tkPoint3i;
-    typedef AABB<tkFloat> tkAABBf;
-    typedef AABB<tkInt> tkAABBi;
+    typedef Vec2<tkFloat> Vec2f;
+    typedef Vec2<int> Vec2i;
+    typedef Vec3<tkFloat> Vec3f;
+    typedef Vec3<int> Vec3i;
+    typedef Point2<tkFloat> Point2f;
+    typedef Point2<int> Point2i;
+    typedef Point3<tkFloat> Point3f;
+    typedef Point3<int> Point3i;
+    typedef AABB<tkFloat> AABBf;
+    typedef AABB<int> AABBi;
     typedef RGBSpectrum tkSpectrum;
 }  // namespace TK

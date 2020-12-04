@@ -8,15 +8,15 @@ namespace TK {
 
     class PathTracingIntegrator : public SamplerIntegrator {
     public:
-        PathTracingIntegrator(tkInt maxDepth, std::shared_ptr<Camera> camera,
+        PathTracingIntegrator(int maxDepth, std::shared_ptr<Camera> camera,
                               std::shared_ptr<Sampler> sampler, LightSampleStrategy strategy = POWER)
             : SamplerIntegrator(camera, sampler), maxDepth(maxDepth), strategy(strategy) {}
 
         void preprocess(const Scene& scene) override;
-        tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, tkInt depth) const override;
+        tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const override;
 
     private:
-        tkInt maxDepth;
+        int maxDepth;
         LightSampleStrategy strategy;
         std::unique_ptr<Distribution> lightDist;
     };

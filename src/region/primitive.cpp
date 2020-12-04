@@ -6,7 +6,7 @@
 #include "core/material.hpp"
 
 namespace TK {
-    tkAABBf Primitive::worldBoundingBox() const {
+    AABBf Primitive::worldBoundingBox() const {
         return shape->worldBoundingBox();
     }
 

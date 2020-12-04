@@ -11,22 +11,22 @@ namespace TK {
         ~Scattering();
 
         void initialize(const SurfaceInteraction& interaction);
-        tkSpectrum evaluate(const tkVec3f& worldWo, const tkVec3f& worldWi, BxDFType type = BXDF_ALL) const;
-        tkSpectrum sample(const tkVec3f& worldWo, tkVec3f* worldWi, const tkVec2f& samp, tkFloat* pdf,
+        tkSpectrum evaluate(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type = BXDF_ALL) const;
+        tkSpectrum sample(const Vec3f& worldWo, Vec3f* worldWi, const Vec2f& samp, tkFloat* pdf,
                           BxDFType* sampledType = nullptr, BxDFType type = BXDF_ALL) const;
-        tkFloat getPdf(const tkVec3f& worldWo, const tkVec3f& worldWi, BxDFType type = BXDF_ALL) const;
+        tkFloat getPdf(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type = BXDF_ALL) const;
 
         bool addContribution(BxDF* bxdf);
-        tkVec3f worldToLocal(const tkVec3f& v) const;
-        tkVec3f localToWorld(const tkVec3f& v) const;
+        Vec3f worldToLocal(const Vec3f& v) const;
+        Vec3f localToWorld(const Vec3f& v) const;
 
     private:
-        static constexpr tkInt MAX_BXDF_COUNT = 8;
+        static constexpr int MAX_BXDF_COUNT = 8;
 
-        tkInt numBxdf = 0;
+        int numBxdf = 0;
         BxDF* bxdfs[MAX_BXDF_COUNT];
-        tkVec3f n;
-        tkVec3f t;
-        tkVec3f bt;
+        Vec3f n;
+        Vec3f t;
+        Vec3f bt;
     };
 }  // namespace TK

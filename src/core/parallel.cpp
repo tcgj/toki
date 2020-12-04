@@ -13,22 +13,22 @@ namespace TK {
         static std::condition_variable jobQueueCond;
 
         // Per-thread variables
-        thread_local tkInt threadIndex;
+        thread_local int threadIndex;
 
-        tkUInt getNumCores() {
+        unsigned int getNumCores() {
             return std::max(1u, std::thread::hardware_concurrency());
         }
 
         struct WorkSplit {
-            tkI64 start;
-            tkI64 end;
+            int64_t start;
+            int64_t end;
         };
 
         class Job {
         public:
-            Job(tkI64 workSize, tkInt batchSize, std::function<void(tkI64)> func)
+            Job(int64_t workSize, int batchSize, std::function<void(int64_t)> func)
                 : func1D(std::move(func)), iterCount(workSize), batchSize(batchSize) {}
-            Job(const tkVec2i& workSize, tkInt batchSize, std::function<void(tkVec2i)> func)
+            Job(const Vec2i& workSize, int batchSize, std::function<void(Vec2i)> func)
                 : func2D(std::move(func)),
                   iterCount(workSize.x * workSize.y),
                   batchSize(batchSize),
@@ -42,13 +42,13 @@ namespace TK {
                 return !hasWork() && activeWorkers == 0;
             }
 
-            std::function<void(tkI64)> func1D = nullptr;
-            std::function<void(tkVec2i)> func2D = nullptr;
-            tkI64 iterCount;
-            tkInt iterX = -1;
-            tkInt batchSize;
-            tkI64 nextIter = 0;
-            tkInt activeWorkers = 0;
+            std::function<void(int64_t)> func1D = nullptr;
+            std::function<void(Vec2i)> func2D = nullptr;
+            int64_t iterCount;
+            int iterX = -1;
+            int batchSize;
+            int64_t nextIter = 0;
+            int activeWorkers = 0;
             Job* nextJob = nullptr;
         };
 
@@ -64,18 +64,18 @@ namespace TK {
         // Job execution function
         void executeJob(const Job& job, const WorkSplit& split) {
             if (job.func1D != nullptr) {
-                for (tkI64 i = split.start; i < split.end; ++i) {
+                for (int64_t i = split.start; i < split.end; ++i) {
                     job.func1D(i);
                 }
             } else if (job.func2D != nullptr) {
-                for (tkI64 i = split.start; i < split.end; ++i) {
-                    job.func2D(tkVec2i(i % job.iterX, i / job.iterX));
+                for (int64_t i = split.start; i < split.end; ++i) {
+                    job.func2D(Vec2i(i % job.iterX, i / job.iterX));
                 }
             }
         }
 
         // Worker thread initialization function
-        void workerStart(tkInt index) {
+        void workerStart(int index) {
             threadIndex = index;
             std::unique_lock<std::mutex> lock(jobQueueMutex);
 
@@ -100,13 +100,13 @@ namespace TK {
         }
 
         // Parallel for loop initialization function
-        void dispatch(tkI64 workSize, tkInt batchSize, std::function<void(tkI64)> func) {
+        void dispatch(int64_t workSize, int batchSize, std::function<void(int64_t)> func) {
             if (func == nullptr)
                 return;
 
             // Running on single thread, use standard for loop
             if (threads.empty() || workSize < batchSize) {
-                for (tkInt i = 0; i < workSize; ++i) {
+                for (int i = 0; i < workSize; ++i) {
                     func(i);
                 }
                 return;
@@ -128,15 +128,15 @@ namespace TK {
                 ;
         }
 
-        void dispatch2D(const tkVec2i& workSize, tkInt batchSize, std::function<void(tkVec2i)> func) {
+        void dispatch2D(const Vec2i& workSize, int batchSize, std::function<void(Vec2i)> func) {
             if (func == nullptr)
                 return;
 
             // Running on single thread, use standard for loop
             if (threads.empty() || workSize.x * workSize.y <= batchSize) {
-                for (tkInt y = 0; y < workSize.y; ++y) {
-                    for (tkInt x = 0; x < workSize.x; ++x) {
-                        func(tkVec2i(x, y));
+                for (int y = 0; y < workSize.y; ++y) {
+                    for (int x = 0; x < workSize.x; ++x) {
+                        func(Vec2i(x, y));
                     }
                 }
                 return;
@@ -159,12 +159,12 @@ namespace TK {
             delete job;
         }
 
-        void initThreads(tkInt threadCount) {
+        void initThreads(int threadCount) {
             // Set number of threads based on system options
-            tkInt tc = threadCount < 0 ? getNumCores() : threadCount;
+            int tc = threadCount < 0 ? getNumCores() : threadCount;
 
             // Create threads (main thread excluded)
-            for (tkInt i = 0; i < tc; ++i) {
+            for (int i = 0; i < tc; ++i) {
                 threads.push_back(std::thread(workerStart, i + 1));
             }
 

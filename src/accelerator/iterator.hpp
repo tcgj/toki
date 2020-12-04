@@ -13,7 +13,7 @@ namespace TK {
             }
         }
 
-        tkAABBf worldBoundingBox() const override {
+        AABBf worldBoundingBox() const override {
             return worldBB;
         }
         bool hasIntersect(const Ray& r) const override {
@@ -35,6 +35,6 @@ namespace TK {
         }
 
         std::vector<std::shared_ptr<Primitive>> primitives;
-        tkAABBf worldBB;
+        AABBf worldBB;
     };
 }  // namespace TK

@@ -6,22 +6,22 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    tkAABBf Triangle::objectBoundingBox() const {
+    AABBf Triangle::objectBoundingBox() const {
         Vertex v0;
         Vertex v1;
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        return bbUnion(tkAABBf(objectToWorld->applyInverse(v0.p), objectToWorld->applyInverse(v1.p)),
+        return bbUnion(AABBf(objectToWorld->applyInverse(v0.p), objectToWorld->applyInverse(v1.p)),
                        objectToWorld->applyInverse(v2.p));
     }
 
-    tkAABBf Triangle::worldBoundingBox() const {
+    AABBf Triangle::worldBoundingBox() const {
         Vertex v0;
         Vertex v1;
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
-        return bbUnion(tkAABBf(v0.p, v1.p), v2.p);
+        return bbUnion(AABBf(v0.p, v1.p), v2.p);
     }
 
     tkFloat Triangle::surfaceArea() const {
@@ -30,8 +30,8 @@ namespace TK {
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f v01 = v1.p - v0.p;
-        tkVec3f v02 = v2.p - v0.p;
+        Vec3f v01 = v1.p - v0.p;
+        Vec3f v02 = v2.p - v0.p;
 
         return cross(v01, v02).magnitude() * 0.5;
     }
@@ -44,23 +44,23 @@ namespace TK {
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f e1 = v1.p - v0.p;
-        tkVec3f e2 = v2.p - v0.p;
+        Vec3f e1 = v1.p - v0.p;
+        Vec3f e2 = v2.p - v0.p;
 
-        tkVec3f p = cross(r.d, e2);
+        Vec3f p = cross(r.d, e2);
         tkFloat det = dot(e1, p);
         if (std::abs(det) < TK_EPSILON)
             return false;
         tkFloat invDet = 1.0 / det;
 
-        tkVec3f t = r.o - v0.p;
+        Vec3f t = r.o - v0.p;
 
         // Calculate barycentric coords (u,v)
         tkFloat u = dot(t, p) * invDet;
         if (u < 0.0 || u > 1.0)
             return false;
 
-        tkVec3f q = cross(t, e1);
+        Vec3f q = cross(t, e1);
 
         tkFloat v = dot(r.d, q) * invDet;
         if (v < 0.0 || u + v > 1.0)
@@ -70,13 +70,13 @@ namespace TK {
         if (tempT < TK_EPSILON || tempT > r.tMax)
             return false;
 
-        tkVec3f normal = cross(e1, e2).normalized();
+        Vec3f normal = cross(e1, e2).normalized();
 
-        tkVec2f duv1 = v1.uv - v0.uv;
-        tkVec2f duv2 = v2.uv - v0.uv;
+        Vec2f duv1 = v1.uv - v0.uv;
+        Vec2f duv2 = v2.uv - v0.uv;
         tkFloat uvDet = duv1[0] * duv2[1] - duv1[1] * duv2[0];
-        tkVec3f tangent;
-        tkVec3f bitangent;
+        Vec3f tangent;
+        Vec3f bitangent;
         if (uvDet == 0)
             coordinateSystem(normal, &tangent, &bitangent);
         else {
@@ -101,23 +101,23 @@ namespace TK {
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
 
-        tkVec3f e1 = v1.p - v0.p;
-        tkVec3f e2 = v2.p - v0.p;
+        Vec3f e1 = v1.p - v0.p;
+        Vec3f e2 = v2.p - v0.p;
 
-        tkVec3f p = cross(r.d, e2);
+        Vec3f p = cross(r.d, e2);
         tkFloat det = dot(e1, p);
         if (std::abs(det) < TK_EPSILON)
             return false;
         tkFloat invDet = 1.0 / det;
 
-        tkVec3f t = r.o - v0.p;
+        Vec3f t = r.o - v0.p;
 
         // Calculate barycentric coords (u,v)
         tkFloat u = dot(t, p) * invDet;
         if (u < 0.0 || u > 1.0)
             return false;
 
-        tkVec3f q = cross(t, e1);
+        Vec3f q = cross(t, e1);
 
         tkFloat v = dot(r.d, q) * invDet;
         if (v < 0.0 || u + v > 1.0)
@@ -130,14 +130,14 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Triangle::sample(const Interaction& ref, const tkVec2f& samp, tkFloat* pdf) const {
+    SurfaceInteraction Triangle::sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const {
         SurfaceInteraction ret;
 
         Vertex v0;
         Vertex v1;
         Vertex v2;
         mesh->getTriVertices(triIndex, &v0, &v1, &v2);
-        tkVec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
+        Vec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
         ret.p = bCoord.x * v0.p + bCoord.y * v1.p + bCoordZ * v2.p;

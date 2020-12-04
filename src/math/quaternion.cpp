@@ -19,15 +19,15 @@ namespace TK {
             xyz.y = (m.entries[8] - m.entries[2]) * s;
             xyz.z = (m.entries[1] - m.entries[4]) * s;
         } else {
-            const tkInt next[3] = { 1, 2, 0 };
+            const int next[3] = { 1, 2, 0 };
             tkFloat q[3];
-            tkInt i = 0;
+            int i = 0;
             if (m.entries[5] > m.entries[0])
                 i = 1;
             if (m.entries[10] > m.entries[5])
                 i = 2;
-            tkInt j = next[i];
-            tkInt k = next[j];
+            int j = next[i];
+            int k = next[j];
             tkFloat s = std::sqrt(1.0f + m.entries[i * 4 + i] - m.entries[j * 4 + j] - m.entries[k * 4 + k]);
             q[i] = s * 0.5f;
             if (s != 0.0f)

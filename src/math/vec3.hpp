@@ -20,8 +20,8 @@ namespace TK {
         // Unary/subscript operators
         const Vec3<T>& operator+() const;
         Vec3<T> operator-() const;
-        T operator[](tkInt i) const;
-        T& operator[](tkInt i);
+        T operator[](int i) const;
+        T& operator[](int i);
 
         // Assignment operators
         Vec3<T>& operator+=(const Vec3<T>& v);
@@ -71,7 +71,7 @@ namespace TK {
 
     template <typename T>
     inline bool isNaN(Vec3<T>& v) {
-        for (tkInt i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             if (std::isnan(v.entries[i]))
                 return true;
         }
@@ -87,12 +87,12 @@ namespace TK {
         return Vec3<T>(-x, -y, -z);
     }
     template <typename T>
-    inline T Vec3<T>::operator[](tkInt i) const {
+    inline T Vec3<T>::operator[](int i) const {
         tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
     template <typename T>
-    inline T& Vec3<T>::operator[](tkInt i) {
+    inline T& Vec3<T>::operator[](int i) {
         tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
@@ -226,7 +226,7 @@ namespace TK {
         return v;
     }
     template <typename T>
-    inline Vec3<T> swizzle(const Vec3<T>& v, tkInt x, tkInt y, tkInt z) {
+    inline Vec3<T> swizzle(const Vec3<T>& v, int x, int y, int z) {
         return Vec3<T>(v[x], v[y], v[z]);
     }
     template <typename T>

@@ -13,7 +13,7 @@ namespace TK {
         }
     }
 
-    const tkAABBf& Scene::worldBoundingBox() const {
+    const AABBf& Scene::worldBoundingBox() const {
         return worldBB;
     }
 

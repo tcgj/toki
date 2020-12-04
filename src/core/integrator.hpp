@@ -18,12 +18,12 @@ namespace TK {
         SamplerIntegrator(std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
             : camera(camera), sampler(sampler) {}
 
-        virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, tkInt depth = 0) const = 0;
+        virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth = 0) const = 0;
         void render(const Scene& scene) override;
         tkSpectrum specularReflectedLi(const SurfaceInteraction& interaction, const Scene& scene,
-                                       const Ray& r, Sampler& sampler, tkInt depth) const;
+                                       const Ray& r, Sampler& sampler, int depth) const;
         tkSpectrum specularRefractedLi(const SurfaceInteraction& interaction, const Scene& scene,
-                                       const Ray& r, Sampler& sampler, tkInt depth) const;
+                                       const Ray& r, Sampler& sampler, int depth) const;
 
     private:
         std::shared_ptr<Camera> camera;

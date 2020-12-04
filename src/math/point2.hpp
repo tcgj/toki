@@ -20,8 +20,8 @@ namespace TK {
         const Point2<T>& operator+() const;
         Point2<T> operator-() const;
         Point2<T> operator/(T w) const;
-        T operator[](tkInt i) const;
-        T& operator[](tkInt i);
+        T operator[](int i) const;
+        T& operator[](int i);
 
         // Assignment operators
         Point2<T>& operator+=(const Vec2<T>& v);
@@ -66,12 +66,12 @@ namespace TK {
         return Point2<T>(x * k, y * k);
     }
     template <typename T>
-    inline T Point2<T>::operator[](tkInt i) const {
+    inline T Point2<T>::operator[](int i) const {
         tkAssert(i == 0 || i == 1);
         return entries[i];
     }
     template <typename T>
-    inline T& Point2<T>::operator[](tkInt i) {
+    inline T& Point2<T>::operator[](int i) {
         tkAssert(i == 0 || i == 1);
         return entries[i];
     }
@@ -134,7 +134,7 @@ namespace TK {
         return (p2 - p1).squaredMagnitude();
     }
     template <typename T>
-    inline Point2<T> swizzle(const Point2<T>& p, tkInt x, tkInt y) {
+    inline Point2<T> swizzle(const Point2<T>& p, int x, int y) {
         return Point2<T>(p[x], p[y]);
     }
 

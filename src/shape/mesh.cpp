@@ -5,32 +5,32 @@
 namespace TK {
     // mesh is initialized in world space to eliminate need for transformation
     // during ray intersection check
-    Mesh::Mesh(const Transform& objectToWorld, tkI64 numVert, tkI64 numTri, const tkPoint3f* V,
-               const tkI64* I, const tkVec3f* N, const tkVec3f* UV)
+    Mesh::Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V,
+               const int64_t* I, const Vec3f* N, const Vec3f* UV)
         : numTri(numTri), numVert(numVert), indexBuffer(I, I + 3 * numTri) {
         // clear ptr and set ownership
-        vertexBuffer.reset(new tkPoint3f[numVert]);
-        for (tkI64 i = 0; i < numVert; ++i)
+        vertexBuffer.reset(new Point3f[numVert]);
+        for (int64_t i = 0; i < numVert; ++i)
             vertexBuffer[i] = objectToWorld(V[i]);
 
         if (N != nullptr) {
-            normalBuffer.reset(new tkVec3f[numVert]);
-            for (tkI64 i = 0; i < numVert; ++i)
+            normalBuffer.reset(new Vec3f[numVert]);
+            for (int64_t i = 0; i < numVert; ++i)
                 normalBuffer[i] = objectToWorld(N[i]);
         }
         if (UV != nullptr) {
-            uvBuffer.reset(new tkPoint2f[numVert]);
-            memcpy(uvBuffer.get(), UV, numVert * sizeof(tkPoint2f));
+            uvBuffer.reset(new Point2f[numVert]);
+            memcpy(uvBuffer.get(), UV, numVert * sizeof(Point2f));
         }
     }
 
-    bool Mesh::getTriVertices(tkI64 triIndex, Vertex* v0, Vertex* v1, Vertex* v2) const {
+    bool Mesh::getTriVertices(int64_t triIndex, Vertex* v0, Vertex* v1, Vertex* v2) const {
         if (triIndex >= numTri)
             return false;
 
-        tkI64 i0 = indexBuffer[3 * triIndex];
-        tkI64 i1 = indexBuffer[3 * triIndex + 1];
-        tkI64 i2 = indexBuffer[3 * triIndex + 2];
+        int64_t i0 = indexBuffer[3 * triIndex];
+        int64_t i1 = indexBuffer[3 * triIndex + 1];
+        int64_t i2 = indexBuffer[3 * triIndex + 2];
 
         v0->p = vertexBuffer[i0];
         v1->p = vertexBuffer[i1];

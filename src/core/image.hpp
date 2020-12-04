@@ -7,15 +7,15 @@
 namespace TK {
     class Image {
     public:
-        Image(const tkVec2i& res, const std::string& filename);
+        Image(const Vec2i& res, const std::string& filename);
 
         tkFloat getAspectRatio() const;
-        tkVec3f getPixelColor(const tkPoint2i& pixelCoord) const;
-        void updatePixelColor(const tkPoint2i& pixelCoord, const tkSpectrum& colorContribution);
-        virtual tkVec3f gammaCorrect(const tkVec3f& rgb) const;
+        Vec3f getPixelColor(const Point2i& pixelCoord) const;
+        void updatePixelColor(const Point2i& pixelCoord, const tkSpectrum& colorContribution);
+        virtual Vec3f gammaCorrect(const Vec3f& rgb) const;
         virtual void write() = 0;
 
-        tkVec2i resolution;
+        Vec2i resolution;
         std::string filename;
 
     protected:

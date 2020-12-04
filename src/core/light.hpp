@@ -34,12 +34,12 @@ namespace TK {
             return true;
         }
         virtual tkSpectrum power() const = 0;
-        virtual tkSpectrum Le(const SurfaceInteraction& interaction, const tkVec3f& wo) const {
+        virtual tkSpectrum Le(const SurfaceInteraction& interaction, const Vec3f& wo) const {
             return 0;
         };
-        virtual tkSpectrum sample(const Interaction& ref, tkVec3f* wi, const tkVec2f& samp, tkFloat* pdf,
+        virtual tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
                                   OcclusionChecker* occCheck) const = 0;
-        virtual tkFloat getPdf(const Interaction& ref, const tkVec3f& wi) const {
+        virtual tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const {
             return 0;
         }
 

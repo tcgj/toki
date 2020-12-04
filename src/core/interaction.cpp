@@ -7,15 +7,15 @@
 #include "region/primitive.hpp"
 
 namespace TK {
-    Ray Interaction::spawnRayTo(const tkVec3f& d) const {
-        tkPoint3f o = p + d * TK_EPSILON;
+    Ray Interaction::spawnRayTo(const Vec3f& d) const {
+        Point3f o = p + d * TK_EPSILON;
         return Ray(o, d);
     }
 
     Ray Interaction::spawnRayTo(const Interaction& ref) const {
-        tkVec3f d = normalize(ref.p - p);
-        tkPoint3f o = p + d * TK_EPSILON;
-        tkPoint3f end = ref.p - d * TK_EPSILON;
+        Vec3f d = normalize(ref.p - p);
+        Point3f o = p + d * TK_EPSILON;
+        Point3f end = ref.p - d * TK_EPSILON;
         return Ray(o, end - o, 1.0f - TK_EPSILON);
     }
 

@@ -4,10 +4,10 @@
 
 namespace TK {
     namespace Parallel {
-        tkUInt getNumCores();
-        void initThreads(tkInt threadCount);
+        unsigned int getNumCores();
+        void initThreads(int threadCount);
         void cleanupThreads();
-        void dispatch(tkI64 workSize, tkInt batchSize, std::function<void(tkI64)> func);
-        void dispatch2D(const tkVec2i& workSize, tkInt batchSize, std::function<void(tkVec2i)> func);
+        void dispatch(int64_t workSize, int batchSize, std::function<void(int64_t)> func);
+        void dispatch2D(const Vec2i& workSize, int batchSize, std::function<void(Vec2i)> func);
     }  // namespace Parallel
 }  // namespace TK

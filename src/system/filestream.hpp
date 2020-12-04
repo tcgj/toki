@@ -42,19 +42,19 @@ namespace TK {
             return *this;
         }
 
-        FileStream& operator>>(tkInt& i) override {
+        FileStream& operator>>(int& i) override {
             file.read(reinterpret_cast<char*>(&i), sizeof(i));
             return *this;
         }
 
-        FileStream& operator>>(tkUInt& u) override {
+        FileStream& operator>>(unsigned int& u) override {
             file.read(reinterpret_cast<char*>(&u), sizeof(u));
             return *this;
         }
 
         FileStream& operator>>(std::string& s) override {
             s = "";
-            tkChar c;
+            char c;
             do {
                 file.read(&c, sizeof(c));
                 if (c == 0)
@@ -69,7 +69,7 @@ namespace TK {
             return *this;
         }
 
-        FileStream& read(tkChar* data, tkUInt size) override {
+        FileStream& read(char* data, unsigned int size) override {
             file.read(data, size);
             return *this;
         }
@@ -80,12 +80,12 @@ namespace TK {
             return *this;
         }
 
-        FileStream& operator<<(tkInt i) override {
+        FileStream& operator<<(int i) override {
             file.write(reinterpret_cast<const char*>(&i), sizeof(i));
             return *this;
         }
 
-        FileStream& operator<<(tkUInt u) override {
+        FileStream& operator<<(unsigned int u) override {
             file.write(reinterpret_cast<const char*>(&u), sizeof(u));
             return *this;
         }
@@ -100,7 +100,7 @@ namespace TK {
             return *this;
         }
 
-        FileStream& write(const tkChar* data, tkUInt size) override {
+        FileStream& write(const char* data, unsigned int size) override {
             file.write(data, size);
             return *this;
         }

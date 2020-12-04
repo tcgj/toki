@@ -9,7 +9,7 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    tkSpectrum WhittedIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler, tkInt depth) const {
+    tkSpectrum WhittedIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const {
         tkSpectrum li;
         SurfaceInteraction interaction;
         if (!scene.intersect(r, &interaction)) {
@@ -21,8 +21,8 @@ namespace TK {
         Scattering scattering;
         interaction.computeScattering(&scattering);
 
-        tkVec3f normal = interaction.n;
-        tkVec3f wo = interaction.wo;
+        Vec3f normal = interaction.n;
+        Vec3f wo = interaction.wo;
 
         // Add emission contribution if interaction with light
         li += interaction.Le();
@@ -33,7 +33,7 @@ namespace TK {
             // if (!light->isDelta())
             // continue;
 
-            tkVec3f wi;
+            Vec3f wi;
             tkFloat pdf;
             OcclusionChecker occCheck;
             tkSpectrum ld = light->sample(interaction, &wi, sampler.nextVector(), &pdf, &occCheck);

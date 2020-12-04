@@ -7,12 +7,12 @@
 
 namespace TK {
     /* ----- MIS Heuristics ----- */
-    inline tkFloat balanceHeuristic(tkInt nf, tkFloat pdff, tkInt ng,
+    inline tkFloat balanceHeuristic(int nf, tkFloat pdff, int ng,
                                     tkFloat pdfg) {
         return nf * pdff / (nf * pdff + ng * pdfg);
     }
 
-    inline tkFloat powerHeuristic(tkInt nf, tkFloat pdff, tkInt ng,
+    inline tkFloat powerHeuristic(int nf, tkFloat pdff, int ng,
                                   tkFloat pdfg) {
         // Hard-coded exponent of 2, as empirically determined by Eric Veach
         tkFloat qf = nf * pdff;
@@ -21,8 +21,8 @@ namespace TK {
     }
 
     /* ----- Disk Sampling ----- */
-    inline tkVec2f rejectionDiskSample() {
-        tkVec2f v;
+    inline Vec2f rejectionDiskSample() {
+        Vec2f v;
         do {
             v.x = 2 * Random::nextFloat() - 1;
             v.y = 2 * Random::nextFloat() - 1;
@@ -30,11 +30,11 @@ namespace TK {
         return v;
     }
 
-    inline tkVec2f concentricDiskSample(tkFloat u, tkFloat v) {
+    inline Vec2f concentricDiskSample(tkFloat u, tkFloat v) {
         tkFloat a = 2 * u - 1;
         tkFloat b = 2 * v - 1;
         if (a == 0 && b == 0)
-            return tkVec2f::zero;
+            return Vec2f::zero;
 
         tkFloat phi;
         tkFloat r;
@@ -46,30 +46,30 @@ namespace TK {
             phi = TK_PIOVER2 - TK_PIOVER4 * a / b;
         }
 
-        return tkVec2f(r * std::cos(phi), r * std::sin(phi));
+        return Vec2f(r * std::cos(phi), r * std::sin(phi));
     }
 
-    inline tkVec2f uniformDiskSample(tkFloat u, tkFloat v) {
+    inline Vec2f uniformDiskSample(tkFloat u, tkFloat v) {
         tkFloat r = std::sqrt(u);
         tkFloat theta = 2 * TK_PI * v;
-        return tkVec2f(r * std::cos(theta), r * std::sin(theta));
+        return Vec2f(r * std::cos(theta), r * std::sin(theta));
     }
 
     /* ----- Hemisphere Sampling ----- */
-    inline tkVec3f cosineHemisphereSample(tkFloat u, tkFloat v) {
-        tkVec2f d = concentricDiskSample(u, v);
+    inline Vec3f cosineHemisphereSample(tkFloat u, tkFloat v) {
+        Vec2f d = concentricDiskSample(u, v);
         tkFloat z = std::sqrt(std::max((tkFloat)0, 1 - d.x * d.x - d.y * d.y));
-        return tkVec3f(d, z);
+        return Vec3f(d, z);
     }
 
-    inline tkVec3f uniformHemisphereSample(tkFloat u, tkFloat v) {
+    inline Vec3f uniformHemisphereSample(tkFloat u, tkFloat v) {
         tkFloat theta = std::acos(u);
         tkFloat phi = 2 * TK_PI * v;
         return polarToVec3(theta, phi);
     }
 
     /* ----- Sphere Sampling ----- */
-    inline tkVec3f uniformSphereSample(tkFloat u, tkFloat v) {
+    inline Vec3f uniformSphereSample(tkFloat u, tkFloat v) {
         tkFloat theta = std::acos(1 - 2 * u);
         tkFloat phi = 2 * TK_PI * v;
         return polarToVec3(theta, phi);
@@ -77,7 +77,7 @@ namespace TK {
 
     /* ----- Cone Sampling ----- */
     // cosMaxTheta - cosine from center to edge of the cone
-    inline tkVec3f uniformConeSample(tkFloat u, tkFloat v, tkFloat cosMaxTheta) {
+    inline Vec3f uniformConeSample(tkFloat u, tkFloat v, tkFloat cosMaxTheta) {
         tkFloat cosTheta = 1 + (cosMaxTheta - 1) * u;
         tkFloat sinTheta = std::sqrt(1 - cosTheta * cosTheta);
         tkFloat phi = 2 * TK_PI * v;
@@ -89,9 +89,9 @@ namespace TK {
     }
 
     /* ----- Triangle Sampling ----- */
-    inline tkVec2f uniformTriangleSample(tkFloat u, tkFloat v) {
+    inline Vec2f uniformTriangleSample(tkFloat u, tkFloat v) {
         // Uses the Eric Heitz Square-to-Triangle Mapping
-        tkVec2f ret;
+        Vec2f ret;
         if (v > u) {
             ret.x = u * 0.5f;
             ret.y = v - ret.x;
@@ -106,28 +106,28 @@ namespace TK {
     struct Distribution {
         Distribution(const std::vector<tkFloat> &f)
             : func(f), cdf(f.size() + 1) {
-            tkInt n = f.size();
+            int n = f.size();
             cdf[0] = 0;
-            for (tkInt i = 1; i < n + 1; ++i) {
+            for (int i = 1; i < n + 1; ++i) {
                 cdf[i] = cdf[i - 1] + f[i - 1] / n;
             }
 
             integral = cdf[n];
             if (integral > 0) {
-                for (tkInt i = 1; i < n + 1; ++i) {
+                for (int i = 1; i < n + 1; ++i) {
                     cdf[i] /= integral;
                 }
             } else {
-                for (tkInt i = 1; i < n + 1; ++i) {
+                for (int i = 1; i < n + 1; ++i) {
                     cdf[i] = (tkFloat)i / n;
                 }
             }
         }
 
         tkFloat sampleContinuous(tkFloat u, tkFloat *pdf) const {
-            tkInt index = getInterval(cdf.size(), [&](tkInt i) { return cdf[i] <= u; });
+            int index = getInterval(cdf.size(), [&](int i) { return cdf[i] <= u; });
             tkFloat offset = u - cdf[index];
-            tkInt diff = (cdf[index + 1] - cdf[index]);
+            int diff = (cdf[index + 1] - cdf[index]);
             if (diff > 0)
                 offset /= diff;
             if (pdf != nullptr)
@@ -137,7 +137,7 @@ namespace TK {
         }
 
         tkFloat sampleDiscrete(tkFloat u, tkFloat *pdf = nullptr, tkFloat *uRemapped = nullptr) const {
-            tkInt index = getInterval(cdf.size(), [&](tkInt i) { return cdf[i] <= u; });
+            int index = getInterval(cdf.size(), [&](int i) { return cdf[i] <= u; });
             if (pdf != nullptr)
                 *pdf = func[index] / (integral * func.size());
             if (uRemapped != nullptr)

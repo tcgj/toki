@@ -9,15 +9,15 @@ namespace TK {
             : Light(lightToWorld), intensity(intensity) {
             // Bypassing transform application, since the light source is defined at (0, 0, 0) in light
             Matrix44 mat = lightToWorld.getMatrix();
-            pos = tkPoint3f(mat.entries[3], mat.entries[7], mat.entries[11]);
+            pos = Point3f(mat.entries[3], mat.entries[7], mat.entries[11]);
         }
 
         tkSpectrum power() const;
-        tkSpectrum sample(const Interaction& ref, tkVec3f* wi, const tkVec2f& samp, tkFloat* pdf,
+        tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
                           OcclusionChecker* occCheck) const;
 
     private:
         tkSpectrum intensity;
-        tkPoint3f pos;
+        Point3f pos;
     };
 }  // namespace TK

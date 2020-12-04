@@ -26,7 +26,7 @@ namespace TK {
         Quaternion& normalized();
         Transform toTransform() const;
 
-        tkVec3f xyz;
+        Vec3f xyz;
         tkFloat w;
     };
 

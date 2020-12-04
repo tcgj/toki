@@ -4,8 +4,8 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    tkAABBf Sphere::objectBoundingBox() const {
-        return tkAABBf(tkPoint3f(-radius), tkPoint3f(radius));
+    AABBf Sphere::objectBoundingBox() const {
+        return AABBf(Point3f(-radius), Point3f(radius));
     }
 
     tkFloat Sphere::surfaceArea() const {
@@ -14,7 +14,7 @@ namespace TK {
 
     bool Sphere::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
         Ray oRay = objectToWorld->applyInverse(r);
-        tkVec3f r0 = tkVec3f(oRay.o);
+        Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
         tkFloat c = dot(r0, r0) - radius * radius;
@@ -29,8 +29,8 @@ namespace TK {
             t0 = t1;
 
         *tHit = t0;
-        tkVec3f normal = tkVec3f(oRay(*tHit));
-        tkVec3f tangent = cross(tkVec3f(0, 0, 1), normal);
+        Vec3f normal = Vec3f(oRay(*tHit));
+        Vec3f tangent = cross(Vec3f(0, 0, 1), normal);
         normal = (*objectToWorld)(normal, true);
         tangent = (*objectToWorld)(tangent);
         interaction->p = r(*tHit);
@@ -43,7 +43,7 @@ namespace TK {
 
     bool Sphere::hasIntersect(const Ray& r) const {
         Ray oRay = objectToWorld->applyInverse(r);
-        tkVec3f r0 = tkVec3f(oRay.o);
+        Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
         tkFloat c = dot(r0, r0) - radius * radius;
@@ -58,12 +58,12 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Sphere::sample(const Interaction& ref, const tkVec2f& samp, tkFloat* pdf) const {
-        tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
-        tkVec3f centerToRef = ref.p - center;
-        tkVec3f z = normalize(centerToRef);
-        tkVec3f x;
-        tkVec3f y;
+    SurfaceInteraction Sphere::sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const {
+        Point3f center = (*objectToWorld)(Point3f::zero);
+        Vec3f centerToRef = ref.p - center;
+        Vec3f z = normalize(centerToRef);
+        Vec3f x;
+        Vec3f y;
         coordinateSystem(z, &x, &y);
         SurfaceInteraction ret;
 
@@ -72,9 +72,9 @@ namespace TK {
 
         // Check if ref is within sphere
         if (sqrDist <= sqrRadius) {
-            tkVec3f n = radius * uniformSphereSample(samp[0], samp[1]);
+            Vec3f n = radius * uniformSphereSample(samp[0], samp[1]);
             ret.n = (*objectToWorld)(n, true);
-            ret.p = (*objectToWorld)(tkPoint3f(n));
+            ret.p = (*objectToWorld)(Point3f(n));
             if (invertNormals)
                 ret.n = -ret.n;
             ret.wo = normalize(ref.p - ret.p);
@@ -106,8 +106,8 @@ namespace TK {
         return ret;
     }
 
-    tkFloat Sphere::getPdf(const Interaction& ref, const tkVec3f& wi) const {
-        tkPoint3f center = (*objectToWorld)(tkPoint3f::zero);
+    tkFloat Sphere::getPdf(const Interaction& ref, const Vec3f& wi) const {
+        Point3f center = (*objectToWorld)(Point3f::zero);
         tkFloat sqrRadius = radius * radius;
         tkFloat sqrDist = squaredDistance(ref.p, center);
         if (sqrDist <= sqrRadius)

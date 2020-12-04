@@ -1,7 +1,7 @@
 #include "shape.hpp"
 
 namespace TK {
-    tkAABBf Shape::worldBoundingBox() const {
+    AABBf Shape::worldBoundingBox() const {
         return (*objectToWorld)(objectBoundingBox());
     }
 
@@ -13,7 +13,7 @@ namespace TK {
     }
 
     tkFloat Shape::getPdf(const Interaction& ref, const SurfaceInteraction& surface) const {
-        tkVec3f dir = ref.p - surface.p;
+        Vec3f dir = ref.p - surface.p;
         tkFloat sampleSqrDist = dir.squaredMagnitude();
         tkFloat cosTheta = dot(surface.wo, surface.n);
         if (sampleSqrDist == 0 || cosTheta <= 0)
@@ -22,7 +22,7 @@ namespace TK {
             return sampleSqrDist / (surfaceArea() * cosTheta);
     }
 
-    tkFloat Shape::getPdf(const Interaction& ref, const tkVec3f& wi) const {
+    tkFloat Shape::getPdf(const Interaction& ref, const Vec3f& wi) const {
         Ray r = ref.spawnRayTo(wi);
         tkFloat tHit;
         SurfaceInteraction interaction;

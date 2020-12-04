@@ -6,7 +6,7 @@
 namespace TK {
     // Construct a BVH based on the provided construction type
     BVH::BVH(const std::vector<std::shared_ptr<Primitive>>& primitiveList, Strategy type) {
-        tkI64 pCount = primitiveList.size();
+        int64_t pCount = primitiveList.size();
         if (pCount == 0)
             return;
         // Initialise array to maximum number of nodes required
@@ -14,7 +14,7 @@ namespace TK {
         nodes = std::make_unique<Node[]>(2 * pCount - 1);
 
         std::vector<PrimitiveUnit> pSet;
-        for (tkI64 i = 0; i < pCount; ++i) {
+        for (int64_t i = 0; i < pCount; ++i) {
             pSet.emplace_back(i, primitiveList[i]->worldBoundingBox());
         }
 
@@ -27,15 +27,15 @@ namespace TK {
         }
 
         std::vector<std::shared_ptr<Primitive>> pSorted;
-        for (tkI64 i = 0; i < pCount; ++i) {
+        for (int64_t i = 0; i < pCount; ++i) {
             pSorted.push_back(primitiveList[pSet[i].index]);
         }
         primitives.swap(pSorted);
         pSet.clear();
     }
 
-    tkAABBf BVH::worldBoundingBox() const {
-        return nodes != nullptr ? nodes[0].bb : tkAABBf();
+    AABBf BVH::worldBoundingBox() const {
+        return nodes != nullptr ? nodes[0].bb : AABBf();
     }
 
     // Traverse the BVH until intersection with a primitive
@@ -49,15 +49,15 @@ namespace TK {
     }
 
     // Start traversal from particular node
-    bool BVH::intersectNode(const Ray& r, tkI64 nodeIndex, SurfaceInteraction* interaction) const {
+    bool BVH::intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* interaction) const {
         // Pre-calculation for aabb intersection test
-        tkVec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
-        tkInt dirNegative[3] = { invD.x < 0, invD.y < 0, invD.z < 0 };
+        Vec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
+        int dirNegative[3] = { invD.x < 0, invD.y < 0, invD.z < 0 };
 
         bool hit = false;
-        tkInt sp = 0;
-        tkI64 stack[64] = { 0 };
-        tkI64 curr;
+        int sp = 0;
+        int64_t stack[64] = { 0 };
+        int64_t curr;
         while (sp >= 0) {
             curr = stack[sp--];
             if (!nodes[curr].bb.hasIntersect(r, invD, dirNegative)) {
@@ -66,12 +66,12 @@ namespace TK {
             // Intersected bounding box, check if leaf/interior
             if (nodes[curr].count > 0) {
                 if (interaction != nullptr) {
-                    for (tkI64 i = 0; i < nodes[curr].count; ++i) {
+                    for (int64_t i = 0; i < nodes[curr].count; ++i) {
                         if (primitives[nodes[curr].offset + i]->intersect(r, interaction))
                             hit = true;
                     }
                 } else {
-                    for (tkI64 i = 0; i < nodes[curr].count; ++i) {
+                    for (int64_t i = 0; i < nodes[curr].count; ++i) {
                         if (primitives[nodes[curr].offset + i]->hasIntersect(r))
                             return true;
                     }
@@ -90,17 +90,17 @@ namespace TK {
     }
 
     /* ----- SAH-based Binned BVH Construction ----- */
-    constexpr tkInt binCount = 16;
-    constexpr tkInt maxPCount = 2;
+    constexpr int binCount = 16;
+    constexpr int maxPCount = 2;
 
     struct SAHBin {
-        tkI64 count = 0;
-        tkAABBf bb;
+        int64_t count = 0;
+        AABBf bb;
     };
 
     // Construct a SAH-based BVH
-    void BVH::buildSAH(tkI64 nodeIndex, tkI64 start, tkI64 end, std::vector<PrimitiveUnit>& pSet) {
-        tkI64 count = end - start;
+    void BVH::buildSAH(int64_t nodeIndex, int64_t start, int64_t end, std::vector<PrimitiveUnit>& pSet) {
+        int64_t count = end - start;
 
         /* Make leaf node since no subdivision required */
         if (count == 1) {
@@ -109,14 +109,14 @@ namespace TK {
         }
 
         /* Compute bounding boxes for current node */
-        tkAABBf bb;
-        tkAABBf centroidBB;
-        for (tkI64 i = start; i < end; ++i) {
+        AABBf bb;
+        AABBf centroidBB;
+        for (int64_t i = start; i < end; ++i) {
             bb = bbUnion(bb, pSet[i].bb);
             centroidBB = bbUnion(centroidBB, pSet[i].centroid);
         }
         // Get widest axis to subdivide (works reasonably well)
-        tkInt axis = centroidBB.maxExtent();
+        int axis = centroidBB.maxExtent();
         // Centroids are almost at the same point, make leaf node
         // since subdivision unlikely to improve efficiency
         if (centroidBB.maxPt[axis] - centroidBB.minPt[axis] < TK_EPSILON) {
@@ -129,9 +129,9 @@ namespace TK {
         tkFloat axisWidth = centroidBB.diagonal()[axis];
         tkFloat k1 = binCount * (1 - TK_EPSILON) / axisWidth;
         tkFloat k0 = centroidBB.minPt[axis];
-        for (tkI64 i = start; i < end; ++i) {
+        for (int64_t i = start; i < end; ++i) {
             // Map primitive to bin index
-            tkInt binIndex = k1 * (pSet[i].centroid[axis] - k0);
+            int binIndex = k1 * (pSet[i].centroid[axis] - k0);
             bins[binIndex].count++;
             bins[binIndex].bb = bbUnion(bins[binIndex].bb, pSet[i].bb);
         }
@@ -142,20 +142,20 @@ namespace TK {
         lPart[0] = bins[0];
         rPart[binCount - 2] = bins[binCount - 1];
         // Left pass from 2nd partition(1) to last partition(binCount - 2)
-        for (tkInt i = 1; i < binCount - 1; ++i) {
+        for (int i = 1; i < binCount - 1; ++i) {
             lPart[i].bb = bbUnion(lPart[i - 1].bb, bins[i].bb);
             lPart[i].count = lPart[i - 1].count + bins[i].count;
         }
         // Right pass from 2nd last partition(binCount - 3) to 1st partition(0)
-        for (tkInt i = binCount - 3; i != -1; --i) {
+        for (int i = binCount - 3; i != -1; --i) {
             rPart[i].bb = bbUnion(rPart[i + 1].bb, bins[i + 1].bb);
             rPart[i].count = rPart[i + 1].count + bins[i + 1].count;
         }
 
         /* Compute partition costs and find minimum cost */
         tkFloat minCost = TK_INFINITY;
-        tkInt minCostPart = 0;
-        for (tkInt i = 0; i < binCount - 1; ++i) {
+        int minCostPart = 0;
+        for (int i = 0; i < binCount - 1; ++i) {
             tkFloat cost =
                 lPart[i].count * lPart[i].bb.surfaceArea() + rPart[i].count * rPart[i].bb.surfaceArea();
             if (cost < minCost) {
@@ -172,15 +172,15 @@ namespace TK {
         }
 
         /* Make interior node and recurse */
-        tkI64 maxNodesLeft = 2 * lPart[minCostPart].count - 1;
-        tkI64 left = nodeIndex + 1;
-        tkI64 right = left + maxNodesLeft;
+        int64_t maxNodesLeft = 2 * lPart[minCostPart].count - 1;
+        int64_t left = nodeIndex + 1;
+        int64_t right = left + maxNodesLeft;
         nodes[nodeIndex].makeInner(bb, left, right, axis);
         PrimitiveUnit* midPtr = std::partition(&pSet[start], &pSet[end - 1] + 1, [=](const PrimitiveUnit& p) {
-            tkInt binIndex = k1 * (p.centroid[axis] - k0);
+            int binIndex = k1 * (p.centroid[axis] - k0);
             return binIndex <= minCostPart;
         });
-        tkI64 mid = midPtr - &pSet[0];
+        int64_t mid = midPtr - &pSet[0];
         buildSAH(left, start, mid, pSet);
         buildSAH(right, mid, end, pSet);
     }

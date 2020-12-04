@@ -87,14 +87,14 @@ namespace TK {
     inline AABB<T> Transform::operator()(const AABB<T>& bb) const {
         const Transform& mat = *this;
         AABB<T> out(mat(bb.corner(0)));
-        for (tkInt i = 1; i < 8; ++i) {
+        for (int i = 1; i < 8; ++i) {
             out = bbUnion(out, mat(bb.corner(i)));
         }
         return out;
     }
     inline Ray Transform::operator()(const Ray& r) const {
-        tkPoint3f o = (*this)(r.o);
-        tkVec3f d = (*this)(r.d);
+        Point3f o = (*this)(r.o);
+        Vec3f d = (*this)(r.d);
 
         return Ray(o, d, r.tMax /*, r.time, r.medium*/);
     }
@@ -128,14 +128,14 @@ namespace TK {
     template <typename T>
     inline AABB<T> Transform::applyInverse(const AABB<T>& bb) const {
         AABB<T> out(this->applyInverse(bb.corner(0)));
-        for (tkInt i = 1; i < 8; ++i) {
+        for (int i = 1; i < 8; ++i) {
             out = bbUnion(out, this->applyInverse(bb.corner(i)));
         }
         return out;
     }
     inline Ray Transform::applyInverse(const Ray& r) const {
-        tkPoint3f o = this->applyInverse(r.o);
-        tkVec3f d = this->applyInverse(r.d);
+        Point3f o = this->applyInverse(r.o);
+        Vec3f d = this->applyInverse(r.d);
 
         return Ray(o, d, r.tMax /*, r.time, r.medium*/);
     }
@@ -152,15 +152,15 @@ namespace TK {
     }
 
     // Affine transformations
-    Transform translate(const tkVec3f& offset);
+    Transform translate(const Vec3f& offset);
     Transform scale(tkFloat x, tkFloat y, tkFloat z);
-    Transform rotate(const tkVec3f& axis, tkFloat theta);
+    Transform rotate(const Vec3f& axis, tkFloat theta);
     Transform rotateX(tkFloat theta);
     Transform rotateY(tkFloat theta);
     Transform rotateZ(tkFloat theta);
 
     // View transformation
-    Transform lookAt(const tkPoint3f& eye, const tkPoint3f& at, const tkVec3f& up);
+    Transform lookAt(const Point3f& eye, const Point3f& at, const Vec3f& up);
 
     // Projection transformation
     Transform orthographic(tkFloat near, tkFloat far);

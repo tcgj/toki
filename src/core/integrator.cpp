@@ -16,23 +16,23 @@ namespace TK {
         preprocess(scene);
 
         // Split image into tiles 16px x 16px wide to process in parallel
-        tkInt tileSize = 16;
-        tkVec2i res = camera->image->resolution;
-        tkVec2i numTiles((res.x + tileSize - 1) / tileSize, (res.y + tileSize - 1) / tileSize);
+        int tileSize = 16;
+        Vec2i res = camera->image->resolution;
+        Vec2i numTiles((res.x + tileSize - 1) / tileSize, (res.y + tileSize - 1) / tileSize);
 
-        Parallel::dispatch2D(numTiles, 1, [&](tkVec2i tile) {
+        Parallel::dispatch2D(numTiles, 1, [&](Vec2i tile) {
             // Calculate tile bounds
-            tkInt x0 = tile.x * tileSize;
-            tkInt x1 = std::min(x0 + tileSize, res.x);
-            tkInt y0 = tile.y * tileSize;
-            tkInt y1 = std::min(y0 + tileSize, res.y);
+            int x0 = tile.x * tileSize;
+            int x1 = std::min(x0 + tileSize, res.x);
+            int y0 = tile.y * tileSize;
+            int y1 = std::min(y0 + tileSize, res.y);
 
             // Get sampler clone
             std::unique_ptr<Sampler> localSampler = sampler->getClone();
 
-            for (tkInt y = y0; y < y1; ++y) {
-                for (tkInt x = x0; x < x1; ++x) {
-                    tkPoint2i pix(x, y);
+            for (int y = y0; y < y1; ++y) {
+                for (int x = x0; x < x1; ++x) {
+                    Point2i pix(x, y);
                     localSampler->setPixel(pix);
 
                     tkSpectrum li;
@@ -48,7 +48,7 @@ namespace TK {
 
                     li /= localSampler->samplesPerPixel;
                     camera->image->updatePixelColor(pix, li);
-                    // tkVec3f col = camera->image->getPixelColor(pix);
+                    // Vec3f col = camera->image->getPixelColor(pix);
                     // printf("Pixel [%d, %d]: [%f, %f, %f]\n", pix.x, pix.y, col.x, col.y, col.z);
                 }
             }
@@ -58,9 +58,9 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::specularReflectedLi(const SurfaceInteraction& interaction,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
-                                                      tkInt depth) const {
-        tkVec3f wo = interaction.wo;
-        tkVec3f wi;
+                                                      int depth) const {
+        Vec3f wo = interaction.wo;
+        Vec3f wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
         tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
@@ -73,7 +73,7 @@ namespace TK {
 
     tkSpectrum SamplerIntegrator::specularRefractedLi(const SurfaceInteraction& interaction,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
-                                                      tkInt depth) const {
+                                                      int depth) const {
         // Not implemented yet
         return 0;
     }
@@ -89,7 +89,7 @@ namespace TK {
                           const std::shared_ptr<Light>& light, Sampler& sampler) {
         tkSpectrum ld;
 
-        tkVec3f wi;
+        Vec3f wi;
         tkFloat lightPdf;
         tkFloat scatterPdf;
         OcclusionChecker occCheck;

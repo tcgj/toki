@@ -6,7 +6,7 @@
 
 namespace TK {
     Scattering::~Scattering() {
-        for (tkInt i = 0; i < numBxdf; ++i) {
+        for (int i = 0; i < numBxdf; ++i) {
             delete bxdfs[i];
         }
     }
@@ -22,39 +22,39 @@ namespace TK {
                                            (!sameHemisphere && (bxdf->type & BXDF_TRANSMISSIVE)));
     }
 
-    tkSpectrum Scattering::evaluate(const tkVec3f& worldWo, const tkVec3f& worldWi, BxDFType type) const {
-        tkVec3f wo = worldToLocal(worldWo);
-        tkVec3f wi = worldToLocal(worldWi);
+    tkSpectrum Scattering::evaluate(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type) const {
+        Vec3f wo = worldToLocal(worldWo);
+        Vec3f wi = worldToLocal(worldWi);
         tkSpectrum ret;
         bool sameSide = isSameHemisphere(wo, wi);
-        for (tkInt i = 0; i < numBxdf; ++i) {
+        for (int i = 0; i < numBxdf; ++i) {
             if (bxdfIsApplicable(bxdfs[i], sameSide, type))
                 ret += bxdfs[i]->evaluate(wo, wi);
         }
         return ret;
     }
 
-    tkSpectrum Scattering::sample(const tkVec3f& worldWo, tkVec3f* worldWi, const tkVec2f& samp, tkFloat* pdf,
+    tkSpectrum Scattering::sample(const Vec3f& worldWo, Vec3f* worldWi, const Vec2f& samp, tkFloat* pdf,
                                   BxDFType* sampledType, BxDFType type) const {
         std::vector<BxDF*> matching;
         *pdf = 0;
         // Collect bxdfs that match the type criteria
-        for (tkInt i = 0; i < numBxdf; ++i) {
+        for (int i = 0; i < numBxdf; ++i) {
             if (bxdfs[i]->matchesType(type))
                 matching.push_back(bxdfs[i]);
         }
-        tkInt size = matching.size();
+        int size = matching.size();
         if (size == 0)
             return 0;
 
         // Find bxdf to sample from
-        tkInt randIndex = std::min((tkInt)std::floor(samp[0] * size), size - 1);
+        int randIndex = std::min((int)std::floor(samp[0] * size), size - 1);
         BxDF* sampleBxDF = matching[randIndex];
 
         // Sample from selected bxdf
-        tkVec2f newSamp(samp[0] * size - randIndex, samp[1]);
-        tkVec3f wo = worldToLocal(worldWo);
-        tkVec3f wi;
+        Vec2f newSamp(samp[0] * size - randIndex, samp[1]);
+        Vec3f wo = worldToLocal(worldWo);
+        Vec3f wi;
         tkSpectrum ret = sampleBxDF->sample(wo, &wi, newSamp, pdf);
         if (*pdf == 0)
             return 0;
@@ -82,13 +82,13 @@ namespace TK {
         return ret;
     }
 
-    tkFloat Scattering::getPdf(const tkVec3f& worldWo, const tkVec3f& worldWi, BxDFType type) const {
-        tkVec3f wo = worldToLocal(worldWo);
-        tkVec3f wi = worldToLocal(worldWi);
+    tkFloat Scattering::getPdf(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type) const {
+        Vec3f wo = worldToLocal(worldWo);
+        Vec3f wi = worldToLocal(worldWi);
         tkFloat ret = 0;
-        tkInt count = 0;
+        int count = 0;
         bool sameSide = isSameHemisphere(wo, wi);
-        for (tkInt i = 0; i < numBxdf; ++i) {
+        for (int i = 0; i < numBxdf; ++i) {
             if (bxdfIsApplicable(bxdfs[i], sameSide, type)) {
                 ret += bxdfs[i]->getPdf(wo, wi);
                 count++;
@@ -105,11 +105,11 @@ namespace TK {
         return true;
     }
 
-    tkVec3f Scattering::worldToLocal(const tkVec3f& v) const {
-        return tkVec3f(dot(t, v), dot(bt, v), dot(n, v));
+    Vec3f Scattering::worldToLocal(const Vec3f& v) const {
+        return Vec3f(dot(t, v), dot(bt, v), dot(n, v));
     }
-    tkVec3f Scattering::localToWorld(const tkVec3f& v) const {
-        return tkVec3f(t.x * v.x + bt.x * v.y + n.x * v.z, t.y * v.x + bt.y * v.y + n.y * v.z,
+    Vec3f Scattering::localToWorld(const Vec3f& v) const {
+        return Vec3f(t.x * v.x + bt.x * v.y + n.x * v.z, t.y * v.x + bt.y * v.y + n.y * v.z,
                        t.z * v.x + bt.z * v.y + n.z * v.z);
     }
 }  // namespace TK

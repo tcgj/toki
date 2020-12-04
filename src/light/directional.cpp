@@ -14,11 +14,11 @@ namespace TK {
         return radiance * TK_PI * sceneRadius * sceneRadius;
     }
 
-    tkSpectrum DirectionalLight::sample(const Interaction& ref, tkVec3f* wi, const tkVec2f& samp,
+    tkSpectrum DirectionalLight::sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp,
                                         tkFloat* pdf, OcclusionChecker* occCheck) const {
         *wi = -dir;
         *pdf = 1;
-        tkPoint3f lightRef = ref.p - 2 * sceneRadius * dir;
+        Point3f lightRef = ref.p - 2 * sceneRadius * dir;
         *occCheck = OcclusionChecker(ref, Interaction(lightRef));
 
         return radiance;

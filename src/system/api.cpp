@@ -1,6 +1,7 @@
 #include "api.hpp"
 
 #include "stream.hpp"
+#include "core/parallel.hpp"
 
 // temp
 #include "shape/mesh.hpp"
@@ -26,13 +27,13 @@
 namespace TK {
     // Options
     std::string RenderAPI::outFile;
-    tkInt RenderAPI::threadCount = -1;
+    int RenderAPI::threadCount = -1;
     bool RenderAPI::fastRender = false;
 
     // Render Settings
-    tkInt RenderAPI::tileSize = 16;
-    tkInt RenderAPI::samplesPerPixel = 16;
-    tkVec2i RenderAPI::resolution = { 800, 800 };
+    int RenderAPI::tileSize = 16;
+    int RenderAPI::samplesPerPixel = 16;
+    Vec2i RenderAPI::resolution = { 800, 800 };
 
     void RenderAPI::tokiConfigure(const Options& options) {
         outFile = options.outFile;
@@ -49,22 +50,22 @@ namespace TK {
         // testScene(resolution, outFile);
 
         // Cornell Box
-        tkPoint3f eye(278, 273, -800);
-        tkPoint3f at(278, 273, 0);
-        Transform cameraToWorld = lookAt(eye, at, tkVec3f(0, 1, 0));
+        Point3f eye(278, 273, -800);
+        Point3f at(278, 273, 0);
+        Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
         PNGImage output(resolution, outFile);
         auto camera =
             std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
         // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
         auto sampler = std::make_shared<StratifiedSampler>(8, 8, 0);
 
-        tkSpectrum whiteKd(tkSpectrum::fromRGB(tkVec3f(0.75f, 0.75f, 0.75f)));
+        tkSpectrum whiteKd(tkSpectrum::fromRGB(Vec3f(0.75f, 0.75f, 0.75f)));
         auto matteWhite = std::make_shared<Matte>(whiteKd);
-        tkSpectrum redKd(tkSpectrum::fromRGB(tkVec3f(0.66f, 0.0f, 0.0f)));
+        tkSpectrum redKd(tkSpectrum::fromRGB(Vec3f(0.66f, 0.0f, 0.0f)));
         auto matteRed = std::make_shared<Matte>(redKd);
-        tkSpectrum greenKd(tkSpectrum::fromRGB(tkVec3f(0.15f, 0.476f, 0.0f)));
+        tkSpectrum greenKd(tkSpectrum::fromRGB(Vec3f(0.15f, 0.476f, 0.0f)));
         auto matteGreen = std::make_shared<Matte>(greenKd);
-        tkSpectrum mirrorKd(tkSpectrum::fromRGB(tkVec3f(0.9, 0.9, 0.9)));
+        tkSpectrum mirrorKd(tkSpectrum::fromRGB(Vec3f(0.9, 0.9, 0.9)));
         auto mirror = std::make_shared<Mirror>(mirrorKd);
 
         std::vector<std::shared_ptr<Primitive>> prims;
@@ -73,62 +74,62 @@ namespace TK {
         std::vector<std::shared_ptr<Light>> lights;
         // lights.push_back(std::make_shared<DirectionalLight>(rotateY(degToRad(-90)), tkSpectrum(0.7)));
         // lights.push_back(std::make_shared<PointLight>(
-        //     translate(tkVec3f(343, 540, 227)), tkSpectrum(100000)));
+        //     translate(Vec3f(343, 540, 227)), tkSpectrum(100000)));
         // lights.push_back(std::make_shared<PointLight>(
-        //     translate(tkVec3f(213, 540, 332)), tkSpectrum(100000)));
-        Transform lightPos = translate(tkVec3f(278, 548.8, 279.5));
+        //     translate(Vec3f(213, 540, 332)), tkSpectrum(100000)));
+        Transform lightPos = translate(Vec3f(278, 548.8, 279.5));
         auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
         auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(10.0f));
         lights.push_back(areaLight);
         prims.push_back(std::make_shared<Primitive>(sphereLight, matteWhite, areaLight));
 
         // Geometry
-        Transform tf = translate(tkVec3f::zero);
-        tkPoint3f V[64] = {
+        Transform tf = translate(Vec3f::zero);
+        Point3f V[64] = {
             // Floor 0-1
-            tkPoint3f(552.8, 0, 0), tkPoint3f(0, 0, 0), tkPoint3f(0, 0, 559.2), tkPoint3f(549.6, 0, 559.2),
+            Point3f(552.8, 0, 0), Point3f(0, 0, 0), Point3f(0, 0, 559.2), Point3f(549.6, 0, 559.2),
             // Light 36-37
-            tkPoint3f(343, 548.8, 227), tkPoint3f(343, 548.8, 332), tkPoint3f(213, 548.8, 332),
-            tkPoint3f(213, 548.8, 227),
+            Point3f(343, 548.8, 227), Point3f(343, 548.8, 332), Point3f(213, 548.8, 332),
+            Point3f(213, 548.8, 227),
             // Ceiling 2-5,32-35
-            tkPoint3f(556, 548.8, 0), tkPoint3f(556, 548.8, 559.2), tkPoint3f(0, 548.8, 559.2),
-            tkPoint3f(0, 548.8, 0),
+            Point3f(556, 548.8, 0), Point3f(556, 548.8, 559.2), Point3f(0, 548.8, 559.2),
+            Point3f(0, 548.8, 0),
             // Back wall 6-7
-            tkPoint3f(549.6, 0, 559.2), tkPoint3f(0, 0, 559.2), tkPoint3f(0, 548.8, 559.2),
-            tkPoint3f(556, 548.8, 559.2),
+            Point3f(549.6, 0, 559.2), Point3f(0, 0, 559.2), Point3f(0, 548.8, 559.2),
+            Point3f(556, 548.8, 559.2),
             // Right wall 8-9
-            tkPoint3f(0, 0, 559.2), tkPoint3f(0, 0, 0), tkPoint3f(0, 548.8, 0), tkPoint3f(0, 548.8, 559.2),
+            Point3f(0, 0, 559.2), Point3f(0, 0, 0), Point3f(0, 548.8, 0), Point3f(0, 548.8, 559.2),
             // Left wall 1011
-            tkPoint3f(552.8, 0, 0), tkPoint3f(549.6, 0, 559.2), tkPoint3f(556, 548.8, 559.2),
-            tkPoint3f(556, 548.8, 0),
+            Point3f(552.8, 0, 0), Point3f(549.6, 0, 559.2), Point3f(556, 548.8, 559.2),
+            Point3f(556, 548.8, 0),
             // Short block 12-21
-            tkPoint3f(130, 165, 65), tkPoint3f(82, 165, 225), tkPoint3f(240, 165, 272),
-            tkPoint3f(290, 165, 114),
+            Point3f(130, 165, 65), Point3f(82, 165, 225), Point3f(240, 165, 272),
+            Point3f(290, 165, 114),
 
-            tkPoint3f(290, 0, 114), tkPoint3f(290, 165, 114), tkPoint3f(240, 165, 272),
-            tkPoint3f(240, 0, 272),
+            Point3f(290, 0, 114), Point3f(290, 165, 114), Point3f(240, 165, 272),
+            Point3f(240, 0, 272),
 
-            tkPoint3f(130, 0, 65), tkPoint3f(130, 165, 65), tkPoint3f(290, 165, 114), tkPoint3f(290, 0, 114),
+            Point3f(130, 0, 65), Point3f(130, 165, 65), Point3f(290, 165, 114), Point3f(290, 0, 114),
 
-            tkPoint3f(82, 0, 225), tkPoint3f(82, 165, 225), tkPoint3f(130, 165, 65), tkPoint3f(130, 0, 65),
+            Point3f(82, 0, 225), Point3f(82, 165, 225), Point3f(130, 165, 65), Point3f(130, 0, 65),
 
-            tkPoint3f(240, 0, 272), tkPoint3f(240, 165, 272), tkPoint3f(82, 165, 225), tkPoint3f(82, 0, 225),
+            Point3f(240, 0, 272), Point3f(240, 165, 272), Point3f(82, 165, 225), Point3f(82, 0, 225),
             // Tall Block 22-31
-            tkPoint3f(423, 330, 247), tkPoint3f(265, 330, 296), tkPoint3f(314, 330, 456),
-            tkPoint3f(472, 330, 406),
+            Point3f(423, 330, 247), Point3f(265, 330, 296), Point3f(314, 330, 456),
+            Point3f(472, 330, 406),
 
-            tkPoint3f(423, 0, 247), tkPoint3f(423, 330, 247), tkPoint3f(472, 330, 406),
-            tkPoint3f(472, 0, 406),
+            Point3f(423, 0, 247), Point3f(423, 330, 247), Point3f(472, 330, 406),
+            Point3f(472, 0, 406),
 
-            tkPoint3f(472, 0, 406), tkPoint3f(472, 330, 406), tkPoint3f(314, 330, 456),
-            tkPoint3f(314, 0, 456),
+            Point3f(472, 0, 406), Point3f(472, 330, 406), Point3f(314, 330, 456),
+            Point3f(314, 0, 456),
 
-            tkPoint3f(314, 0, 456), tkPoint3f(314, 330, 456), tkPoint3f(265, 330, 296),
-            tkPoint3f(265, 0, 296),
+            Point3f(314, 0, 456), Point3f(314, 330, 456), Point3f(265, 330, 296),
+            Point3f(265, 0, 296),
 
-            tkPoint3f(265, 0, 296), tkPoint3f(265, 330, 296), tkPoint3f(423, 330, 247), tkPoint3f(423, 0, 247)
+            Point3f(265, 0, 296), Point3f(265, 330, 296), Point3f(423, 330, 247), Point3f(423, 0, 247)
         };
-        tkI64 I[114] = { 0,  1,  2,  0,  2,  3,  8,  4,  7,  8,  7,  11, 8,  9,  5,  8,  5,  4,  12,
+        int64_t I[114] = { 0,  1,  2,  0,  2,  3,  8,  4,  7,  8,  7,  11, 8,  9,  5,  8,  5,  4,  12,
                          13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23, 24, 25,
                          26, 24, 26, 27, 28, 29, 30, 28, 30, 31, 32, 33, 34, 32, 34, 35, 36, 37, 38,
                          36, 38, 39, 40, 41, 42, 40, 42, 43, 44, 45, 46, 44, 46, 47, 48, 49, 50, 48,
@@ -214,7 +215,7 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri36, matteWhite, areaLight1));
         prims.push_back(std::make_shared<Primitive>(tri37, matteWhite, areaLight2));
 
-        /*Transform sphereTf = translate(tkVec3f(185, 397, 353));
+        /*Transform sphereTf = translate(Vec3f(185, 397, 353));
         auto mirrorSphere = std::make_shared<Sphere>(&sphereTf, 103);
         prims.push_back(std::make_shared<Primitive>(mirrorSphere, mirror));*/
 
@@ -222,7 +223,7 @@ namespace TK {
         // lights.push_back(areaLight2);
 
         // Accel Structure
-        // auto accel = std::make_shared<Iterator>(prims, tkAABBf(tkPoint3f(0), tkPoint3f(560, 560, -560)));
+        // auto accel = std::make_shared<Iterator>(prims, AABBf(Point3f(0), Point3f(560, 560, -560)));
         auto accel = std::make_shared<BVH>(prims);
 
         // Scene
@@ -242,11 +243,11 @@ namespace TK {
         }
     }
 
-    void testScene(const tkVec2i& resolution, std::string outFile) {
+    void testScene(const Vec2i& resolution, std::string outFile) {
         // Initialise camera
-        tkPoint3f eye(3.0f, 5.0f, 5.0f);
-        tkPoint3f at(0.0f, 2.0f, 0.0f);
-        Transform cameraToWorld = lookAt(eye, at, tkVec3f(0, 1, 0));
+        Point3f eye(3.0f, 5.0f, 5.0f);
+        Point3f at(0.0f, 2.0f, 0.0f);
+        Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
         PNGImage output(resolution, outFile);
         auto camera =
             std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 60.0f, &output);
@@ -254,24 +255,24 @@ namespace TK {
         auto sampler = std::make_shared<StratifiedSampler>(4, 4, 5);
 
         // Materials
-        tkSpectrum greyKd(tkSpectrum::fromRGB(tkVec3f(0.9f, 0.9f, 0.9f)));
+        tkSpectrum greyKd(tkSpectrum::fromRGB(Vec3f(0.9f, 0.9f, 0.9f)));
         auto matteGrey = std::make_shared<Matte>(greyKd);
-        tkSpectrum redKd(tkSpectrum::fromRGB(tkVec3f(0.9f, 0.0f, 0.0f)));
+        tkSpectrum redKd(tkSpectrum::fromRGB(Vec3f(0.9f, 0.0f, 0.0f)));
         auto matteRed = std::make_shared<Matte>(redKd);
-        tkSpectrum blueKd(tkSpectrum::fromRGB(tkVec3f(0.01f, 0.77f, 0.98f)));
+        tkSpectrum blueKd(tkSpectrum::fromRGB(Vec3f(0.01f, 0.77f, 0.98f)));
         auto matteBlue = std::make_shared<Matte>(blueKd);
-        tkSpectrum yellowKd(tkSpectrum::fromRGB(tkVec3f(1.0f, 1.0f, 0.0f)));
+        tkSpectrum yellowKd(tkSpectrum::fromRGB(Vec3f(1.0f, 1.0f, 0.0f)));
         auto matteYellow = std::make_shared<Matte>(yellowKd);
 
         // Primitives
         std::vector<std::shared_ptr<Primitive>> prims;
 
         // Plane
-        Transform tf = translate(tkVec3f::zero);
-        tkI64 I[6] = { 0, 1, 3, 1, 2, 3 };
-        tkPoint3f V[4] = { tkPoint3f(-10, 0, 10), tkPoint3f(10, 0, 10), tkPoint3f(10, 0, -10),
-                           tkPoint3f(-10, 0, -10) };
-        tkVec3f N[4] = { tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0), tkVec3f(0, 1, 0) };
+        Transform tf = translate(Vec3f::zero);
+        int64_t I[6] = { 0, 1, 3, 1, 2, 3 };
+        Point3f V[4] = { Point3f(-10, 0, 10), Point3f(10, 0, 10), Point3f(10, 0, -10),
+                           Point3f(-10, 0, -10) };
+        Vec3f N[4] = { Vec3f(0, 1, 0), Vec3f(0, 1, 0), Vec3f(0, 1, 0), Vec3f(0, 1, 0) };
         auto mesh = std::make_shared<Mesh>(tf, 4, 2, V, I, N, nullptr);
         auto tri1 = std::make_shared<Triangle>(&tf, mesh, 0);
         auto tri2 = std::make_shared<Triangle>(&tf, mesh, 1);
@@ -279,7 +280,7 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri2, matteYellow));
 
         // Sphere
-        Transform sphereToWorld = translate(tkVec3f(1.0f, 2.0f, 0.0f));
+        Transform sphereToWorld = translate(Vec3f(1.0f, 2.0f, 0.0f));
         auto sphere = std::make_shared<Sphere>(&sphereToWorld, 1.0f);
         prims.push_back(std::make_shared<Primitive>(sphere, matteRed));
 
@@ -287,9 +288,9 @@ namespace TK {
         std::vector<std::shared_ptr<Light>> lights;
         // lights.push_back(std::make_shared<DirectionalLight>(rotateZ(degToRad(-90)),
         // tkSpectrum(0.4)));
-        // lights.push_back(std::make_shared<PointLight>(translate(tkVec3f(-2.0f,
+        // lights.push_back(std::make_shared<PointLight>(translate(Vec3f(-2.0f,
         // 4.0f, 0)), tkSpectrum(10)));
-        Transform lightPos = translate(tkVec3f(-3.0f, 6.0f, 0.0f));
+        Transform lightPos = translate(Vec3f(-3.0f, 6.0f, 0.0f));
         auto sphereLight = std::make_shared<Sphere>(&lightPos, 2.0f);
         auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(1.0f));
         lights.push_back(areaLight);

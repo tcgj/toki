@@ -12,10 +12,10 @@ namespace TK {
 
         bool isDelta() const override;
         tkSpectrum power() const override;
-        tkSpectrum Le(const SurfaceInteraction& interaction, const tkVec3f& wo) const override;
-        tkSpectrum sample(const Interaction& ref, tkVec3f* wi, const tkVec2f& samp, tkFloat* pdf,
+        tkSpectrum Le(const SurfaceInteraction& interaction, const Vec3f& wo) const override;
+        tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
                           OcclusionChecker* occCheck) const override;
-        tkFloat getPdf(const Interaction& ref, const tkVec3f& wi) const override;
+        tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const override;
 
     private:
         std::shared_ptr<Shape> shape;

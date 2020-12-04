@@ -1,13 +1,12 @@
 #pragma once
 
-#include "system/toki.hpp"
+#include "toki.hpp"
 #include "math/math.hpp"
-#include "core/parallel.hpp"
 
 namespace TK {
     struct Options {
         std::string outFile;
-        tkInt threadCount = -1;
+        int threadCount = -1;
         bool fastRender = false;
     };
 
@@ -21,13 +20,13 @@ namespace TK {
     private:
         // Options
         static std::string outFile;
-        static tkInt threadCount;
+        static int threadCount;
         static bool fastRender;
 
         // Render Settings
-        static tkInt tileSize;
-        static tkInt samplesPerPixel;
-        static tkVec2i resolution;
+        static int tileSize;
+        static int samplesPerPixel;
+        static Vec2i resolution;
     };
 
     // Serializing API

@@ -5,22 +5,22 @@
 
 namespace TK {
     struct Vertex {
-        tkPoint3f p;
-        tkVec3f n;
-        tkPoint2f uv;
+        Point3f p;
+        Vec3f n;
+        Point2f uv;
     };
 
     struct Mesh {
-        Mesh(const Transform& objectToWorld, tkI64 numVert, tkI64 numTri, const tkPoint3f* V, const tkI64* I,
-             const tkVec3f* N, const tkVec3f* UV);
+        Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V, const int64_t* I,
+             const Vec3f* N, const Vec3f* UV);
 
-        bool getTriVertices(tkI64 index, Vertex* v0, Vertex* v1, Vertex* v2) const;
+        bool getTriVertices(int64_t index, Vertex* v0, Vertex* v1, Vertex* v2) const;
 
-        tkI64 numTri;
-        tkI64 numVert;
-        std::vector<tkI64> indexBuffer;  // std::vector to allow for easy triangle inversion
-        std::unique_ptr<tkPoint3f[]> vertexBuffer;
-        std::unique_ptr<tkVec3f[]> normalBuffer;
-        std::unique_ptr<tkPoint2f[]> uvBuffer;
+        int64_t numTri;
+        int64_t numVert;
+        std::vector<int64_t> indexBuffer;  // std::vector to allow for easy triangle inversion
+        std::unique_ptr<Point3f[]> vertexBuffer;
+        std::unique_ptr<Vec3f[]> normalBuffer;
+        std::unique_ptr<Point2f[]> uvBuffer;
     };
 }  // namespace TK
