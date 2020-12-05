@@ -273,7 +273,7 @@ namespace TK {
 
     template <int N>
     std::ostream& operator<<(std::ostream& os, const Spectrum<N>& s) {
-        os << s.toString() << "\n";
+        os << s.toString();
         return os;
     }
 

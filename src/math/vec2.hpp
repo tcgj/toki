@@ -248,7 +248,7 @@ namespace TK {
 
     template <typename T>
     inline std::ostream& operator<<(std::ostream& os, const Vec2<T>& v) {
-        os << v.toString() << "\n";
+        os << v.toString();
         return os;
     }
 

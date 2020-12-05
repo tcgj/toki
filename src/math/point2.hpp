@@ -171,7 +171,7 @@ namespace TK {
 
     template <typename T>
     inline std::ostream& operator<<(std::ostream& os, const Point2<T>& p) {
-        os << p.toString() << "\n";
+        os << p.toString();
         return os;
     }
 }  // namespace TK

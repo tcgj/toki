@@ -37,7 +37,7 @@ namespace TK {
     }
 
     std::ostream& operator<<(std::ostream& os, const Transform& t) {
-        os << t.toString() << "\n";
+        os << t.toString();
         return os;
     }
 

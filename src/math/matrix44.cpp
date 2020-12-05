@@ -195,7 +195,7 @@ namespace TK {
     }
 
     std::ostream& operator<<(std::ostream& os, const Matrix44& m) {
-        os << m.toString() << "\n";
+        os << m.toString();
         return os;
     }
 }  // namespace TK

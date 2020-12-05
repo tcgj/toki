@@ -280,7 +280,7 @@ namespace TK {
 
     template <typename T>
     inline std::ostream& operator<<(std::ostream& os, const Vec3<T>& v) {
-        os << v.toString() << "\n";
+        os << v.toString();
         return os;
     }
 
