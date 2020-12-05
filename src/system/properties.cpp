@@ -3,7 +3,6 @@
 #include <variant>
 #include <sstream>
 
-#include "math/math.hpp"
 #include "core/transform.hpp"
 #include "core/spectrum.hpp"
 

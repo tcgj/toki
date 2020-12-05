@@ -92,12 +92,12 @@ add_library(toki_lib STATIC
 add_sanitizers(toki_lib)
 
 # add executable
-add_executable(toki_exe src/main.cpp)
+add_executable(toki_exe src/system/toki.cpp)
 add_sanitizers(toki_exe)
 
 # set include directories
-target_include_directories(toki_lib PRIVATE include)
-target_include_directories(toki_lib PRIVATE src)
+target_include_directories(toki_lib PUBLIC include)
+target_include_directories(toki_lib PUBLIC src)
 
 set_target_properties(toki_exe PROPERTIES OUTPUT_NAME toki)
 target_link_libraries(toki_exe PRIVATE toki_lib)

@@ -1,20 +1,14 @@
 #pragma once
 
-#include "system/toki.hpp"
-
 namespace TK {
     template <typename T>
     class Point2 {
     public:
         Point2() : x(0), y(0) {}
         Point2(T t) : x(t), y(t) {}
-        Point2(T p0, T p1) : x(p0), y(p1) {
-            tkAssert(!(std::isnan(x) || std::isnan(y)));
-        }
+        Point2(T p0, T p1) : x(p0), y(p1) {}
         template <typename U>
-        explicit Point2(const Point2<U>& p) : x((T)p.x), y((T)p.y) {
-            tkAssert(!(std::isnan(x) || std::isnan(y)));
-        }
+        explicit Point2(const Point2<U>& p) : x((T)p.x), y((T)p.y) {}
 
         // Unary/subscript operators
         const Point2<T>& operator+() const;
@@ -61,18 +55,15 @@ namespace TK {
     }
     template <typename T>
     inline Point2<T> Point2<T>::operator/(T w) const {
-        tkAssert(w != 0);
         tkFloat k = 1.0 / w;
         return Point2<T>(x * k, y * k);
     }
     template <typename T>
     inline T Point2<T>::operator[](int i) const {
-        tkAssert(i == 0 || i == 1);
         return entries[i];
     }
     template <typename T>
     inline T& Point2<T>::operator[](int i) {
-        tkAssert(i == 0 || i == 1);
         return entries[i];
     }
 
@@ -136,6 +127,16 @@ namespace TK {
     template <typename T>
     inline Point2<T> swizzle(const Point2<T>& p, int x, int y) {
         return Point2<T>(p[x], p[y]);
+    }
+
+    // Explicit cast
+    template <typename T>
+    inline Point2<T>::operator Point3<T>() const {
+        return Point3<T>(x, y, 0);
+    }
+    template <typename T>
+    inline Point2<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
     }
 
     // IO stream operators

@@ -1,21 +1,15 @@
 #pragma once
 
-#include "system/toki.hpp"
-
 namespace TK {
     template <typename T>
     class Point3 {
     public:
         Point3() : x(0), y(0), z(0) {}
         Point3(T t) : x(t), y(t), z(t) {}
-        Point3(T p0, T p1, T p2) : x(p0), y(p1), z(p2) {
-            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
-        }
+        Point3(T p0, T p1, T p2) : x(p0), y(p1), z(p2) {}
         Point3(const Point2<T>& xy, T z) : x(xy.x), y(xy.y), z(z) {}
         template <typename U>
-        explicit Point3(const Point3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {
-            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
-        }
+        explicit Point3(const Point3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {}
 
         // Unary/subscript operators
         const Point3<T>& operator+() const;
@@ -60,18 +54,15 @@ namespace TK {
     }
     template <typename T>
     inline Point3<T> Point3<T>::operator/(T w) const {
-        tkAssert(w != 0);
         tkFloat k = 1.0 / w;
         return Point3<T>(x * k, y * k, z * k);
     }
     template <typename T>
     inline T Point3<T>::operator[](int i) const {
-        tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
     template <typename T>
     inline T& Point3<T>::operator[](int i) {
-        tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
 
@@ -137,6 +128,20 @@ namespace TK {
     template <typename T>
     inline Point3<T> swizzle(const Point3<T>& p, int x, int y, int z) {
         return Point3<T>(p[x], p[y], p[z]);
+    }
+
+    // Explicit cast
+    template <typename T>
+    inline Point3<T>::operator Point2<T>() const {
+        return Point2<T>(x, y);
+    }
+    template <typename T>
+    inline Point3<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
+    }
+    template <typename T>
+    inline Point3<T>::operator Vec3<T>() const {
+        return Vec3<T>(x, y, z);
     }
 
     // IO stream operators

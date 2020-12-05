@@ -1,7 +1,6 @@
 #pragma once
 
 #include "toki.hpp"
-#include "math/math.hpp"
 
 namespace TK {
     struct Options {

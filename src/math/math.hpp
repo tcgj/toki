@@ -1,12 +1,5 @@
 #pragma once
 
-#include "system/toki.hpp"
-#include "vec2.hpp"
-#include "vec3.hpp"
-#include "point2.hpp"
-#include "point3.hpp"
-#include "matrix44.hpp"
-
 #define TK_PI 3.141592653589793
 #define TK_INVPI 0.31830988618
 #define TK_INV2PI 0.15915494309
@@ -75,47 +68,5 @@ namespace TK {
                 end = mid;
         }
         return clamp(start - 1, 0, size - 2);
-    }
-
-    // Explicit casts
-    template <typename T>
-    inline Vec2<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
-    }
-    template <typename T>
-    inline Vec2<T>::operator Vec3<T>() const {
-        return Vec3<T>(x, y, 0);
-    }
-    template <typename T>
-    inline Vec3<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
-    }
-    template <typename T>
-    inline Vec3<T>::operator Point3<T>() const {
-        return Point3<T>(x, y, z);
-    }
-    template <typename T>
-    inline Vec3<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
-    }
-    template <typename T>
-    inline Point2<T>::operator Point3<T>() const {
-        return Point3<T>(x, y, 0);
-    }
-    template <typename T>
-    inline Point2<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Vec3<T>() const {
-        return Vec3<T>(x, y, z);
     }
 }  // namespace TK

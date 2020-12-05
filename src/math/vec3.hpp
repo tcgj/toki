@@ -1,21 +1,15 @@
 #pragma once
 
-#include "system/toki.hpp"
-
 namespace TK {
     template <typename T>
     class Vec3 {
     public:
         Vec3() : x(0), y(0), z(0) {}
         Vec3(T t) : x(t), y(t), z(t) {}
-        Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {
-            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
-        }
+        Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {}
         Vec3(const Vec2<T>& xy, T z) : x(xy.x), y(xy.y), z(z) {}
         template <typename U>
-        explicit Vec3(const Vec3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {
-            tkAssert(!(std::isnan(x) || std::isnan(y) || std::isnan(z)));
-        }
+        explicit Vec3(const Vec3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {}
 
         // Unary/subscript operators
         const Vec3<T>& operator+() const;
@@ -70,15 +64,6 @@ namespace TK {
     inline const Vec3<T> Vec3<T>::forward = Vec3<T>(0, 0, 1);
 
     template <typename T>
-    inline bool isNaN(Vec3<T>& v) {
-        for (int i = 0; i < 3; ++i) {
-            if (std::isnan(v.entries[i]))
-                return true;
-        }
-        return false;
-    }
-
-    template <typename T>
     inline const Vec3<T>& Vec3<T>::operator+() const {
         return *this;
     }
@@ -88,12 +73,10 @@ namespace TK {
     }
     template <typename T>
     inline T Vec3<T>::operator[](int i) const {
-        tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
     template <typename T>
     inline T& Vec3<T>::operator[](int i) {
-        tkAssert(i >= 0 && i <= 2);
         return entries[i];
     }
 
@@ -120,7 +103,6 @@ namespace TK {
     }
     template <typename T>
     inline Vec3<T>& Vec3<T>::operator/=(const Vec3<T>& v) {
-        tkAssert(!isNaN(v));
         x /= v.x;
         y /= v.y;
         z /= v.z;
@@ -135,7 +117,6 @@ namespace TK {
     }
     template <typename T>
     inline Vec3<T>& Vec3<T>::operator/=(T s) {
-        tkAssert(s != 0);
         tkFloat k = 1.0 / s;
         x *= k;
         y *= k;
@@ -192,12 +173,10 @@ namespace TK {
     }
     template <typename T>
     inline Vec3<T> operator/(const Vec3<T>& v1, const Vec3<T>& v2) {
-        tkAssert(isNaN(v2));
         return Vec3<T>(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
     }
     template <typename T>
     inline Vec3<T> operator/(const Vec3<T>& v, T s) {
-        tkAssert(s != 0);
         tkFloat k = 1.0 / s;
         return Vec3<T>(v.x * k, v.y * k, v.z * k);
     }
@@ -243,6 +222,20 @@ namespace TK {
     template <typename T>
     inline Vec3<T> reflect(const Vec3<T>& v, const Vec3<T>& n) {
         return v - 2 * dot(v, n) * n;
+    }
+
+    // Explicit cast
+    template <typename T>
+    inline Vec3<T>::operator Point2<T>() const {
+        return Point2<T>(x, y);
+    }
+    template <typename T>
+    inline Vec3<T>::operator Point3<T>() const {
+        return Point3<T>(x, y, z);
+    }
+    template <typename T>
+    inline Vec3<T>::operator Vec2<T>() const {
+        return Vec2<T>(x, y);
     }
 
     // IO stream operators

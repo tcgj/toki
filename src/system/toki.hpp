@@ -16,7 +16,8 @@
 //#define TK_ENABLE_ASSERTS
 #include "error.hpp"
 #include "types.hpp"
-
-namespace TK {
-    int startToki(int argc, char* argv[]);
-}  // namespace TK
+#include "math/math.hpp"
+#include "math/vec2.hpp"
+#include "math/vec3.hpp"
+#include "math/point2.hpp"
+#include "math/point3.hpp"

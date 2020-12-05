@@ -1,7 +1,5 @@
 #include "parallel.hpp"
 
-#include "math/math.hpp"
-
 namespace TK {
     namespace Parallel {
         class Job;

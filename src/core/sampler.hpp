@@ -1,7 +1,6 @@
 #pragma once
 
 #include "system/toki.hpp"
-#include "math/math.hpp"
 #include "camera.hpp"
 
 namespace TK {

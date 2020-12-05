@@ -49,3 +49,7 @@ namespace TK {
         return 0;
     }
 }  // namespace TK
+
+int main(int argc, char* argv[]) {
+    return TK::startToki(argc, argv);
+}
