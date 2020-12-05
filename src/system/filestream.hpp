@@ -15,7 +15,6 @@ namespace TK {
         FileStream() = default;
         FileStream(const std::string filename, FileStreamMode fsm) : file(std::fstream(filename, fsm)) {
             // TODO: Setup a proper check for fail
-            tkAssert(!file.is_open());
         }
 
         bool open(std::string filename, FileStreamMode fsm, bool forceOpen = false) {

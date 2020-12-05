@@ -52,13 +52,11 @@ namespace TK {
 
     template <typename T>
     inline const Point3<T>& AABB<T>::operator[](int i) const {
-        tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }
 
     template <typename T>
     inline Point3<T> AABB<T>::operator[](int i) {
-        tkAssert(i == 0 || i == 1);
         return i == 0 ? minPt : maxPt;
     }
 

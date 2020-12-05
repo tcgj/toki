@@ -9,7 +9,7 @@ namespace TK {
             : Light(lightToWorld), intensity(intensity) {
             // Bypassing transform application, since the light source is defined at (0, 0, 0) in light
             Matrix44 mat = lightToWorld.getMatrix();
-            pos = Point3f(mat.entries[3], mat.entries[7], mat.entries[11]);
+            pos = Point3f(mat.m_Entries[3], mat.m_Entries[7], mat.m_Entries[11]);
         }
 
         tkSpectrum power() const;

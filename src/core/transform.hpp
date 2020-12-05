@@ -42,6 +42,8 @@ namespace TK {
         const Matrix44& getMatrix() const;
         const Matrix44& getInverse() const;
 
+        std::string toString() const;
+
         friend Transform inverse(const Transform& t);
         friend Transform transpose(const Transform& t);
 
@@ -53,6 +55,7 @@ namespace TK {
     inline bool Transform::operator==(const Transform& t) const {
         return t.m == m && t.mInv == mInv;
     }
+
     inline bool Transform::operator!=(const Transform& t) const {
         return t.m != m || t.mInv != mInv;
     }
@@ -60,29 +63,31 @@ namespace TK {
     template <typename T>
     inline Point3<T> Transform::operator()(const Point3<T>& p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = m.entries[0] * px + m.entries[1] * py + m.entries[2] * pz + m.entries[3];
-        T y = m.entries[4] * px + m.entries[5] * py + m.entries[6] * pz + m.entries[7];
-        T z = m.entries[8] * px + m.entries[9] * py + m.entries[10] * pz + m.entries[11];
-        T w = m.entries[12] * px + m.entries[13] * py + m.entries[14] * pz + m.entries[15];
+        T x = m.m_Entries[0] * px + m.m_Entries[1] * py + m.m_Entries[2] * pz + m.m_Entries[3];
+        T y = m.m_Entries[4] * px + m.m_Entries[5] * py + m.m_Entries[6] * pz + m.m_Entries[7];
+        T z = m.m_Entries[8] * px + m.m_Entries[9] * py + m.m_Entries[10] * pz + m.m_Entries[11];
+        T w = m.m_Entries[12] * px + m.m_Entries[13] * py + m.m_Entries[14] * pz + m.m_Entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
             return Point3<T>(x, y, z) / w;
     }
+
     template <typename T>
     inline Vec3<T> Transform::operator()(const Vec3<T>& v, bool isNormal) const {
         T vx = v.x, vy = v.y, vz = v.z;
 
         if (isNormal) {
-            return Vec3<T>(mInv.entries[0] * vx + mInv.entries[4] * vy + mInv.entries[8] * vz,
-                           mInv.entries[1] * vx + mInv.entries[5] * vy + mInv.entries[9] * vz,
-                           mInv.entries[2] * vx + mInv.entries[6] * vy + mInv.entries[10] * vz);
+            return Vec3<T>(mInv.m_Entries[0] * vx + mInv.m_Entries[4] * vy + mInv.m_Entries[8] * vz,
+                           mInv.m_Entries[1] * vx + mInv.m_Entries[5] * vy + mInv.m_Entries[9] * vz,
+                           mInv.m_Entries[2] * vx + mInv.m_Entries[6] * vy + mInv.m_Entries[10] * vz);
         } else {
-            return Vec3<T>(m.entries[0] * vx + m.entries[1] * vy + m.entries[2] * vz,
-                           m.entries[4] * vx + m.entries[5] * vy + m.entries[6] * vz,
-                           m.entries[8] * vx + m.entries[9] * vy + m.entries[10] * vz);
+            return Vec3<T>(m.m_Entries[0] * vx + m.m_Entries[1] * vy + m.m_Entries[2] * vz,
+                           m.m_Entries[4] * vx + m.m_Entries[5] * vy + m.m_Entries[6] * vz,
+                           m.m_Entries[8] * vx + m.m_Entries[9] * vy + m.m_Entries[10] * vz);
         }
     }
+
     template <typename T>
     inline AABB<T> Transform::operator()(const AABB<T>& bb) const {
         const Transform& mat = *this;
@@ -92,6 +97,7 @@ namespace TK {
         }
         return out;
     }
+
     inline Ray Transform::operator()(const Ray& r) const {
         Point3f o = (*this)(r.o);
         Vec3f d = (*this)(r.d);
@@ -102,29 +108,31 @@ namespace TK {
     template <typename T>
     inline Point3<T> Transform::applyInverse(const Point3<T>& p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = mInv.entries[0] * px + mInv.entries[1] * py + mInv.entries[2] * pz + mInv.entries[3];
-        T y = mInv.entries[4] * px + mInv.entries[5] * py + mInv.entries[6] * pz + mInv.entries[7];
-        T z = mInv.entries[8] * px + mInv.entries[9] * py + mInv.entries[10] * pz + mInv.entries[11];
-        T w = mInv.entries[12] * px + mInv.entries[13] * py + mInv.entries[14] * pz + mInv.entries[15];
+        T x = mInv.m_Entries[0] * px + mInv.m_Entries[1] * py + mInv.m_Entries[2] * pz + mInv.m_Entries[3];
+        T y = mInv.m_Entries[4] * px + mInv.m_Entries[5] * py + mInv.m_Entries[6] * pz + mInv.m_Entries[7];
+        T z = mInv.m_Entries[8] * px + mInv.m_Entries[9] * py + mInv.m_Entries[10] * pz + mInv.m_Entries[11];
+        T w = mInv.m_Entries[12] * px + mInv.m_Entries[13] * py + mInv.m_Entries[14] * pz + mInv.m_Entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
             return Point3<T>(x, y, z) / w;
     }
+
     template <typename T>
     inline Vec3<T> Transform::applyInverse(const Vec3<T>& v, bool isNormal) const {
         T vx = v.x, vy = v.y, vz = v.z;
 
         if (isNormal) {
-            return Vec3<T>(m.entries[0] * vx + m.entries[4] * vy + m.entries[8] * vz,
-                           m.entries[1] * vx + m.entries[5] * vy + m.entries[9] * vz,
-                           m.entries[2] * vx + m.entries[6] * vy + m.entries[10] * vz);
+            return Vec3<T>(m.m_Entries[0] * vx + m.m_Entries[4] * vy + m.m_Entries[8] * vz,
+                           m.m_Entries[1] * vx + m.m_Entries[5] * vy + m.m_Entries[9] * vz,
+                           m.m_Entries[2] * vx + m.m_Entries[6] * vy + m.m_Entries[10] * vz);
         } else {
-            return Vec3<T>(mInv.entries[0] * vx + mInv.entries[1] * vy + mInv.entries[2] * vz,
-                           mInv.entries[4] * vx + mInv.entries[5] * vy + mInv.entries[6] * vz,
-                           mInv.entries[8] * vx + mInv.entries[9] * vy + mInv.entries[10] * vz);
+            return Vec3<T>(mInv.m_Entries[0] * vx + mInv.m_Entries[1] * vy + mInv.m_Entries[2] * vz,
+                           mInv.m_Entries[4] * vx + mInv.m_Entries[5] * vy + mInv.m_Entries[6] * vz,
+                           mInv.m_Entries[8] * vx + mInv.m_Entries[9] * vy + mInv.m_Entries[10] * vz);
         }
     }
+
     template <typename T>
     inline AABB<T> Transform::applyInverse(const AABB<T>& bb) const {
         AABB<T> out(this->applyInverse(bb.corner(0)));
@@ -133,6 +141,7 @@ namespace TK {
         }
         return out;
     }
+
     inline Ray Transform::applyInverse(const Ray& r) const {
         Point3f o = this->applyInverse(r.o);
         Vec3f d = this->applyInverse(r.d);
@@ -140,9 +149,14 @@ namespace TK {
         return Ray(o, d, r.tMax /*, r.time, r.medium*/);
     }
 
+    inline std::string Transform::toString() const {
+        return m.toString();
+    }
+
     inline Transform inverse(const Transform& t) {
         return Transform(t.mInv, t.m);
     }
+
     inline Transform transpose(const Transform& t) {
         return Transform(transpose(t.m), transpose(t.mInv));
     }
@@ -150,6 +164,9 @@ namespace TK {
     inline Transform operator*(const Transform& t1, const Transform& t2) {
         return Transform(t1.getMatrix() * t2.getMatrix(), t2.getInverse() * t1.getInverse());
     }
+
+    std::istream& operator>>(std::istream& is, const Transform& t);
+    std::ostream& operator<<(std::ostream& os, const Transform& t);
 
     // Affine transformations
     Transform translate(const Vec3f& offset);

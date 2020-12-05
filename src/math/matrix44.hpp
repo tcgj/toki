@@ -19,12 +19,15 @@ namespace TK {
 
         tkFloat determinant() const;
 
+        std::string toString() const;
+
         friend Matrix44 transpose(const Matrix44& m);
         friend Matrix44 inverse(const Matrix44& m);
 
-        tkFloat entries[16];
+        tkFloat m_Entries[16];
     };
 
     Matrix44 operator*(const Matrix44& m1, const Matrix44& m2);
+    std::istream& operator>>(std::istream& is, Matrix44& m);
     std::ostream& operator<<(std::ostream& os, const Matrix44& m);
 }  // namespace TK

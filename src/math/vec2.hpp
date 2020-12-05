@@ -36,6 +36,8 @@ namespace TK {
         explicit operator Point2<T>() const;
         explicit operator Vec3<T>() const;
 
+        std::string toString() const;
+
         union {
             struct {
                 T x, y;
@@ -59,14 +61,17 @@ namespace TK {
     inline const Vec2<T>& Vec2<T>::operator+() const {
         return *this;
     }
+
     template <typename T>
     inline Vec2<T> Vec2<T>::operator-() const {
         return Vec2<T>(-x, -y);
     }
+
     template <typename T>
     inline T Vec2<T>::operator[](int i) const {
         return entries[i];
     }
+
     template <typename T>
     inline T& Vec2<T>::operator[](int i) {
         return entries[i];
@@ -78,30 +83,35 @@ namespace TK {
         y += v.y;
         return *this;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& v) {
         x -= v.x;
         y -= v.y;
         return *this;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::operator*=(const Vec2<T>& v) {
         x *= v.x;
         y *= v.y;
         return *this;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& v) {
         x /= v.x;
         y /= v.y;
         return *this;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::operator*=(T s) {
         x *= s;
         y *= s;
         return *this;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::operator/=(T s) {
         tkFloat k = 1.0 / s;
@@ -114,6 +124,7 @@ namespace TK {
     inline bool Vec2<T>::operator==(const Vec2<T>& v) const {
         return x == v.x && y == v.y;
     }
+
     template <typename T>
     inline bool Vec2<T>::operator!=(const Vec2<T>& v) const {
         return x != v.x || y != v.y;
@@ -123,10 +134,12 @@ namespace TK {
     inline tkFloat Vec2<T>::magnitude() const {
         return std::sqrt(x * x + y * y);
     }
+
     template <typename T>
     inline tkFloat Vec2<T>::squaredMagnitude() const {
         return x * x + y * y;
     }
+
     template <typename T>
     inline Vec2<T>& Vec2<T>::normalized() {
         tkFloat sm = squaredMagnitude();
@@ -141,26 +154,32 @@ namespace TK {
     inline Vec2<T> operator+(const Vec2<T>& v1, const Vec2<T>& v2) {
         return Vec2<T>(v1.x + v2.x, v1.y + v2.y);
     }
+
     template <typename T>
     inline Vec2<T> operator-(const Vec2<T>& v1, const Vec2<T>& v2) {
         return Vec2<T>(v1.x - v2.x, v1.y - v2.y);
     }
+
     template <typename T>
     inline Vec2<T> operator*(const Vec2<T>& v1, const Vec2<T>& v2) {
         return Vec2<T>(v1.x * v2.x, v1.y * v2.y);
     }
+
     template <typename T>
     inline Vec2<T> operator*(const Vec2<T>& v, T s) {
         return Vec2<T>(v.x * s, v.y * s);
     }
+
     template <typename T>
     inline Vec2<T> operator*(T s, const Vec2<T>& v) {
         return Vec2<T>(v.x * s, v.y * s);
     }
+
     template <typename T>
     inline Vec2<T> operator/(const Vec2<T>& v1, const Vec2<T>& v2) {
         return Vec2<T>(v1.x / v2.x, v1.y / v2.y);
     }
+
     template <typename T>
     inline Vec2<T> operator/(const Vec2<T>& v, T s) {
         tkFloat k = 1.0 / s;
@@ -172,14 +191,17 @@ namespace TK {
     inline Vec2<T> abs(const Vec2<T>& v) {
         return Vec2<T>(std::abs(v.x), std::abs(v.y));
     }
+
     template <typename T>
     inline tkFloat dot(const Vec2<T>& v1, const Vec2<T>& v2) {
         return v1.x * v2.x + v1.y * v2.y;
     }
+
     template <typename T>
     inline tkFloat cross(const Vec2<T>& v1, const Vec2<T>& v2) {
         return v1.x * v2.y - v1.y * v2.x;
     }
+
     template <typename T>
     inline Vec2<T> normalize(const Vec2<T>& v) {
         tkFloat sm = v.squaredMagnitude();
@@ -188,6 +210,7 @@ namespace TK {
 
         return v;
     }
+
     template <typename T>
     inline Vec2<T> swizzle(const Vec2<T>& v, int x, int y) {
         return Vec2<T>(v[x], v[y]);
@@ -203,9 +226,17 @@ namespace TK {
     inline Vec2<T>::operator Point2<T>() const {
         return Point2<T>(x, y);
     }
+
     template <typename T>
     inline Vec2<T>::operator Vec3<T>() const {
         return Vec3<T>(x, y, 0);
+    }
+
+    template <typename T>
+    inline std::string Vec2<T>::toString() const {
+        std::ostringstream oss;
+        oss << "Vector2 [ " << x << ", " << y << " ]";
+        return oss.str();
     }
 
     // IO stream operators
@@ -217,7 +248,7 @@ namespace TK {
 
     template <typename T>
     inline std::ostream& operator<<(std::ostream& os, const Vec2<T>& v) {
-        os << "[" << v.x << " " << v.y << "]";
+        os << v.toString() << "\n";
         return os;
     }
 

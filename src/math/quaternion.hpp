@@ -35,6 +35,7 @@ namespace TK {
     inline tkFloat dot(const Quaternion& q1, const Quaternion& q2) {
         return dot(q1.xyz, q2.xyz) + q1.w * q2.w;
     }
+
     inline Quaternion normalize(const Quaternion& q) {
         tkFloat sm = dot(q, q);
         if (sm > 0)
@@ -55,16 +56,19 @@ namespace TK {
         w += q.w;
         return *this;
     }
+
     inline Quaternion& Quaternion::operator-=(const Quaternion& q) {
         xyz -= q.xyz;
         w -= q.w;
         return *this;
     }
+
     inline Quaternion& Quaternion::operator*=(tkFloat f) {
         xyz *= f;
         w *= f;
         return *this;
     }
+
     inline Quaternion& Quaternion::operator/=(tkFloat f) {
         tkFloat r = 1.0 / f;
         xyz *= r;
@@ -76,16 +80,19 @@ namespace TK {
         Quaternion ret = *this;
         return ret += q;
     }
+
     inline Quaternion Quaternion::operator-(const Quaternion& q) const {
         Quaternion ret = *this;
         return ret -= q;
     }
+
     inline Quaternion Quaternion::operator*(tkFloat f) const {
         Quaternion ret = *this;
         ret.xyz *= f;
         ret.w *= f;
         return ret;
     }
+
     inline Quaternion Quaternion::operator/(tkFloat f) const {
         Quaternion ret = *this;
         tkFloat r = 1.0 / f;

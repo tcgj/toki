@@ -50,7 +50,7 @@ namespace TK {
 
         IStream& operator>>(Matrix44& m) {
             for (int i = 0; i < 16; ++i) {
-                *this >> m.entries[i];
+                *this >> m.m_Entries[i];
             }
             return *this;
         }
@@ -116,7 +116,7 @@ namespace TK {
 
         OStream& operator<<(const Matrix44& m) {
             for (int i = 0; i < 16; ++i)
-                *this << m.entries[i];
+                *this << m.m_Entries[i];
 
             return *this;
         }

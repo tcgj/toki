@@ -1,7 +1,6 @@
 #include "properties.hpp"
 
 #include <variant>
-#include <sstream>
 
 #include "core/transform.hpp"
 #include "core/spectrum.hpp"
@@ -17,22 +16,22 @@ namespace TK {
     namespace {
         class StringifyVisitor {
         public:
-            StringifyVisitor(std::ostringstream& osstream) : osstream(osstream) {}
+            StringifyVisitor(std::ostringstream& oss) : oss(oss) {}
 
-            void operator()(const bool& v) const { osstream << (v ? "true" : "false"); }
-            void operator()(const std::string& v) const { osstream << v; }
-            void operator()(const int64_t& v) const { osstream << v; }
-            void operator()(const tkFloat& v) const { osstream << v; }
-            void operator()(const Vec3f& v) const {} //osstream << v.toString(); }
-            void operator()(const Vec3i& v) const {} //osstream << v.toString(); }
-            void operator()(const Point3f& v) const {} //osstream << v.toString(); }
-            void operator()(const Point3i& v) const {} //osstream << v.toString(); }
-            void operator()(const tkSpectrum& v) const {} //osstream << v.toString(); }
-            void operator()(const Transform& v) const {} //osstream << v.toString(); }
-            void operator()(const Properties::Data& v) const { osstream << v.ptr << " (size: " << v.size << ")"; }
+            void operator()(const bool& v) const { oss << (v ? "true" : "false"); }
+            void operator()(const std::string& v) const { oss << v; }
+            void operator()(const int64_t& v) const { oss << v; }
+            void operator()(const tkFloat& v) const { oss << v; }
+            void operator()(const Vec3f& v) const { oss << v.toString(); }
+            void operator()(const Vec3i& v) const { oss << v.toString(); }
+            void operator()(const Point3f& v) const { oss << v.toString(); }
+            void operator()(const Point3i& v) const { oss << v.toString(); }
+            void operator()(const tkSpectrum& v) const { oss << v.toString(); }
+            void operator()(const Transform& v) const { oss << v.toString(); }
+            void operator()(const Properties::Data& v) const { oss << v.ptr << " (size: " << v.size << ")"; }
 
         private:
-            std::ostringstream& osstream;
+            std::ostringstream& oss;
         };
     } // namespace __
 
@@ -60,23 +59,23 @@ namespace TK {
         auto result = m_Props.find(name);
         // if (result == m_Props.end())
         // Log failure and exit
-        std::ostringstream osstream;
-        std::visit(StringifyVisitor(osstream), result->second.data);
-        return osstream.str();
+        std::ostringstream oss;
+        std::visit(StringifyVisitor(oss), result->second.data);
+        return oss.str();
     }
 
     std::string Properties::toString() const {
-        std::ostringstream osstream;
-        StringifyVisitor sVisitor(osstream);
-        osstream << "Properties (Id=\"" << m_Id << "\") [\n";
+        std::ostringstream oss;
+        StringifyVisitor sVisitor(oss);
+        oss << "Properties (Id=\"" << m_Id << "\") [\n";
 
         for (const auto& prop : m_Props) {
-            osstream << "    \"" << prop.first << "\":  ";
+            oss << "    \"" << prop.first << "\":  ";
             std::visit(sVisitor, prop.second.data);
-            osstream << "\n";
+            oss << "\n";
         }
-        osstream << "]\n";
-        return osstream.str();
+        oss << "]\n";
+        return oss.str();
     }
 
 #define INIT_PROPERTY(type, storeType, alias)                                                             \
