@@ -16,7 +16,7 @@ namespace TK {
 
     class SurfaceInteraction : public Interaction {
     public:
-        void computeScattering(Scattering* s);
+        void computeScattering(BSDF* s);
         tkSpectrum Le() const;
 
         Vec3f n;
@@ -25,6 +25,6 @@ namespace TK {
         Vec3f wo;
         const Shape* shape = nullptr;
         const Primitive* primitive = nullptr;
-        Scattering* scattering = nullptr;
+        BSDF* bsdf = nullptr;
     };
 }  // namespace TK

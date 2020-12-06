@@ -4,10 +4,10 @@
 #include "bxdf.hpp"
 
 namespace TK {
-    class Scattering {
+    class BSDF {
     public:
-        Scattering() = default;
-        ~Scattering();
+        BSDF() = default;
+        ~BSDF();
 
         void initialize(const SurfaceInteraction& interaction);
         tkSpectrum evaluate(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type = BXDF_ALL) const;

@@ -3,7 +3,7 @@
 #include "ray.hpp"
 #include "interaction.hpp"
 #include "camera.hpp"
-#include "scattering.hpp"
+#include "bsdf.hpp"
 #include "spectrum.hpp"
 #include "sampler.hpp"
 #include "parallel.hpp"
@@ -63,7 +63,7 @@ namespace TK {
         Vec3f wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
-        tkSpectrum f = interaction.scattering->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
+        tkSpectrum f = interaction.bsdf->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
         tkFloat cosTheta = std::abs(dot(interaction.n, wi));
         if (pdf == 0 || f.isBlack() || cosTheta == 0)
             return 0;
@@ -97,12 +97,12 @@ namespace TK {
         // Sampling the light
         tkSpectrum lightLd = light->sample(ref, &wi, sampler.nextVector(), &lightPdf, &occCheck);
         if (lightPdf > 0 && !lightLd.isBlack()) {
-            tkSpectrum f = ref.scattering->evaluate(ref.wo, wi);
+            tkSpectrum f = ref.bsdf->evaluate(ref.wo, wi);
             if (!f.isBlack() && occCheck.notOccluded(scene)) {
                 tkFloat weight = 1;
                 // If light is delta, don't use MIS
                 if (!light->isDelta()) {
-                    scatterPdf = ref.scattering->getPdf(ref.wo, wi);
+                    scatterPdf = ref.bsdf->getPdf(ref.wo, wi);
                     weight = powerHeuristic(1, lightPdf, 1, scatterPdf);
                 }
 
@@ -116,7 +116,7 @@ namespace TK {
         }
 
         BxDFType sampledType;
-        tkSpectrum f = ref.scattering->sample(ref.wo, &wi, sampler.nextVector(), &scatterPdf, &sampledType);
+        tkSpectrum f = ref.bsdf->sample(ref.wo, &wi, sampler.nextVector(), &scatterPdf, &sampledType);
         if (scatterPdf > 0 && !f.isBlack()) {
             tkFloat weight = 1;
             // If specular(delta) bxdf sampled, don't use MIS

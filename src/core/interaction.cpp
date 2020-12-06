@@ -3,7 +3,7 @@
 #include "ray.hpp"
 #include "spectrum.hpp"
 #include "light.hpp"
-#include "scattering.hpp"
+#include "bsdf.hpp"
 #include "region/primitive.hpp"
 
 namespace TK {
@@ -19,10 +19,10 @@ namespace TK {
         return Ray(o, end - o, 1.0f - TK_EPSILON);
     }
 
-    void SurfaceInteraction::computeScattering(Scattering* s) {
+    void SurfaceInteraction::computeScattering(BSDF* s) {
         s->initialize(*this);
         primitive->computeScattering(s);
-        scattering = s;
+        bsdf = s;
     }
 
     tkSpectrum SurfaceInteraction::Le() const {

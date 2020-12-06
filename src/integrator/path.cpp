@@ -1,7 +1,7 @@
 #include "path.hpp"
 
 #include "core/scene.hpp"
-#include "core/scattering.hpp"
+#include "core/bsdf.hpp"
 #include "core/light.hpp"
 #include "core/interaction.hpp"
 #include "core/spectrum.hpp"
@@ -42,8 +42,8 @@ namespace TK {
             if (!hit || bounces >= maxDepth)
                 break;
 
-            Scattering scattering;
-            interaction.computeScattering(&scattering);
+            BSDF bsdf;
+            interaction.computeScattering(&bsdf);
 
             // Add direct lighting contribution with multiple importance sampling
             tkFloat lightPdf;
@@ -54,7 +54,7 @@ namespace TK {
             Vec3f wi;
             tkFloat pdf;
             BxDFType sampledType;
-            tkSpectrum f = scattering.sample(interaction.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
+            tkSpectrum f = bsdf.sample(interaction.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
             if (pdf == 0 || f.isBlack())
                 break;
             throughput *= f * std::abs(dot(wi, interaction.n)) / pdf;

@@ -14,7 +14,7 @@ namespace TK {
         bool hasIntersect(const Ray& r) const override;
         std::shared_ptr<Material> getMaterial() const;
         std::shared_ptr<Light> getLight() const;
-        void computeScattering(Scattering* scattering) const;
+        void computeScattering(BSDF* bsdf) const;
 
     private:
         std::shared_ptr<Shape> shape;

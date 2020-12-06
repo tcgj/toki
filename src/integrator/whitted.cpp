@@ -1,7 +1,7 @@
 #include "whitted.hpp"
 
 #include "core/scene.hpp"
-#include "core/scattering.hpp"
+#include "core/bsdf.hpp"
 #include "core/light.hpp"
 #include "core/interaction.hpp"
 #include "core/spectrum.hpp"
@@ -18,8 +18,8 @@ namespace TK {
             return li;
         }
 
-        Scattering scattering;
-        interaction.computeScattering(&scattering);
+        BSDF bsdf;
+        interaction.computeScattering(&bsdf);
 
         Vec3f normal = interaction.n;
         Vec3f wo = interaction.wo;
@@ -40,7 +40,7 @@ namespace TK {
             if (pdf == 0 || ld.isBlack())
                 continue;
 
-            tkSpectrum f = scattering.evaluate(wo, wi);
+            tkSpectrum f = bsdf.evaluate(wo, wi);
             if (!f.isBlack() && occCheck.notOccluded(scene))
                 li += f * ld * std::abs(dot(wi, normal)) / pdf;
         }

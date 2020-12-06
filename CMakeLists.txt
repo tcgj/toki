@@ -37,6 +37,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # add sources
 set(TK_CORE_HEADER
     src/core/aabb.hpp
+    src/core/bsdf.hpp
     src/core/bxdf.hpp
     src/core/camera.hpp
     src/core/fresnel.hpp
@@ -50,13 +51,13 @@ set(TK_CORE_HEADER
     src/core/ray.hpp
     src/core/region.hpp
     src/core/sampler.hpp
-    src/core/scattering.hpp
     src/core/scene.hpp
     src/core/shape.hpp
     src/core/spectrum.hpp
     src/core/transform.hpp)
 
 set(TK_CORE_SOURCE
+    src/core/bsdf.cpp
     src/core/bxdf.cpp
     src/core/fresnel.cpp
     src/core/image.cpp
@@ -65,7 +66,6 @@ set(TK_CORE_SOURCE
     src/core/light.cpp
     src/core/parallel.cpp
     src/core/random.cpp
-    src/core/scattering.cpp
     src/core/scene.cpp
     src/core/shape.cpp
     src/core/transform.cpp)

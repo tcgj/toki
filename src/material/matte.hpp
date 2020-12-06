@@ -8,7 +8,7 @@ namespace TK {
     public:
         Matte(const tkSpectrum& kd) : kd(kd) {}
 
-        void computeScattering(Scattering* scattering) const override;
+        void computeScattering(BSDF* bsdf) const override;
 
     private:
         tkSpectrum kd;

@@ -1,12 +1,12 @@
 #include "mirror.hpp"
 
-#include "core/scattering.hpp"
+#include "core/bsdf.hpp"
 #include "core/fresnel.hpp"
 #include "bsdf/specularreflection.hpp"
 
 namespace TK {
-    void Mirror::computeScattering(Scattering* scattering) const {
+    void Mirror::computeScattering(BSDF* bsdf) const {
         if (!kr.isBlack())
-            scattering->addContribution(new SpecularReflection(kr, new NoOpFresnel()));
+            bsdf->addContribution(new SpecularReflection(kr, new NoOpFresnel()));
     }
 }  // namespace TK

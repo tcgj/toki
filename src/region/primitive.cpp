@@ -32,8 +32,8 @@ namespace TK {
         return light;
     }
 
-    void Primitive::computeScattering(Scattering* scattering) const {
+    void Primitive::computeScattering(BSDF* bsdf) const {
         if (material != nullptr)
-            material->computeScattering(scattering);
+            material->computeScattering(bsdf);
     }
 }  // namespace TK

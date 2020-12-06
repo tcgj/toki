@@ -8,7 +8,7 @@ namespace TK {
     public:
         Mirror(const tkSpectrum& kr) : kr(kr) {}
 
-        void computeScattering(Scattering* scattering) const override;
+        void computeScattering(BSDF* bsdf) const override;
 
     private:
         tkSpectrum kr;

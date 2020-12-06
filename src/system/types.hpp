@@ -23,7 +23,7 @@ namespace TK {
     class RGBSpectrum;
     class Light;
     class BxDF;
-    class Scattering;
+    class BSDF;
     class Material;
     class Camera;
     class Scene;
