@@ -19,6 +19,21 @@ namespace TK {
     };
 
     namespace {
+        class TypeVisitor {
+        public:
+            Properties::PropertyType operator()(const bool&) const { return Properties::PROP_BOOL; }
+            Properties::PropertyType operator()(const std::string&) const { return Properties::PROP_STRING; }
+            Properties::PropertyType operator()(const int64_t&) const { return Properties::PROP_INT; }
+            Properties::PropertyType operator()(const tkFloat&) const { return Properties::PROP_FLOAT; }
+            Properties::PropertyType operator()(const Vec3f&) const { return Properties::PROP_VECTOR_F; }
+            Properties::PropertyType operator()(const Vec3i&) const { return Properties::PROP_VECTOR_I; }
+            Properties::PropertyType operator()(const Point3f&) const { return Properties::PROP_POINT_F; }
+            Properties::PropertyType operator()(const Point3i&) const { return Properties::PROP_POINT_I; }
+            Properties::PropertyType operator()(const tkSpectrum&) const { return Properties::PROP_SPECTRUM; }
+            Properties::PropertyType operator()(const Transform&) const { return Properties::PROP_TRANSFORM; }
+            Properties::PropertyType operator()(const Properties::Data&) const { return Properties::PROP_DATA; }
+        };
+
         class StringifyVisitor {
         public:
             StringifyVisitor(std::ostringstream& oss) : oss(oss) {}
@@ -57,7 +72,7 @@ namespace TK {
         auto result = m_Props.find(name);
         // if (result == m_Props.end())
             // Log failure and exit
-        return result->second.type;
+        return std::visit(TypeVisitor(), result->second.data);
     }
 
     std::string Properties::getStringValue(const std::string& name) const {
