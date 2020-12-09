@@ -3,7 +3,8 @@
 #include "system/toki.hpp"
 
 namespace TK {
-    struct Interaction {
+    class Interaction {
+    public:
         Interaction() = default;
         Interaction(const Point3f& p) : p(p) {}
         virtual ~Interaction() = default;

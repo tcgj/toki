@@ -3,7 +3,8 @@
 #include "system/toki.hpp"
 
 namespace TK {
-    struct Quaternion {
+    class Quaternion {
+    public:
         Quaternion() : xyz(0, 0, 0), w(1) {}
         Quaternion(const Transform& t);
 

@@ -3,7 +3,8 @@
 #include "system/toki.hpp"
 
 namespace TK {
-    struct Matrix44 {
+    class Matrix44 {
+    public:
         Matrix44();
         Matrix44(tkFloat d[16]);
         Matrix44(tkFloat f00, tkFloat f01, tkFloat f02, tkFloat f03, tkFloat f10, tkFloat f11, tkFloat f12,

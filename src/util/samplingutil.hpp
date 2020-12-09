@@ -102,7 +102,8 @@ namespace TK {
     }
 
     /* ----- Distributions ----- */
-    struct Distribution {
+    class Distribution {
+    public:
         Distribution(const std::vector<tkFloat> &f)
             : func(f), cdf(f.size() + 1) {
             int n = f.size();

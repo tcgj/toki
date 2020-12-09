@@ -11,12 +11,12 @@ namespace TK {
     class Point3;
     template <typename T>
     class AABB;
-    struct Matrix44;
     struct Mesh;
-    struct Interaction;
+    class Matrix44;
     class Ray;
     class Transform;
     class Shape;
+    class Interaction;
     class SurfaceInteraction;
     class Region;
     class Primitive;
@@ -32,19 +32,19 @@ namespace TK {
     class OStream;
 
 #ifdef TK_USE_DOUBLE
-    typedef double tkFloat;
+    using tkFloat = double;
 #else
-    typedef float tkFloat;
+    using tkFloat = float;
 #endif  // TK_USE_DOUBLE
-    typedef Vec2<tkFloat> Vec2f;
-    typedef Vec2<int> Vec2i;
-    typedef Vec3<tkFloat> Vec3f;
-    typedef Vec3<int> Vec3i;
-    typedef Point2<tkFloat> Point2f;
-    typedef Point2<int> Point2i;
-    typedef Point3<tkFloat> Point3f;
-    typedef Point3<int> Point3i;
-    typedef AABB<tkFloat> AABBf;
-    typedef AABB<int> AABBi;
-    typedef RGBSpectrum tkSpectrum;
+    using Vec2f = Vec2<tkFloat>;
+    using Vec2i = Vec2<int>;
+    using Vec3f = Vec3<tkFloat>;
+    using Vec3i = Vec3<int>;
+    using Point2f = Point2<tkFloat>;
+    using Point2i = Point2<int>;
+    using Point3f = Point3<tkFloat>;
+    using Point3i = Point3<int>;
+    using AABBf = AABB<tkFloat>;
+    using AABBi = AABB<int>;
+    using tkSpectrum = RGBSpectrum;
 }  // namespace TK
