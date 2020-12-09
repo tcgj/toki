@@ -8,9 +8,14 @@
 namespace TK {
     using Element = std::variant<bool, std::string, int64_t, tkFloat, Vec3f, Vec3i, Point3f, Point3i,
                                  tkSpectrum, Transform, Properties::Data>;
+
     struct Property {
         Element data;
-        Properties::PropertyType type;
+    };
+
+    struct Properties::Data {
+        uint8_t* ptr;
+        size_t size;
     };
 
     namespace {

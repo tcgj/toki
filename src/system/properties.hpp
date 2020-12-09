@@ -7,6 +7,7 @@ namespace TK {
 
     class Properties {
     public:
+        struct Data;
         enum PropertyType {
             PROP_BOOL,
             PROP_STRING,
@@ -19,11 +20,6 @@ namespace TK {
             PROP_SPECTRUM,
             PROP_TRANSFORM,
             PROP_DATA
-        };
-
-        struct Data {
-            uint8_t* ptr;
-            size_t size;
         };
 
         Properties(const std::string& id = "unnamed");

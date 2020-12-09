@@ -17,38 +17,8 @@ namespace TK {
         bool intersect(const Ray& r, SurfaceInteraction* interaction) const override;
 
     private:
-        struct PrimitiveUnit {
-            PrimitiveUnit(int64_t index, const AABBf& bb) : index(index), bb(bb), centroid(bb.center()) {}
-
-            int64_t index;
-            AABBf bb;
-            Point3f centroid;
-        };
-
-        struct Node {
-            void makeInner(const AABBf& nodeBB, int64_t nLeft, int64_t nRight, int splitAxis) {
-                bb = nodeBB;
-                left = nLeft;
-                right = nRight;
-                axis = splitAxis;
-            }
-
-            void makeLeaf(const AABBf& nodeBB, int64_t pCount, int64_t pOffset) {
-                bb = nodeBB;
-                count = pCount;
-                offset = pOffset;
-            }
-
-            // Common members
-            AABBf bb;
-            // Inner node only
-            int64_t left;
-            int64_t right;
-            int axis;
-            // Leaf node only
-            int64_t count = 0;
-            int64_t offset;
-        };
+        struct PrimitiveUnit;
+        struct Node;
 
         // Stack-based BVH traversal
         bool intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* interaction = nullptr) const;
