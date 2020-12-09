@@ -13,6 +13,7 @@
 #include <vector>
 #include <unordered_map>
 #include <cstdint>
+#include <cstdarg>
 
 //#define TK_ENABLE_ASSERTS
 #include "error.hpp"
