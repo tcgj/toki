@@ -5,30 +5,42 @@ namespace TK {
     class Point3 {
     public:
         Point3() : x(0), y(0), z(0) {}
+
         Point3(T t) : x(t), y(t), z(t) {}
+
         Point3(T p0, T p1, T p2) : x(p0), y(p1), z(p2) {}
+
         Point3(const Point2<T>& xy, T z) : x(xy.x), y(xy.y), z(z) {}
+
         template <typename U>
         explicit Point3(const Point3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {}
 
         // Unary/subscript operators
         const Point3<T>& operator+() const;
+
         Point3<T> operator-() const;
+
         Point3<T> operator/(T w) const;
+
         T operator[](int i) const;
+
         T& operator[](int i);
 
         // Assignment operators
         Point3<T>& operator+=(const Vec3<T>& v);
+
         Point3<T>& operator-=(const Vec3<T>& v);
 
         // Equality
         bool operator==(const Point3<T>& p) const;
+
         bool operator!=(const Point3<T>& p) const;
 
         // Explicit cast
         explicit operator Point2<T>() const;
+
         explicit operator Vec2<T>() const;
+
         explicit operator Vec3<T>() const;
 
         std::string toString() const;

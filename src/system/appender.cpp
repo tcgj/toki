@@ -1,8 +1,6 @@
 #include "appender.hpp"
 
 namespace TK {
-    StreamAppender::StreamAppender() {}
-
     StreamAppender::StreamAppender(std::shared_ptr<std::ostream> s) : m_Stream(std::move(s)) {}
 
     void StreamAppender::append(const std::string& message) {

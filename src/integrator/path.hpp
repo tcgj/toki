@@ -13,6 +13,7 @@ namespace TK {
             : SamplerIntegrator(camera, sampler), maxDepth(maxDepth), strategy(strategy) {}
 
         void preprocess(const Scene& scene) override;
+
         tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const override;
 
     private:

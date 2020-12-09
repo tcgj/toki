@@ -13,37 +13,53 @@ namespace TK {
             minPt = Point3<T>(maxVal);
             maxPt = Point3<T>(minVal);
         }
+
         AABB(const Point2<T>& p) : minPt(p, 0), maxPt(p, 0) {}
+
         AABB(const Point2<T>& p1, const Point2<T>& p2)
             : minPt(std::min(p1.x, p2.x), std::min(p1.y, p2.y), 0),
               maxPt(std::max(p1.x, p2.x), std::max(p1.y, p2.y), 0) {}
+
         AABB(const Point3<T>& p) : minPt(p), maxPt(p) {}
+
         AABB(const Point3<T>& p1, const Point3<T>& p2)
             : minPt(std::min(p1.x, p2.x), std::min(p1.y, p2.y), std::min(p1.z, p2.z)),
               maxPt(std::max(p1.x, p2.x), std::max(p1.y, p2.y), std::max(p1.z, p2.z)) {}
 
         // Subscript operators
         const Point3<T>& operator[](int i) const;
+
         Point3<T> operator[](int i);
 
         // Equality
         bool operator==(const AABB<T>& b) const;
+
         bool operator!=(const AABB<T>& b) const;
 
         // Math
         Point3<T> corner(int cIndex) const;
+
         Point3<T> center() const;
+
         Vec3<T> diagonal() const;
+
         T surfaceArea() const;
+
         T area(int axis1, int axis2) const;
+
         T volume() const;
+
         int maxExtent() const;
+
         Point3<T> lerp(const Point3f& t) const;
+
         Vec3<T> offset(const Point3<T>& p) const;
+
         void boundingSphere(Point3<T>* center, tkFloat* radius) const;
 
         // Ray-BB intersection test
         bool hasIntersect(const Ray& r) const;
+
         bool hasIntersect(const Ray& r, const Vec3f& invD, const int dirNegative[3]) const;
 
         Point3<T> minPt;
@@ -64,6 +80,7 @@ namespace TK {
     inline bool AABB<T>::operator==(const AABB<T>& b) const {
         return b.minPt == minPt && b.maxPt == maxPt;
     }
+
     template <typename T>
     inline bool AABB<T>::operator!=(const AABB<T>& b) const {
         return b.minPt != minPt || b.maxPt != maxPt;
@@ -84,21 +101,25 @@ namespace TK {
     inline Vec3<T> AABB<T>::diagonal() const {
         return maxPt - minPt;
     }
+
     template <typename T>
     inline T AABB<T>::surfaceArea() const {
         Vec3<T> d = diagonal();
         return 2 * (d.x * d.y + d.x * d.z + d.y * d.z);
     }
+
     template <typename T>
     inline T AABB<T>::area(int axis1, int axis2) const {
         Vec3<T> d = diagonal();
         return d[axis1] * d[axis2];
     }
+
     template <typename T>
     inline T AABB<T>::volume() const {
         Vec3<T> d = diagonal();
         return d.x * d.y * d.z;
     }
+
     template <typename T>
     inline int AABB<T>::maxExtent() const {
         Vec3<T> d = diagonal();
@@ -109,11 +130,13 @@ namespace TK {
         else
             return 2;
     }
+
     template <typename T>
     inline Point3<T> AABB<T>::lerp(const Point3f& t) const {
         return Point3<T>(TK::lerp(minPt.x, maxPt.x, t.x), TK::lerp(minPt.y, maxPt.y, t.y),
                          TK::lerp(minPt.z, maxPt.z, t.z));
     }
+
     template <typename T>
     inline Vec3<T> AABB<T>::offset(const Point3<T>& p) const {
         Vec3<T> o = p - minPt;
@@ -132,11 +155,13 @@ namespace TK {
         return (p.x >= b.minPt.x && p.x <= b.maxPt.x && p.y >= b.minPt.y && p.y <= b.maxPt.y &&
                 p.z >= b.minPt.z && p.z <= b.maxPt.z);
     }
+
     template <typename T>
     inline bool isInsideExclusive(const Point3<T>& p, const AABB<T>& b) {
         return (p.x >= b.minPt.x && p.x < b.maxPt.x && p.y >= b.minPt.y && p.y < b.maxPt.y &&
                 p.z >= b.minPt.z && p.z < b.maxPt.z);
     }
+
     template <typename T>
     inline bool overlap(const AABB<T>& b1, const AABB<T>& b2) {
         bool x = (b1.maxPt.x >= b2.minPt.x) && (b1.minPt.x <= b2.maxPt.x);
@@ -144,6 +169,7 @@ namespace TK {
         bool z = (b1.maxPt.z >= b2.minPt.z) && (b1.minPt.z <= b2.maxPt.z);
         return (x && y && z);
     }
+
     template <typename T, typename U>
     inline AABB<T> expand(const AABB<T>& b, U delta) {
         return AABB<T>(b.minPt - Vec3<T>(delta), b.maxPt + Vec3<T>(delta));
@@ -156,12 +182,14 @@ namespace TK {
                        Point3<T>(std::max(b1.maxPt.x, b2.maxPt.x), std::max(b1.maxPt.y, b2.maxPt.y),
                                  std::max(b1.maxPt.z, b2.maxPt.z)));
     }
+
     template <typename T>
     inline AABB<T> bbUnion(const AABB<T>& b, const Point3<T>& p) {
         return AABB<T>(
             Point3<T>(std::min(b.minPt.x, p.x), std::min(b.minPt.y, p.y), std::min(b.minPt.z, p.z)),
             Point3<T>(std::max(b.maxPt.x, p.x), std::max(b.maxPt.y, p.y), std::max(b.maxPt.z, p.z)));
     }
+
     template <typename T>
     inline AABB<T> bbIntersect(const AABB<T>& b1, const AABB<T>& b2) {
         return AABB<T>(Point3<T>(std::max(b1.minPt.x, b2.minPt.x), std::max(b1.minPt.y, b2.minPt.y),

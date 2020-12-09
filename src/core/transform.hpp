@@ -8,43 +8,57 @@ namespace TK {
     class Transform {
     public:
         Transform() = default;
+
         Transform(const tkFloat d[16]) {
             m = Matrix44(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12],
                          d[13], d[14], d[15]);
             mInv = inverse(m);
         }
+
         Transform(const Matrix44& m) : m(m), mInv(inverse(m)) {}
+
         Transform(const Matrix44& m, const Matrix44& mInv) : m(m), mInv(mInv) {}
 
         // Transform Application
         template <typename T>
         Point3<T> operator()(const Point3<T>& p) const;
+
         template <typename T>
         Vec3<T> operator()(const Vec3<T>& v, bool isNormal = false) const;
+
         template <typename T>
         AABB<T> operator()(const AABB<T>& bb) const;
+
         Ray operator()(const Ray& r) const;
 
         template <typename T>
         Point3<T> applyInverse(const Point3<T>& p) const;
+
         template <typename T>
         Vec3<T> applyInverse(const Vec3<T>& v, bool isNormal = false) const;
+
         template <typename T>
         AABB<T> applyInverse(const AABB<T>& bb) const;
+
         Ray applyInverse(const Ray& r) const;
 
         // Equality
         bool operator==(const Transform& t) const;
+
         bool operator!=(const Transform& t) const;
 
         bool isIdentity() const;
+
         bool willSwapHandedness() const;
+
         const Matrix44& getMatrix() const;
+
         const Matrix44& getInverse() const;
 
         std::string toString() const;
 
         friend Transform inverse(const Transform& t);
+
         friend Transform transpose(const Transform& t);
 
     private:
@@ -111,7 +125,8 @@ namespace TK {
         T x = mInv.m_Entries[0] * px + mInv.m_Entries[1] * py + mInv.m_Entries[2] * pz + mInv.m_Entries[3];
         T y = mInv.m_Entries[4] * px + mInv.m_Entries[5] * py + mInv.m_Entries[6] * pz + mInv.m_Entries[7];
         T z = mInv.m_Entries[8] * px + mInv.m_Entries[9] * py + mInv.m_Entries[10] * pz + mInv.m_Entries[11];
-        T w = mInv.m_Entries[12] * px + mInv.m_Entries[13] * py + mInv.m_Entries[14] * pz + mInv.m_Entries[15];
+        T w =
+            mInv.m_Entries[12] * px + mInv.m_Entries[13] * py + mInv.m_Entries[14] * pz + mInv.m_Entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else

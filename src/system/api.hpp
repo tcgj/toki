@@ -12,8 +12,11 @@ namespace TK {
     class RenderAPI {
     public:
         static void tokiConfigure(const Options& options);
+
         static void tokiParse(std::string inputFile);
+
         static void tokiRun();
+
         static void tokiShutdown();
 
     private:

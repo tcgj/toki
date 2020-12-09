@@ -10,10 +10,15 @@ namespace TK {
             : shape(shape), material(material), light(light) {}
 
         AABBf worldBoundingBox() const override;
+
         bool intersect(const Ray& r, SurfaceInteraction* interaction) const override;
+
         bool hasIntersect(const Ray& r) const override;
+
         std::shared_ptr<Material> getMaterial() const;
+
         std::shared_ptr<Light> getLight() const;
+
         void computeScattering(BSDF* bsdf) const;
 
     private:

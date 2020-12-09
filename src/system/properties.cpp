@@ -78,31 +78,31 @@ namespace TK {
         return oss.str();
     }
 
-#define INIT_PROPERTY(type, storeType, alias)                                                             \
+#define INIT_PROPERTY(type, storeType, alias)                                                      \
     void Properties::set##alias(const std::string& name, const type& value, bool warnDuplicates) { \
-        if (!hasProperty(name) && warnDuplicates)                                                         \
-            printf("Does not exist");                                                                     \
-        m_Props[name].data = (storeType)value;                                                            \
-    }                                                                                                     \
-                                                                                                          \
-    type Properties::get##alias(const std::string& name) const {                                          \
-        auto result = m_Props.find(name);                                                                 \
-        /* if (result == m_Props.end()) */                                                                \
-        /* Log failure and exit */                                                                        \
-        auto val = std::get_if<storeType>(&result->second.data);                                          \
-        /* if (!val) */                                                                                   \
-        /* Log failure */                                                                                 \
-        return (type)*val;                                                                                \
-    }                                                                                                     \
-                                                                                                          \
-    type Properties::get##alias(const std::string& name, const type& defaultValue) const {                \
-        auto result = m_Props.find(name);                                                                 \
-        if (result == m_Props.end())                                                                      \
-            return defaultValue;                                                                          \
-        auto val = std::get_if<storeType>(&result->second.data);                                          \
-        /* if (!val) */                                                                                   \
-        /* Log failure */                                                                                 \
-        return (type)*val;                                                                                \
+        if (!hasProperty(name) && warnDuplicates)                                                  \
+            printf("Does not exist");                                                              \
+        m_Props[name].data = (storeType)value;                                                     \
+    }                                                                                              \
+                                                                                                   \
+    type Properties::get##alias(const std::string& name) const {                                   \
+        auto result = m_Props.find(name);                                                          \
+        /* if (result == m_Props.end()) */                                                         \
+        /* Log failure and exit */                                                                 \
+        auto val = std::get_if<storeType>(&result->second.data);                                   \
+        /* if (!val) */                                                                            \
+        /* Log failure */                                                                          \
+        return (type)*val;                                                                         \
+    }                                                                                              \
+                                                                                                   \
+    type Properties::get##alias(const std::string& name, const type& defaultValue) const {         \
+        auto result = m_Props.find(name);                                                          \
+        if (result == m_Props.end())                                                               \
+            return defaultValue;                                                                   \
+        auto val = std::get_if<storeType>(&result->second.data);                                   \
+        /* if (!val) */                                                                            \
+        /* Log failure */                                                                          \
+        return (type)*val;                                                                         \
     }
 
     INIT_PROPERTY(bool, bool, Bool)

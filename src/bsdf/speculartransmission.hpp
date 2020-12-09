@@ -14,7 +14,9 @@ namespace TK {
               etaB(etaB) {}
 
         tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const override;
+
         tkSpectrum sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp, tkFloat* pdf) const override;
+
         tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const override;
 
     private:

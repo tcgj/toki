@@ -9,9 +9,13 @@ namespace TK {
         Image(const Vec2i& res, const std::string& filename);
 
         tkFloat getAspectRatio() const;
+
         Vec3f getPixelColor(const Point2i& pixelCoord) const;
+
         void updatePixelColor(const Point2i& pixelCoord, const tkSpectrum& colorContribution);
+
         virtual Vec3f gammaCorrect(const Vec3f& rgb) const;
+
         virtual void write() = 0;
 
         Vec2i resolution;

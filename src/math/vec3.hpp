@@ -5,37 +5,54 @@ namespace TK {
     class Vec3 {
     public:
         Vec3() : x(0), y(0), z(0) {}
+
         Vec3(T t) : x(t), y(t), z(t) {}
+
         Vec3(T v0, T v1, T v2) : x(v0), y(v1), z(v2) {}
+
         Vec3(const Vec2<T>& xy, T z) : x(xy.x), y(xy.y), z(z) {}
+
         template <typename U>
         explicit Vec3(const Vec3<U>& p) : x((T)p.x), y((T)p.y), z((T)p.z) {}
 
         // Unary/subscript operators
         const Vec3<T>& operator+() const;
+
         Vec3<T> operator-() const;
+
         T operator[](int i) const;
+
         T& operator[](int i);
 
         // Assignment operators
         Vec3<T>& operator+=(const Vec3<T>& v);
+
         Vec3<T>& operator-=(const Vec3<T>& v);
+
         Vec3<T>& operator*=(const Vec3<T>& v);
+
         Vec3<T>& operator*=(const T s);
+
         Vec3<T>& operator/=(const Vec3<T>& v);
+
         Vec3<T>& operator/=(const T s);
 
         // Equality
         bool operator==(const Vec3<T>& v) const;
+
         bool operator!=(const Vec3<T>& v) const;
 
         tkFloat magnitude() const;
+
         tkFloat squaredMagnitude() const;
+
         Vec3<T>& normalized();
 
         // Explicit cast
         explicit operator Point2<T>() const;
+
         explicit operator Point3<T>() const;
+
         explicit operator Vec2<T>() const;
 
         std::string toString() const;

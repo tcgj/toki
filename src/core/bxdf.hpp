@@ -15,12 +15,15 @@ namespace TK {
     class BxDF {
     public:
         BxDF(BxDFType type) : type(type) {}
+
         virtual ~BxDF() = default;
 
         bool matchesType(BxDFType t) const;
 
         virtual tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const = 0;
+
         virtual tkSpectrum sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp, tkFloat* pdf) const;
+
         virtual tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const;
 
         BxDFType type;

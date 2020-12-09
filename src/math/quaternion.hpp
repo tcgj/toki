@@ -6,6 +6,7 @@ namespace TK {
     class Quaternion {
     public:
         Quaternion() : xyz(0, 0, 0), w(1) {}
+
         Quaternion(const Transform& t);
 
         // Unary operators
@@ -13,17 +14,24 @@ namespace TK {
 
         // Assignment operators
         Quaternion& operator+=(const Quaternion& q);
+
         Quaternion& operator-=(const Quaternion& q);
+
         Quaternion& operator*=(tkFloat f);
+
         Quaternion& operator/=(tkFloat f);
 
         // Binary operators
         Quaternion operator+(const Quaternion& q) const;
+
         Quaternion operator-(const Quaternion& q) const;
+
         Quaternion operator*(tkFloat f) const;
+
         Quaternion operator/(tkFloat f) const;
 
         Quaternion& normalized();
+
         Transform toTransform() const;
 
         Vec3f xyz;

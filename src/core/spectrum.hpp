@@ -13,25 +13,39 @@ namespace TK {
         }
 
         const Spectrum& operator+() const;
+
         Spectrum operator-() const;
+
         tkFloat operator[](int i) const;
+
         tkFloat& operator[](int i);
 
         Spectrum operator+(const Spectrum& s) const;
+
         Spectrum operator-(const Spectrum& s) const;
+
         Spectrum operator*(const Spectrum& s) const;
+
         Spectrum operator/(const Spectrum& s) const;
+
         Spectrum operator*(tkFloat f) const;
+
         Spectrum operator/(tkFloat f) const;
 
         Spectrum& operator+=(const Spectrum& s);
+
         Spectrum& operator-=(const Spectrum& s);
+
         Spectrum& operator*=(const Spectrum& s);
+
         Spectrum& operator/=(const Spectrum& s);
+
         Spectrum& operator*=(tkFloat f);
+
         Spectrum& operator/=(tkFloat f);
 
         bool operator==(const Spectrum& s) const;
+
         bool operator!=(const Spectrum& s) const;
 
         bool isBlack() const;

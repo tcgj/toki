@@ -7,15 +7,23 @@ namespace TK {
     class Sampler {
     public:
         Sampler(int64_t samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
+
         virtual ~Sampler() = default;
 
         virtual void setPixel(const Point2i& pixelCoord);
+
         CameraSample getCameraSample(const Point2i& pixelCoord);
+
         virtual void requestFloats(int count);
+
         virtual void requestVectors(int count);
+
         virtual tkFloat nextFloat() = 0;
+
         virtual Vec2f nextVector() = 0;
+
         virtual bool nextSample();
+
         virtual std::unique_ptr<Sampler> getClone() = 0;
 
         int64_t samplesPerPixel;

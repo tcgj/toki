@@ -16,6 +16,7 @@ namespace TK {
         AABBf worldBoundingBox() const override {
             return worldBB;
         }
+
         bool hasIntersect(const Ray& r) const override {
             for (const auto& prim : primitives) {
                 if (prim->hasIntersect(r)) {
@@ -24,6 +25,7 @@ namespace TK {
             }
             return false;
         }
+
         bool intersect(const Ray& r, SurfaceInteraction* interaction) const override {
             bool hasIntersected = false;
             for (const auto& prim : primitives) {

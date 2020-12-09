@@ -15,6 +15,7 @@ namespace TK {
     public:
         Camera(const Transform& cameraToWorld /*, const Medium *medium*/, Image* image)
             : cameraToWorld(cameraToWorld) /*, medium(medium)*/, image(image) {}
+
         virtual ~Camera() = default;
 
         virtual tkFloat generateRay(const CameraSample& sample, Ray* r) const = 0;

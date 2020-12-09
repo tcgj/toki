@@ -5,6 +5,7 @@
 
 namespace TK {
     tkFloat dielectricFresnel(tkFloat cosI, tkFloat etaI, tkFloat etaT);
+
     tkSpectrum conductorFresnel(tkFloat cosI, const tkSpectrum& eta, const tkSpectrum& etaK);
 
     class Fresnel {

@@ -17,7 +17,7 @@ namespace TK {
         void append(const std::string& message) override;
 
     protected:
-        StreamAppender();
+        StreamAppender() = default;
 
         std::shared_ptr<std::ostream> m_Stream;
     };

@@ -6,10 +6,13 @@ namespace TK {
     class Interaction {
     public:
         Interaction() = default;
+
         Interaction(const Point3f& p) : p(p) {}
+
         virtual ~Interaction() = default;
 
         Ray spawnRayTo(const Vec3f& d) const;
+
         Ray spawnRayTo(const Interaction& ref) const;
 
         Point3f p;
@@ -18,6 +21,7 @@ namespace TK {
     class SurfaceInteraction : public Interaction {
     public:
         void computeScattering(BSDF* s);
+
         tkSpectrum Le() const;
 
         Vec3f n;

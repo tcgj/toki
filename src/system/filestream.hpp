@@ -13,6 +13,7 @@ namespace TK {
     class FileStream : public IOStream {
     public:
         FileStream() = default;
+
         FileStream(const std::string filename, FileStreamMode fsm) : file(std::fstream(filename, fsm)) {
             // TODO: Setup a proper check for fail
         }

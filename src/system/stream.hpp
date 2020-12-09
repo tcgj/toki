@@ -9,10 +9,15 @@ namespace TK {
     public:
         // Interface for primitive type output streaming
         virtual IStream& operator>>(tkFloat& f) = 0;
+
         virtual IStream& operator>>(int& i) = 0;
+
         virtual IStream& operator>>(unsigned int& u) = 0;
+
         virtual IStream& operator>>(std::string& s) = 0;
+
         virtual IStream& operator>>(bool& b) = 0;
+
         virtual IStream& read(char* data, unsigned int size) = 0;
 
         // Pre-defined output streaming operators
@@ -74,11 +79,17 @@ namespace TK {
     public:
         // Interface for primitive type output streaming
         virtual OStream& operator<<(tkFloat f) = 0;
+
         virtual OStream& operator<<(int i) = 0;
+
         virtual OStream& operator<<(unsigned int u) = 0;
+
         virtual OStream& operator<<(const std::string& s) = 0;
+
         virtual OStream& operator<<(bool b) = 0;
+
         virtual OStream& write(const char* data, unsigned int size) = 0;
+
         virtual void flush() {}
 
         // Pre-defined output streaming operators
@@ -115,8 +126,9 @@ namespace TK {
         }
 
         OStream& operator<<(const Matrix44& m) {
-            for (int i = 0; i < 16; ++i)
+            for (int i = 0; i < 16; ++i) {
                 *this << m.m_Entries[i];
+            }
 
             return *this;
         }

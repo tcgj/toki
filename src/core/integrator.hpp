@@ -10,6 +10,7 @@ namespace TK {
         virtual ~Integrator() = default;
 
         virtual void preprocess(const Scene& scene) {}
+
         virtual void render(const Scene& scene) = 0;
     };
 
@@ -19,9 +20,12 @@ namespace TK {
             : camera(camera), sampler(sampler) {}
 
         virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth = 0) const = 0;
+
         void render(const Scene& scene) override;
+
         tkSpectrum specularReflectedLi(const SurfaceInteraction& interaction, const Scene& scene,
                                        const Ray& r, Sampler& sampler, int depth) const;
+
         tkSpectrum specularRefractedLi(const SurfaceInteraction& interaction, const Scene& scene,
                                        const Ray& r, Sampler& sampler, int depth) const;
 
@@ -32,6 +36,7 @@ namespace TK {
 
     std::shared_ptr<Light> getLightByDist(const Scene& scene, Sampler& sampler, const Distribution& dist,
                                           tkFloat* pdf);
+
     tkSpectrum miSampleLd(const SurfaceInteraction& ref, const Scene& scene,
                           const std::shared_ptr<Light>& light, Sampler& sampler);
 }  // namespace TK

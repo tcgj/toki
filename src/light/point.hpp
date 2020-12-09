@@ -12,9 +12,10 @@ namespace TK {
             pos = Point3f(mat.m_Entries[3], mat.m_Entries[7], mat.m_Entries[11]);
         }
 
-        tkSpectrum power() const;
+        tkSpectrum power() const override;
+
         tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
-                          OcclusionChecker* occCheck) const;
+                          OcclusionChecker* occCheck) const override;
 
     private:
         tkSpectrum intensity;

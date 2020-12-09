@@ -25,20 +25,26 @@ namespace TK {
     class Light {
     public:
         Light(const Transform& lightToWorld) : lightToWorld(lightToWorld) {}
+
         virtual ~Light() = default;
 
         virtual void preprocess(const Scene& scene) {}
+
         virtual bool isDelta() const {
             // Whether the light source is described by a delta distribution,
             // positional wise or directional-wise
             return true;
         }
+
         virtual tkSpectrum power() const = 0;
+
         virtual tkSpectrum Le(const SurfaceInteraction& interaction, const Vec3f& wo) const {
             return 0;
         };
+
         virtual tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
                                   OcclusionChecker* occCheck) const = 0;
+
         virtual tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const {
             return 0;
         }

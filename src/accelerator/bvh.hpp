@@ -11,7 +11,9 @@ namespace TK {
         BVH(const std::vector<std::shared_ptr<Primitive>>& primitives, Strategy type = BINNED_SAH);
 
         AABBf worldBoundingBox() const override;
+
         bool hasIntersect(const Ray& r) const override;
+
         bool intersect(const Ray& r, SurfaceInteraction* interaction) const override;
 
     private:
@@ -30,6 +32,7 @@ namespace TK {
                 right = nRight;
                 axis = splitAxis;
             }
+
             void makeLeaf(const AABBf& nodeBB, int64_t pCount, int64_t pOffset) {
                 bb = nodeBB;
                 count = pCount;
