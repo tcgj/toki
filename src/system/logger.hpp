@@ -1,7 +1,6 @@
 #pragma once
 
 #include "toki.hpp"
-#include "appender.hpp"
 #include "formatter.hpp"
 
 namespace TK {

@@ -30,6 +30,9 @@ namespace TK {
     class Sampler;
     class IStream;
     class OStream;
+    class Appender;
+    class Formatter;
+    class Logger;
 
 #ifdef TK_USE_DOUBLE
     using tkFloat = double;

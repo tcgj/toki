@@ -1,5 +1,7 @@
 #include "logger.hpp"
 
+#include "appender.hpp"
+
 namespace TK {
     Logger::Logger(LogLevel level) : m_Level(level), m_FatalLevel(LEVEL_ERROR) {}
 
