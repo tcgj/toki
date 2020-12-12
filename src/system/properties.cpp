@@ -13,11 +13,6 @@ namespace TK {
         Element data;
     };
 
-    struct Properties::Data {
-        uint8_t* ptr;
-        size_t size;
-    };
-
     namespace {
         class TypeVisitor {
         public:
