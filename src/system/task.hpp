@@ -13,6 +13,8 @@ namespace TK {
     public:
         Task(int priorityLevel = 0);
 
+        virtual ~Task() = default;
+
         virtual TaskStatus execute() = 0;
 
         int getPriority() const;
