@@ -2,10 +2,11 @@
 
 namespace TK
 {
+    std::mutex Task::s_CounterMutex;
     int Task::s_TaskCounter = 0;
 
     Task::Task(int priorityLevel) : m_PriorityLevel(priorityLevel) {
-        std::lock_guard<std::mutex> lock(m_CounterMutex);
+        std::lock_guard<std::mutex> lock(s_CounterMutex);
         m_TaskId = s_TaskCounter;
         s_TaskCounter++;
     }

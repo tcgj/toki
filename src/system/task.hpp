@@ -26,7 +26,7 @@ namespace TK {
         int m_PriorityLevel;
 
     private:
-        std::mutex m_CounterMutex;
+        static std::mutex s_CounterMutex;
         static int s_TaskCounter;
     };
 
