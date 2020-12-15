@@ -33,6 +33,7 @@ namespace TK {
     class Appender;
     class Formatter;
     class Logger;
+    class Task;
 
 #ifdef TK_USE_DOUBLE
     using tkFloat = double;
