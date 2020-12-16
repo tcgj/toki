@@ -10,6 +10,6 @@ namespace TK {
             : ProjectionCamera(cameraToWorld, orthographic(0, 1), lensRadius, focalLength /*, medium*/,
                                image) {}
 
-        tkFloat generateRay(const CameraSample& sample, Ray* r) const override;
+        tkFloat generateRay(const CameraSample& sample, Ray& r) const override;
     };
 }  // namespace TK

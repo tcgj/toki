@@ -18,7 +18,7 @@ namespace TK {
 
         virtual ~Camera() = default;
 
-        virtual tkFloat generateRay(const CameraSample& sample, Ray* r) const = 0;
+        virtual tkFloat generateRay(const CameraSample& sample, Ray& r) const = 0;
 
         Transform cameraToWorld;
         Image* image;
