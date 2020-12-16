@@ -14,10 +14,16 @@ namespace TK {
 
         bool hasIntersect(const Ray& r) const;
 
-        std::vector<std::shared_ptr<Light>> lights;
+        Camera* getCamera() const;
+
+        Integrator* getIntegrator() const;
+
+        std::vector<std::shared_ptr<Light>> m_Lights;
 
     private:
-        std::shared_ptr<Region> region;
-        AABBf worldBB;
+        std::shared_ptr<Region> m_Region;
+        std::shared_ptr<Camera> m_Camera;
+        std::shared_ptr<Integrator> m_Integrator;
+        AABBf m_WorldBB;
     };
 }  // namespace TK

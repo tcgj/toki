@@ -28,6 +28,7 @@ namespace TK {
     class Camera;
     class Scene;
     class Sampler;
+    class Integrator;
     class IStream;
     class OStream;
     class Appender;

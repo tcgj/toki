@@ -82,7 +82,7 @@ namespace TK {
                                           tkFloat* pdf) {
         tkFloat lightIndex = dist.sampleDiscrete(sampler.nextFloat(), pdf);
 
-        return scene.lights[lightIndex];
+        return scene.m_Lights[lightIndex];
     }
 
     tkSpectrum miSampleLd(const SurfaceInteraction& ref, const Scene& scene,
