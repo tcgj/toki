@@ -236,7 +236,7 @@ namespace TK {
             using ms = std::chrono::duration<double, std::milli>;
 
             const auto before = clock::now();
-            integrator.render(scene);
+            // integrator.render(scene);
             const ms duration = clock::now() - before;
 
             std::cout << "Process took: " << duration.count() << "ms" << std::endl;
@@ -303,7 +303,7 @@ namespace TK {
         Scene scene(accel, lights);
 
         WhittedIntegrator integrator(3, camera, sampler);
-        integrator.render(scene);
+        // integrator.render(scene);
     }
 
     void RenderAPI::tokiRun() {}

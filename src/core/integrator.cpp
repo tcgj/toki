@@ -12,6 +12,7 @@
 #include "region/primitive.hpp"
 
 namespace TK {
+    /*
     void SamplerIntegrator::render(const Scene& scene) {
         preprocess(scene);
 
@@ -55,6 +56,7 @@ namespace TK {
         });
         camera->image->write();
     }
+    */
 
     tkSpectrum SamplerIntegrator::specularReflectedLi(const SurfaceInteraction& interaction,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
