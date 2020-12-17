@@ -28,7 +28,7 @@ namespace TK {
         li += interaction.Le();
 
         // Add contribution of lighting on surface point
-        for (const auto& light : scene.lights) {
+        for (const auto& light : scene.m_Lights) {
             // Ignore non-delta light source as whitted integrator does not handle
             // if (!light->isDelta())
             // continue;

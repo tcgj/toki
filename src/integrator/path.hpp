@@ -6,11 +6,10 @@
 namespace TK {
     enum LightSampleStrategy { POWER };
 
-    class PathTracingIntegrator : public SamplerIntegrator {
+    class PathTracingIntegrator : public Integrator {
     public:
-        PathTracingIntegrator(int maxDepth, std::shared_ptr<Camera> camera,
-                              std::shared_ptr<Sampler> sampler, LightSampleStrategy strategy = POWER)
-            : SamplerIntegrator(camera, sampler), maxDepth(maxDepth), strategy(strategy) {}
+        PathTracingIntegrator(int maxDepth, LightSampleStrategy strategy = POWER)
+            : maxDepth(maxDepth), strategy(strategy) {}
 
         void preprocess(const Scene& scene) override;
 

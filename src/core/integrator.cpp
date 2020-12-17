@@ -58,7 +58,7 @@ namespace TK {
     }
     */
 
-    tkSpectrum SamplerIntegrator::specularReflectedLi(const SurfaceInteraction& interaction,
+    tkSpectrum Integrator::specularReflectedLi(const SurfaceInteraction& interaction,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
                                                       int depth) const {
         Vec3f wo = interaction.wo;
@@ -73,7 +73,7 @@ namespace TK {
         return f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
-    tkSpectrum SamplerIntegrator::specularRefractedLi(const SurfaceInteraction& interaction,
+    tkSpectrum Integrator::specularRefractedLi(const SurfaceInteraction& interaction,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
                                                       int depth) const {
         // Not implemented yet

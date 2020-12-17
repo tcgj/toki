@@ -230,7 +230,7 @@ namespace TK {
         Scene scene(accel, lights);
 
         // WhittedIntegrator integrator(3, camera, sampler);
-        PathTracingIntegrator integrator(20, camera, sampler);
+        PathTracingIntegrator integrator(20);
         {
             using clock = std::chrono::system_clock;
             using ms = std::chrono::duration<double, std::milli>;
@@ -302,7 +302,7 @@ namespace TK {
         // Scene
         Scene scene(accel, lights);
 
-        WhittedIntegrator integrator(3, camera, sampler);
+        WhittedIntegrator integrator(3);
         // integrator.render(scene);
     }
 
