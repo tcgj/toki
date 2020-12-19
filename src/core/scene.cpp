@@ -28,4 +28,8 @@ namespace TK {
     Camera* Scene::getCamera() const {
         return m_Camera.get();
     }
+
+    Integrator* Scene::getIntegrator() const {
+        return m_Integrator.get();
+    }
 }  // namespace TK
