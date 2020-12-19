@@ -38,7 +38,7 @@ namespace TK {
     public:
         ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler);
 
-        static int getThreadID();
+        static int getThreadId();
 
         int getThreadCount() const;
 

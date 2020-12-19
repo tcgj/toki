@@ -3,6 +3,8 @@
 #include "task.hpp"
 
 namespace TK {
+    thread_local int ThreadPool::s_ThreadId;
+
     ThreadPool::ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler)
         : m_Scheduler(std::move(scheduler)) {
         int tc = threadCount < 0 ? std::max(1u, std::thread::hardware_concurrency()) : threadCount;
@@ -14,7 +16,7 @@ namespace TK {
         }
     }
 
-    int ThreadPool::getThreadID() {
+    int ThreadPool::getThreadId() {
         return s_ThreadId;
     }
 
@@ -31,6 +33,7 @@ namespace TK {
         for (auto& t : m_Threads) {
             t.join();
         }
+        m_Threads.clear();
     }
 
     void ThreadPool::workerLoop(int threadId) {
@@ -59,13 +62,16 @@ namespace TK {
 
         int id = task->getTaskId();
         m_TaskMap[id] = std::move(task);
+        m_TaskCount++;
         m_TaskQueue.push(m_TaskMap[id].get());
+        m_CondVar.notify_one();
     }
 
     void Scheduler::rescheduleTask(Task* task) {
         std::lock_guard<std::mutex> lock(m_Mutex);
 
         m_TaskQueue.push(task);
+        m_CondVar.notify_one();
     }
 
     Task* Scheduler::getNextTask() {
@@ -86,6 +92,7 @@ namespace TK {
         std::lock_guard<std::mutex> lock(m_Mutex);
 
         m_TaskMap.erase(task->getTaskId());
+        m_TaskCount--;
     }
 
     void Scheduler::done() {

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "toki.hpp"
+#include "thread.hpp"
+#include "logger.hpp"
 
 namespace TK {
     class TOKIContext {

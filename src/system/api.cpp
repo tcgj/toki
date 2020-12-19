@@ -1,7 +1,5 @@
 #include "api.hpp"
 
-#include "logger.hpp"
-
 // old
 #include "stream.hpp"
 #include "core/parallel.hpp"
