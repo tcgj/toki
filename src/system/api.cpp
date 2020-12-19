@@ -256,7 +256,7 @@ namespace TK {
             // integrator.render(scene);
             const ms duration = clock::now() - before;
 
-            std::cout << "Process took: " << duration.count() << "ms" << std::endl;
+            std::cout << "Process took: " << duration.count() << "ms\n";
         }
     }
 

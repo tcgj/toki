@@ -32,9 +32,9 @@ namespace TK {
         }
 
         // Pre-init
-        std::cout << "--toki--" << std::endl << "Copyright (c) 2020 tcgj" << std::endl;
+        std::cout << "--toki--\n\n" << "Copyright (c) 2020 tcgj\n";
 #ifdef TK_DEBUG_MODE
-        std::cout << "This build is currently running in debug mode" << std::endl;
+        std::cout << "This build is currently running in debug mode\n";
 #endif
 
         // Init
