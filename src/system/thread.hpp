@@ -26,8 +26,8 @@ namespace TK {
         void done();
 
     private:
-        bool m_Done;
-        int m_TaskCount;
+        bool m_Done = false;
+        int m_TaskCount = 0;
         std::mutex m_Mutex;
         std::condition_variable m_CondVar;
         std::unordered_map<int, std::unique_ptr<Task>> m_TaskMap;
@@ -36,13 +36,11 @@ namespace TK {
 
     class ThreadPool {
     public:
-        ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler, std::shared_ptr<Logger> logger);
+        ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler);
 
         static int getThreadID();
 
         int getThreadCount() const;
-
-        Logger* getLogger() const;
 
         void shutdown();
 
@@ -51,7 +49,6 @@ namespace TK {
 
         std::vector<std::thread> m_Threads;
         std::shared_ptr<Scheduler> m_Scheduler;
-        std::shared_ptr<Logger> m_Logger;
 
         static thread_local int s_ThreadId;
     };

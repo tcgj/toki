@@ -1,5 +1,8 @@
 #include "api.hpp"
 
+#include "logger.hpp"
+
+// old
 #include "stream.hpp"
 #include "core/parallel.hpp"
 
@@ -25,6 +28,8 @@
 #include "core/random.hpp"
 
 namespace TK {
+    std::unique_ptr<TOKIContext> g_Context = std::make_unique<TOKIContext>();
+
     // Options
     std::string RenderAPI::outFile;
     int RenderAPI::threadCount = -1;
@@ -40,8 +45,14 @@ namespace TK {
         threadCount = options.threadCount;
         fastRender = options.fastRender;
 
-        // Initialize any other systems
-        Parallel::initThreads(threadCount);
+        auto scheduler = std::make_shared<Scheduler>();
+        g_Context->setScheduler(scheduler);
+        g_Context->setThreadPool(std::make_unique<ThreadPool>(threadCount, scheduler));
+#ifdef TK_DEBUG_MODE
+        g_Context->setLogger(std::make_unique<Logger>(LEVEL_DEBUG));
+#else
+        g_Context->setLogger(std::make_unique<Logger>(LEVEL_INFO));
+#endif
     }
 
     void RenderAPI::tokiParse(std::string inputFile) {

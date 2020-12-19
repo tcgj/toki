@@ -3,9 +3,8 @@
 #include "task.hpp"
 
 namespace TK {
-    ThreadPool::ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler,
-                           std::shared_ptr<Logger> logger)
-        : m_Scheduler(std::move(scheduler)), m_Logger(std::move(logger)) {
+    ThreadPool::ThreadPool(int threadCount, std::shared_ptr<Scheduler> scheduler)
+        : m_Scheduler(std::move(scheduler)) {
         int tc = threadCount < 0 ? std::max(1u, std::thread::hardware_concurrency()) : threadCount;
 
         s_ThreadId = 0;
@@ -21,10 +20,6 @@ namespace TK {
 
     int ThreadPool::getThreadCount() const {
         return m_Threads.size();
-    }
-
-    Logger* ThreadPool::getLogger() const {
-        return m_Logger.get();
     }
 
     void ThreadPool::shutdown() {

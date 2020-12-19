@@ -34,6 +34,8 @@ namespace TK {
     class Appender;
     class Formatter;
     class Logger;
+    class Scheduler;
+    class ThreadPool;
     class Task;
 
 #ifdef TK_USE_DOUBLE
