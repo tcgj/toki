@@ -1,5 +1,7 @@
 #include "api.hpp"
 
+#include "appender.hpp"
+
 // old
 #include "stream.hpp"
 #include "core/parallel.hpp"
@@ -43,14 +45,20 @@ namespace TK {
         threadCount = options.threadCount;
         fastRender = options.fastRender;
 
+        // Setup multi-threading
         auto scheduler = std::make_shared<Scheduler>();
         g_Context->setScheduler(scheduler);
         g_Context->setThreadPool(std::make_unique<ThreadPool>(threadCount, scheduler));
+
+        // Setup logger
 #ifdef TK_DEBUG_MODE
         g_Context->setLogger(std::make_unique<Logger>(LEVEL_DEBUG));
 #else
         g_Context->setLogger(std::make_unique<Logger>(LEVEL_INFO));
 #endif
+        Logger* logger = g_Context->logger();
+        if (logger != nullptr)
+            logger->addAppender(std::make_shared<StreamAppender>(&std::cout));
     }
 
     void RenderAPI::tokiParse(std::string inputFile) {

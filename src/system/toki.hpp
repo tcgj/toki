@@ -18,6 +18,7 @@
 //#define TK_ENABLE_ASSERTS
 #include "error.hpp"
 #include "types.hpp"
+#include "logger.hpp"
 #include "math/math.hpp"
 #include "math/vec2.hpp"
 #include "math/vec3.hpp"

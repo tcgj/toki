@@ -1,14 +1,18 @@
 #pragma once
 
-#include "toki.hpp"
-#include "formatter.hpp"
+#define LOG(level, format, ...)           \
+    Logger* logger = g_Context->logger(); \
+    if (logger != nullptr)                \
+        logger->log(level, __FILE__, __LINE__, format, __VA_ARGS__);
 
 namespace TK {
-
-#define LOG(level, format, ...) {\
-    /* get logger for current thread*/ \
-    /* logger.log(level, __FILE__, __LINE__, format, __VA_ARGS__);*/ \
-}
+    enum LogLevel {
+        LEVEL_TRACE,
+        LEVEL_DEBUG,
+        LEVEL_INFO,
+        LEVEL_WARNING,
+        LEVEL_ERROR
+    };
 
     class Logger {
     public:

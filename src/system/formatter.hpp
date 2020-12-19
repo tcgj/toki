@@ -3,14 +3,6 @@
 #include "toki.hpp"
 
 namespace TK {
-    enum LogLevel {
-        LEVEL_TRACE,
-        LEVEL_DEBUG,
-        LEVEL_INFO,
-        LEVEL_WARNING,
-        LEVEL_ERROR
-    };
-
     class Formatter {
     public:
         virtual ~Formatter() {}

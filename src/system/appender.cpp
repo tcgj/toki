@@ -1,14 +1,18 @@
 #include "appender.hpp"
 
 namespace TK {
-    StreamAppender::StreamAppender(std::shared_ptr<std::ostream> s) : m_Stream(std::move(s)) {}
+    StreamAppender::StreamAppender(std::ostream* s) : m_Stream(s) {}
 
     void StreamAppender::append(const std::string& message) {
         (*m_Stream) << message << "\n";
     }
 
     FileAppender::FileAppender(const std::string& fileName) : m_FileName(fileName) {
-        m_Stream = std::make_shared<std::fstream>(fileName, std::fstream::out | std::fstream::trunc);
+        m_Stream = new std::fstream(fileName, std::fstream::out | std::fstream::trunc);
+    }
+
+    FileAppender::~FileAppender() {
+        delete m_Stream;
     }
 
     std::string FileAppender::getFileName() const {

@@ -12,19 +12,21 @@ namespace TK {
 
     class StreamAppender : public Appender {
     public:
-        StreamAppender(std::shared_ptr<std::ostream> s);
+        StreamAppender(std::ostream* s);
 
         void append(const std::string& message) override;
 
     protected:
         StreamAppender() = default;
 
-        std::shared_ptr<std::ostream> m_Stream;
+        std::ostream* m_Stream;
     };
 
     class FileAppender : public StreamAppender {
     public:
         FileAppender(const std::string& fileName);
+
+        ~FileAppender();
 
         std::string getFileName() const;
 

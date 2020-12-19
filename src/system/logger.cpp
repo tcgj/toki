@@ -1,6 +1,7 @@
-#include "logger.hpp"
+#include "toki.hpp"
 
 #include "appender.hpp"
+#include "formatter.hpp"
 
 namespace TK {
     Logger::Logger(LogLevel level) : m_Level(level), m_FatalLevel(LEVEL_ERROR) {}
