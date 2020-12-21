@@ -42,7 +42,8 @@ namespace TK
 
                 Ray ray;
                 camera->generateRay(sample, ray);
-                tkSpectrum li = integrator->Li(m_Scene, ray, *m_Sampler, 0);
+                tkSpectrum li = integrator->Li(m_Scene, ray, *m_Sampler);
+                camera->image->updatePixelColor(pix, li);
             }
         }
 
