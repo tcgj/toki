@@ -4,8 +4,12 @@
 #include "light.hpp"
 
 namespace TK {
-    Scene::Scene(std::shared_ptr<Region> region, const std::vector<std::shared_ptr<Light>>& lights)
-        : m_Region(region), m_Lights(lights) {
+    Scene::Scene(std::shared_ptr<Region> region, std::vector<std::shared_ptr<Light>> lights,
+                 std::shared_ptr<Camera> camera, std::shared_ptr<Integrator> integrator)
+        : m_Region(std::move(region)),
+          m_Lights(std::move(lights)),
+          m_Camera(std::move(camera)),
+          m_Integrator(std::move(integrator)) {
         m_WorldBB = region->worldBoundingBox();
         // TODO: handle light preprocessing outside constructor
         for (const auto& l : lights) {

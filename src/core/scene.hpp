@@ -6,7 +6,8 @@
 namespace TK {
     class Scene {
     public:
-        Scene(std::shared_ptr<Region> region, const std::vector<std::shared_ptr<Light>>& lights);
+        Scene(std::shared_ptr<Region> region, std::vector<std::shared_ptr<Light>> lights,
+              std::shared_ptr<Camera> camera, std::shared_ptr<Integrator> integrator);
 
         const AABBf& worldBoundingBox() const;
 
