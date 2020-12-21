@@ -1,5 +1,7 @@
 #include "formatter.hpp"
 
+#include "thread.hpp"
+
 namespace TK {
     std::unordered_map<LogLevel, std::string> Formatter::m_Prefix = { { LEVEL_TRACE, "TRACE" },
                                                                       { LEVEL_DEBUG, "DEBUG" },
@@ -10,7 +12,9 @@ namespace TK {
     std::string Formatter::format(LogLevel level, const char* file, int line,
                                   const char* message) const {
         std::ostringstream oss;
-        oss << "[ " << m_Prefix[level] << " ] THREAD=" << 1 // get actual thread number in future
+        ThreadPool* pool = g_Context.threadpool();
+        int id = pool != nullptr ? pool->getThreadId() : 0;
+        oss << "[ " << m_Prefix[level] << " ] THREAD=" << id
             << " at (" << file << ": " << line << "): "
             << message;
 

@@ -6,6 +6,7 @@ namespace TK {
     class Formatter {
     public:
         virtual ~Formatter() {}
+
         virtual std::string format(LogLevel level, const char* file, int line, const char* message) const;
 
     private:
