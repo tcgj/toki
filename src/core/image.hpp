@@ -25,5 +25,6 @@ namespace TK {
 
     protected:
         std::unique_ptr<tkSpectrum[]> pixels;
+        std::unique_ptr<int[]> numSamples;
     };
 }  // namespace TK
