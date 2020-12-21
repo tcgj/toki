@@ -40,9 +40,8 @@ namespace TK {
         // Init
         RenderAPI::configure(options);
         RenderAPI::parse(inputFile);
-
         // Run
-        RenderAPI::run();
+        RenderAPI::render();
 
         // Cleanup
         RenderAPI::shutdown();
