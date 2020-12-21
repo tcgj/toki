@@ -2,8 +2,12 @@
 
 #include <queue>
 
-#include "toki.hpp"
 #include "task.hpp"
+
+#define SCHEDULE_TASK(type, ...)           \
+    Scheduler* scheduler = g_Context.scheduler(); \
+    if (scheduler != nullptr)                \
+        scheduler->scheduleTask(std::make_unique<type>(__VA_ARGS__));
 
 namespace TK {
     class TaskComparator {

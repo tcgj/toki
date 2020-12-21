@@ -77,7 +77,7 @@ namespace TK {
     Task* Scheduler::getNextTask() {
         std::unique_lock<std::mutex> lock(m_Mutex);
 
-        if (m_TaskCount == 0)
+        if (m_TaskQueue.size() == 0)
             m_CondVar.wait(lock);
 
         if (m_Done)
@@ -96,6 +96,7 @@ namespace TK {
     }
 
     void Scheduler::done() {
+        while (m_TaskCount > 0) {}
         {
             std::lock_guard<std::mutex> lock(m_Mutex);
             m_Done = true;
