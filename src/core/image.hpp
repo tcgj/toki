@@ -8,6 +8,8 @@ namespace TK {
     public:
         Image(const Vec2i& res, const std::string& filename);
 
+        virtual ~Image() = default;
+
         tkFloat getAspectRatio() const;
 
         Vec3f getPixelColor(const Point2i& pixelCoord) const;

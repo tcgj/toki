@@ -26,6 +26,7 @@ namespace TK {
     class BSDF;
     class Material;
     class Camera;
+    class Image;
     class Scene;
     class Sampler;
     class Integrator;

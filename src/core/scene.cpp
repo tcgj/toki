@@ -12,7 +12,7 @@ namespace TK {
           m_Integrator(std::move(integrator)) {
         m_WorldBB = region->worldBoundingBox();
         // TODO: handle light preprocessing outside constructor
-        for (const auto& l : lights) {
+        for (const auto& l : m_Lights) {
             l->preprocess(*this);
         }
     }
