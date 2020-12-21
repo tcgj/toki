@@ -23,20 +23,20 @@ namespace TK
         return m_TaskId;
     }
 
-    RenderTask::RenderTask(const Scene& scene, std::unique_ptr<Sampler> sampler, const Point2i& origin,
-                           const Vec2i& tileSize, int numSamples)
+    RenderTask::RenderTask(const Scene& scene, std::unique_ptr<Sampler> sampler, const Point2i& minPt,
+                           const Point2i& maxPt, int numSamples)
         : Task(numSamples),
           m_Scene(scene),
           m_Sampler(std::move(sampler)),
-          m_Origin(origin),
-          m_TileSize(tileSize) {}
+          m_MinPt(minPt),
+          m_MaxPt(maxPt) {}
 
     TaskStatus RenderTask::execute() {
         Camera* camera = m_Scene.getCamera();
         Integrator* integrator = m_Scene.getIntegrator();
 
-        for (int y = m_Origin.y; y < m_TileSize.y; ++y) {
-            for (int x = m_Origin.x; x < m_TileSize.x; ++x) {
+        for (int y = m_MinPt.y; y < m_MaxPt.y; ++y) {
+            for (int x = m_MinPt.x; x < m_MaxPt.x; ++x) {
                 Point2i pix(x, y);
                 CameraSample sample = m_Sampler->getCameraSample(pix);
 

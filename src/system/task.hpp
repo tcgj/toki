@@ -32,14 +32,14 @@ namespace TK {
 
     class RenderTask : public Task {
     public:
-        RenderTask(const Scene& scene, std::unique_ptr<Sampler> sampler, const Point2i& origin,
-                   const Vec2i& tileSize, int numSamples);
+        RenderTask(const Scene& scene, std::unique_ptr<Sampler> sampler, const Point2i& minPt,
+                   const Point2i& maxPt, int numSamples);
 
         TaskStatus execute() override;
 
     private:
-        Point2i m_Origin;
-        Vec2i m_TileSize;
+        Point2i m_MinPt;
+        Point2i m_MaxPt;
         const Scene& m_Scene;
         std::unique_ptr<Sampler> m_Sampler;
     };
