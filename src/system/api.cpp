@@ -1,6 +1,7 @@
 #include "api.hpp"
 
 #include "appender.hpp"
+#include "formatter.hpp"
 
 // old
 #include "stream.hpp"
@@ -27,17 +28,12 @@
 #include "core/random.hpp"
 
 namespace TK {
-    TOKIContext g_Context;
+    void testScene();
 
     void RenderAPI::configure(const Options& options) {
         g_Context.m_Outfile = options.outfile;
         g_Context.m_ThreadCount = options.threadCount;
         g_Context.m_FastRender = options.fastRender;
-
-        // Setup multi-threading
-        auto scheduler = std::make_shared<Scheduler>();
-        g_Context.setScheduler(scheduler);
-        g_Context.setThreadPool(std::make_unique<ThreadPool>(g_Context.m_ThreadCount, scheduler));
 
         // Setup logger
 #ifdef TK_DEBUG_MODE
@@ -46,24 +42,33 @@ namespace TK {
         g_Context.setLogger(std::make_unique<Logger>(LEVEL_INFO));
 #endif
         Logger* logger = g_Context.logger();
-        if (logger != nullptr)
+        if (logger != nullptr) {
             logger->addAppender(std::make_shared<StreamAppender>(&std::cout));
+            logger->setFormatter(std::make_shared<Formatter>());
+        }
+
+        // Setup multi-threading
+        auto scheduler = std::make_shared<Scheduler>();
+        g_Context.setScheduler(scheduler);
+        g_Context.setThreadPool(std::make_unique<ThreadPool>(g_Context.m_ThreadCount, scheduler));
     }
 
     void RenderAPI::parse(std::string inputFile) {
         // TODO: Read required data from file
 
-        // testScene(resolution, m_Outfile);
+        // testScene();
+        // return;
 
         // Cornell Box
         Point3f eye(278, 273, -800);
         Point3f at(278, 273, 0);
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
-        PNGImage output(g_Context.m_Resolution, g_Context.m_Outfile);
-        auto camera =
-            std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
+
+        g_Context.setImage(std::make_unique<PNGImage>(g_Context.m_Resolution, g_Context.m_Outfile));
+        auto camera = std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f,
+                                                          g_Context.image());
         // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
-        auto sampler = std::make_shared<StratifiedSampler>(8, 8, 0);
+        g_Context.setSampler(std::make_unique<StratifiedSampler>(8, 8, 0));
 
         tkSpectrum whiteKd(tkSpectrum::fromRGB(Vec3f(0.75f, 0.75f, 0.75f)));
         auto matteWhite = std::make_shared<Matte>(whiteKd);
@@ -237,7 +242,7 @@ namespace TK {
         auto integrator = std::make_shared<PathTracingIntegrator>(20);
 
         // Scene
-        Scene scene(accel, lights, camera, integrator);
+        g_Context.setScene(std::make_unique<Scene>(accel, lights, camera, integrator));
         {
             using clock = std::chrono::system_clock;
             using ms = std::chrono::duration<double, std::milli>;
@@ -250,16 +255,16 @@ namespace TK {
         }
     }
 
-    void testScene(const Vec2i& resolution, std::string outfile) {
+    void testScene() {
         // Initialise camera
         Point3f eye(3.0f, 5.0f, 5.0f);
         Point3f at(0.0f, 2.0f, 0.0f);
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
-        PNGImage output(resolution, outfile);
+        g_Context.setImage(std::make_unique<PNGImage>(g_Context.m_Resolution, g_Context.m_Outfile));
         auto camera =
-            std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 60.0f, &output);
+            std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 60.0f, g_Context.image());
         // Set up sampler
-        auto sampler = std::make_shared<StratifiedSampler>(4, 4, 5);
+        g_Context.setSampler(std::make_unique<StratifiedSampler>(4, 4, 5));
 
         // Materials
         tkSpectrum greyKd(tkSpectrum::fromRGB(Vec3f(0.9f, 0.9f, 0.9f)));
@@ -309,16 +314,36 @@ namespace TK {
         auto integrator = std::make_shared<WhittedIntegrator>(3);
 
         // Scene
-        Scene scene(accel, lights, camera, integrator);
+        g_Context.setScene(std::make_unique<Scene>(accel, lights, camera, integrator));
 
         // integrator.render(scene);
     }
 
-    void RenderAPI::run() {}
+    void RenderAPI::render() {
+        int tileSize = g_Context.m_TileSize;
+        Vec2i res = g_Context.m_Resolution;
+        Vec2i numTiles((res.x + tileSize - 1) / tileSize, (res.y + tileSize - 1) / tileSize);
+        Scene& scene = *g_Context.scene();
+
+        scene.getIntegrator()->preprocess(scene);
+        for (int y = 0; y < numTiles.y; ++y) {
+            for (int x = 0; x < numTiles.x; ++x) {
+                // Calculate tile bounds
+                Point2i minPt(x * tileSize, y * tileSize);
+                Point2i maxPt(std::min(minPt.x + tileSize, res.x), std::min(minPt.y + tileSize, res.y));
+                SCHEDULE_TASK(RenderTask, scene, g_Context.getSamplerClone(), minPt, maxPt,
+                              g_Context.m_SamplesPerPixel);
+            }
+        }
+    }
 
     void RenderAPI::shutdown() {
         ThreadPool* pool = g_Context.threadpool();
         if (pool != nullptr)
             pool->shutdown();
+
+        Image* image = g_Context.image();
+        if (image != nullptr)
+            image->write();
     }
 }  // namespace TK
