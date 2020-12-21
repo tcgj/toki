@@ -10,7 +10,7 @@ namespace TK {
           m_Lights(std::move(lights)),
           m_Camera(std::move(camera)),
           m_Integrator(std::move(integrator)) {
-        m_WorldBB = region->worldBoundingBox();
+        m_WorldBB = m_Region->worldBoundingBox();
         // TODO: handle light preprocessing outside constructor
         for (const auto& l : m_Lights) {
             l->preprocess(*this);
