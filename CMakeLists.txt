@@ -46,7 +46,6 @@ set(TK_CORE_HEADER
     src/core/interaction.hpp
     src/core/light.hpp
     src/core/material.hpp
-    src/core/parallel.hpp
     src/core/random.hpp
     src/core/ray.hpp
     src/core/region.hpp
@@ -64,7 +63,6 @@ set(TK_CORE_SOURCE
     src/core/integrator.cpp
     src/core/interaction.cpp
     src/core/light.cpp
-    src/core/parallel.cpp
     src/core/random.cpp
     src/core/scene.cpp
     src/core/shape.cpp

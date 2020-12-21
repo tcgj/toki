@@ -5,6 +5,25 @@
 #include "logger.hpp"
 
 namespace TK {
+    struct Options {
+        std::string outfile;
+        int threadCount = 0;
+        bool fastRender = false;
+    };
+
+    namespace RenderAPI {
+        void configure(const Options& options);
+
+        void parse(std::string inputFile);
+
+        void run();
+
+        void shutdown();
+    }  // namespace RenderAPI
+
+    // Serializing API
+
+    // Context Object
     class TOKIContext {
     public:
         Scheduler* scheduler() const {
@@ -31,42 +50,22 @@ namespace TK {
             m_Logger = std::move(logger);
         }
 
+        // Options
+        std::string m_Outfile;
+        int m_ThreadCount = 0;
+        bool m_FastRender = false;
+
+        // Render Settings
+        int m_TileSize = 16;
+        int m_SamplesPerPixel = 16;
+        Vec2i m_Resolution = { 800, 800 };
+
     private:
         std::shared_ptr<Scheduler> m_Scheduler;
         std::unique_ptr<ThreadPool> m_ThreadPool;
         std::unique_ptr<Logger> m_Logger;
     };
 
-    struct Options {
-        std::string outFile;
-        int threadCount = -1;
-        bool fastRender = false;
-    };
-
-    class RenderAPI {
-    public:
-        static void tokiConfigure(const Options& options);
-
-        static void tokiParse(std::string inputFile);
-
-        static void tokiRun();
-
-        static void tokiShutdown();
-
-    private:
-        // Options
-        static std::string outFile;
-        static int threadCount;
-        static bool fastRender;
-
-        // Render Settings
-        static int tileSize;
-        static int samplesPerPixel;
-        static Vec2i resolution;
-    };
-
-    // Serializing API
-
-    // Global variables
-    extern std::unique_ptr<TOKIContext> g_Context;
+    // Global context
+    extern TOKIContext g_Context;
 }  // namespace TK

@@ -23,7 +23,7 @@ namespace TK {
                 i++;
                 if (i == argc)
                     printUsage("missing filename after -o");
-                options.outFile = argv[i];
+                options.outfile = argv[i];
             } else if (strcmp(str, "-f")) {
                 options.fastRender = true;
             } else {
@@ -38,14 +38,14 @@ namespace TK {
 #endif
 
         // Init
-        RenderAPI::tokiConfigure(options);
-        RenderAPI::tokiParse(inputFile);
+        RenderAPI::configure(options);
+        RenderAPI::parse(inputFile);
 
         // Run
-        RenderAPI::tokiRun();
+        RenderAPI::run();
 
         // Cleanup
-        RenderAPI::tokiShutdown();
+        RenderAPI::shutdown();
         return 0;
     }
 }  // namespace TK

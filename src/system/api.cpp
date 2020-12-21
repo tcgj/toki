@@ -4,7 +4,6 @@
 
 // old
 #include "stream.hpp"
-#include "core/parallel.hpp"
 
 // temp
 #include "shape/mesh.hpp"
@@ -28,49 +27,39 @@
 #include "core/random.hpp"
 
 namespace TK {
-    std::unique_ptr<TOKIContext> g_Context = std::make_unique<TOKIContext>();
+    TOKIContext g_Context;
 
-    // Options
-    std::string RenderAPI::outFile;
-    int RenderAPI::threadCount = -1;
-    bool RenderAPI::fastRender = false;
-
-    // Render Settings
-    int RenderAPI::tileSize = 16;
-    int RenderAPI::samplesPerPixel = 16;
-    Vec2i RenderAPI::resolution = { 800, 800 };
-
-    void RenderAPI::tokiConfigure(const Options& options) {
-        outFile = options.outFile;
-        threadCount = options.threadCount;
-        fastRender = options.fastRender;
+    void RenderAPI::configure(const Options& options) {
+        g_Context.m_Outfile = options.outfile;
+        g_Context.m_ThreadCount = options.threadCount;
+        g_Context.m_FastRender = options.fastRender;
 
         // Setup multi-threading
         auto scheduler = std::make_shared<Scheduler>();
-        g_Context->setScheduler(scheduler);
-        g_Context->setThreadPool(std::make_unique<ThreadPool>(threadCount, scheduler));
+        g_Context.setScheduler(scheduler);
+        g_Context.setThreadPool(std::make_unique<ThreadPool>(g_Context.m_ThreadCount, scheduler));
 
         // Setup logger
 #ifdef TK_DEBUG_MODE
-        g_Context->setLogger(std::make_unique<Logger>(LEVEL_DEBUG));
+        g_Context.setLogger(std::make_unique<Logger>(LEVEL_DEBUG));
 #else
-        g_Context->setLogger(std::make_unique<Logger>(LEVEL_INFO));
+        g_Context.setLogger(std::make_unique<Logger>(LEVEL_INFO));
 #endif
-        Logger* logger = g_Context->logger();
+        Logger* logger = g_Context.logger();
         if (logger != nullptr)
             logger->addAppender(std::make_shared<StreamAppender>(&std::cout));
     }
 
-    void RenderAPI::tokiParse(std::string inputFile) {
+    void RenderAPI::parse(std::string inputFile) {
         // TODO: Read required data from file
 
-        // testScene(resolution, outFile);
+        // testScene(resolution, m_Outfile);
 
         // Cornell Box
         Point3f eye(278, 273, -800);
         Point3f at(278, 273, 0);
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
-        PNGImage output(resolution, outFile);
+        PNGImage output(g_Context.m_Resolution, g_Context.m_Outfile);
         auto camera =
             std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f, &output);
         // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
@@ -243,11 +232,12 @@ namespace TK {
         // auto accel = std::make_shared<Iterator>(prims, AABBf(Point3f(0), Point3f(560, 560, -560)));
         auto accel = std::make_shared<BVH>(prims);
 
-        // Scene
-        Scene scene(accel, lights);
 
         // WhittedIntegrator integrator(3, camera, sampler);
-        PathTracingIntegrator integrator(20);
+        auto integrator = std::make_shared<PathTracingIntegrator>(20);
+
+        // Scene
+        Scene scene(accel, lights, camera, integrator);
         {
             using clock = std::chrono::system_clock;
             using ms = std::chrono::duration<double, std::milli>;
@@ -260,12 +250,12 @@ namespace TK {
         }
     }
 
-    void testScene(const Vec2i& resolution, std::string outFile) {
+    void testScene(const Vec2i& resolution, std::string outfile) {
         // Initialise camera
         Point3f eye(3.0f, 5.0f, 5.0f);
         Point3f at(0.0f, 2.0f, 0.0f);
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
-        PNGImage output(resolution, outFile);
+        PNGImage output(resolution, outfile);
         auto camera =
             std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 60.0f, &output);
         // Set up sampler
@@ -316,16 +306,19 @@ namespace TK {
         // Accel Structure
         auto accel = std::make_shared<BVH>(prims);
 
-        // Scene
-        Scene scene(accel, lights);
+        auto integrator = std::make_shared<WhittedIntegrator>(3);
 
-        WhittedIntegrator integrator(3);
+        // Scene
+        Scene scene(accel, lights, camera, integrator);
+
         // integrator.render(scene);
     }
 
-    void RenderAPI::tokiRun() {}
+    void RenderAPI::run() {}
 
-    void RenderAPI::tokiShutdown() {
-        Parallel::cleanupThreads();
+    void RenderAPI::shutdown() {
+        ThreadPool* pool = g_Context.threadpool();
+        if (pool != nullptr)
+            pool->shutdown();
     }
 }  // namespace TK

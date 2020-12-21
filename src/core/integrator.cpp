@@ -6,7 +6,6 @@
 #include "bsdf.hpp"
 #include "spectrum.hpp"
 #include "sampler.hpp"
-#include "parallel.hpp"
 #include "random.hpp"
 #include "scene.hpp"
 #include "region/primitive.hpp"

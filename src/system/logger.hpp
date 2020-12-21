@@ -1,7 +1,7 @@
 #pragma once
 
 #define LOG(level, format, ...)           \
-    Logger* logger = g_Context->logger(); \
+    Logger* logger = g_Context.logger(); \
     if (logger != nullptr)                \
         logger->log(level, __FILE__, __LINE__, format, __VA_ARGS__);
 
