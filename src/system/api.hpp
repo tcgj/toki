@@ -7,7 +7,7 @@
 namespace TK {
     struct Options {
         std::string outfile;
-        int threadCount = 0;
+        int threadCount = -1;
         bool fastRender = false;
     };
 
