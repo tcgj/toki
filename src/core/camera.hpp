@@ -14,15 +14,15 @@ namespace TK {
     class Camera {
     public:
         Camera(const Transform& cameraToWorld /*, const Medium *medium*/, Image* image)
-            : cameraToWorld(cameraToWorld) /*, medium(medium)*/, image(image) {}
+            : m_CameraToWorld(cameraToWorld) /*, m_Medium(medium)*/, m_Image(image) {}
 
         virtual ~Camera() = default;
 
         virtual tkFloat generateRay(const CameraSample& sample, Ray& r) const = 0;
 
-        Transform cameraToWorld;
-        Image* image;
-        // const Medium *medium;
+        Transform m_CameraToWorld;
+        Image* m_Image;
+        // const Medium* m_Medium;
     };
 
     class ProjectionCamera : public Camera {
@@ -31,16 +31,16 @@ namespace TK {
                          tkFloat focalLength
                          /*, const Medium *medium*/,
                          Image* image)
-            : Camera(cameraToWorld /*, medium*/, image), lensRadius(lensRadius), focalLength(focalLength) {
+            : Camera(cameraToWorld /*, medium*/, image), m_LensRadius(lensRadius), m_FocalLength(focalLength) {
             // image space has boundaries from (0, 0) to (res.x, res.y)
             Transform imageToNDC = translate(Vec3f(-1, -1, 0)) * scale((tkFloat)2 / image->m_Resolution.x,
                                                                          (tkFloat)2 / image->m_Resolution.y, 1);
-            imageToCamera = inverse(cameraToNDC) * imageToNDC;
+            m_ImageToCamera = inverse(cameraToNDC) * imageToNDC;
         }
 
         // protected:
-        Transform imageToCamera;
-        tkFloat lensRadius;
-        tkFloat focalLength;
+        Transform m_ImageToCamera;
+        tkFloat m_LensRadius;
+        tkFloat m_FocalLength;
     };
 }  // namespace TK
