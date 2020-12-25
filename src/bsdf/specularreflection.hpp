@@ -7,7 +7,7 @@ namespace TK {
     class SpecularReflection : public BxDF {
     public:
         SpecularReflection(const tkSpectrum& dhr, Fresnel* fresnel)
-            : BxDF(BxDFType(BXDF_REFLECTIVE | BXDF_SPECULAR)), dhr(dhr), fresnel(fresnel) {}
+            : BxDF(BxDFType(BXDF_REFLECTIVE | BXDF_SPECULAR)), m_Dhr(dhr), m_Fresnel(fresnel) {}
 
         tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const override;
 
@@ -16,7 +16,7 @@ namespace TK {
         tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const override;
 
     private:
-        tkSpectrum dhr;  // directional-hemispherical reflectance
-        Fresnel* fresnel = nullptr;
+        tkSpectrum m_Dhr;  // directional-hemispherical reflectance
+        Fresnel* m_Fresnel;
     };
 }  // namespace TK

@@ -2,6 +2,6 @@
 
 namespace TK {
     tkSpectrum Lambert::evaluate(const Vec3f& wo, const Vec3f& wi) const {
-        return dhr * TK_INVPI;
+        return m_Dhr * TK_INVPI;
     }
 }  // namespace TK

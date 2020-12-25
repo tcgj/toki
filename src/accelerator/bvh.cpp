@@ -20,7 +20,7 @@ namespace TK {
             return;
         // Initialise array to maximum number of nodes required
         // which is 2n - 1 nodes assuming 1 primitive per leaf node
-        nodes = std::make_unique<Node[]>(2 * pCount - 1);
+        m_Nodes = std::make_unique<Node[]>(2 * pCount - 1);
 
         std::vector<PrimitiveUnit> pSet;
         for (int64_t i = 0; i < pCount; ++i) {
@@ -39,12 +39,12 @@ namespace TK {
         for (int64_t i = 0; i < pCount; ++i) {
             pSorted.push_back(primitiveList[pSet[i].index]);
         }
-        primitives.swap(pSorted);
+        m_Primitives.swap(pSorted);
         pSet.clear();
     }
 
     AABBf BVH::worldBoundingBox() const {
-        return nodes != nullptr ? nodes[0].bb : AABBf();
+        return m_Nodes != nullptr ? m_Nodes[0].bb : AABBf();
     }
 
     // Traverse the BVH until intersection with a primitive
@@ -69,29 +69,29 @@ namespace TK {
         int64_t curr;
         while (sp >= 0) {
             curr = stack[sp--];
-            if (!nodes[curr].bb.hasIntersect(r, invD, dirNegative)) {
+            if (!m_Nodes[curr].bb.hasIntersect(r, invD, dirNegative)) {
                 continue;
             }
             // Intersected bounding box, check if leaf/interior
-            if (nodes[curr].count > 0) {
+            if (m_Nodes[curr].count > 0) {
                 if (interaction != nullptr) {
-                    for (int64_t i = 0; i < nodes[curr].count; ++i) {
-                        if (primitives[nodes[curr].offset + i]->intersect(r, interaction))
+                    for (int64_t i = 0; i < m_Nodes[curr].count; ++i) {
+                        if (m_Primitives[m_Nodes[curr].offset + i]->intersect(r, interaction))
                             hit = true;
                     }
                 } else {
-                    for (int64_t i = 0; i < nodes[curr].count; ++i) {
-                        if (primitives[nodes[curr].offset + i]->hasIntersect(r))
+                    for (int64_t i = 0; i < m_Nodes[curr].count; ++i) {
+                        if (m_Primitives[m_Nodes[curr].offset + i]->hasIntersect(r))
                             return true;
                     }
                 }
             } else {
-                if (dirNegative[nodes[curr].axis]) {
-                    stack[++sp] = nodes[curr].left;
-                    stack[++sp] = nodes[curr].right;
+                if (dirNegative[m_Nodes[curr].axis]) {
+                    stack[++sp] = m_Nodes[curr].left;
+                    stack[++sp] = m_Nodes[curr].right;
                 } else {
-                    stack[++sp] = nodes[curr].right;
-                    stack[++sp] = nodes[curr].left;
+                    stack[++sp] = m_Nodes[curr].right;
+                    stack[++sp] = m_Nodes[curr].left;
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace TK {
 
         /* Make leaf node since no subdivision required */
         if (count == 1) {
-            nodes[nodeIndex].makeLeaf(pSet[start].bb, count, start);
+            m_Nodes[nodeIndex].makeLeaf(pSet[start].bb, count, start);
             return;
         }
 
@@ -128,8 +128,8 @@ namespace TK {
         int axis = centroidBB.maxExtent();
         // Centroids are almost at the same point, make leaf node
         // since subdivision unlikely to improve efficiency
-        if (centroidBB.maxPt[axis] - centroidBB.minPt[axis] < TK_EPSILON) {
-            nodes[nodeIndex].makeLeaf(bb, count, start);
+        if (centroidBB.m_Max[axis] - centroidBB.m_Min[axis] < TK_EPSILON) {
+            m_Nodes[nodeIndex].makeLeaf(bb, count, start);
             return;
         }
 
@@ -137,7 +137,7 @@ namespace TK {
         SAHBin bins[binCount];
         tkFloat axisWidth = centroidBB.diagonal()[axis];
         tkFloat k1 = binCount * (1 - TK_EPSILON) / axisWidth;
-        tkFloat k0 = centroidBB.minPt[axis];
+        tkFloat k0 = centroidBB.m_Min[axis];
         for (int64_t i = start; i < end; ++i) {
             // Map primitive to bin index
             int binIndex = k1 * (pSet[i].centroid[axis] - k0);
@@ -176,7 +176,7 @@ namespace TK {
         /* Termination criteria met, make leaf node */
         tkFloat noSplitCost = count * bb.surfaceArea();
         if (minCost > noSplitCost || count < maxPCount) {
-            nodes[nodeIndex].makeLeaf(bb, count, start);
+            m_Nodes[nodeIndex].makeLeaf(bb, count, start);
             return;
         }
 
@@ -184,7 +184,7 @@ namespace TK {
         int64_t maxNodesLeft = 2 * lPart[minCostPart].count - 1;
         int64_t left = nodeIndex + 1;
         int64_t right = left + maxNodesLeft;
-        nodes[nodeIndex].makeInner(bb, left, right, axis);
+        m_Nodes[nodeIndex].makeInner(bb, left, right, axis);
         PrimitiveUnit* midPtr = std::partition(&pSet[start], &pSet[end - 1] + 1, [=](const PrimitiveUnit& p) {
             int binIndex = k1 * (p.centroid[axis] - k0);
             return binIndex <= minCostPart;

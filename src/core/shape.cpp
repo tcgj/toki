@@ -2,7 +2,7 @@
 
 namespace TK {
     AABBf Shape::worldBoundingBox() const {
-        return (*objectToWorld)(objectBoundingBox());
+        return (*m_ObjectToWorld)(objectBoundingBox());
     }
 
     // Default inefficient intersection test

@@ -37,7 +37,7 @@ namespace TK {
         // Render Options
         int m_TileSize = 16;
         int m_SamplesPerPixel = 8;
-        Vec2i m_Resolution = { 400, 400 };
+        Vec2i m_Resolution = { 800, 800 };
 
     private:
         // System Context

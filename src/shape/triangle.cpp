@@ -10,17 +10,17 @@ namespace TK {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
 
-        return bbUnion(AABBf(objectToWorld->applyInverse(v0.p), objectToWorld->applyInverse(v1.p)),
-                       objectToWorld->applyInverse(v2.p));
+        return bbUnion(AABBf(m_ObjectToWorld->applyInverse(v0.p), m_ObjectToWorld->applyInverse(v1.p)),
+                       m_ObjectToWorld->applyInverse(v2.p));
     }
 
     AABBf Triangle::worldBoundingBox() const {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
         return bbUnion(AABBf(v0.p, v1.p), v2.p);
     }
 
@@ -28,7 +28,7 @@ namespace TK {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
 
         Vec3f v01 = v1.p - v0.p;
         Vec3f v02 = v2.p - v0.p;
@@ -42,7 +42,7 @@ namespace TK {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
 
         Vec3f e1 = v1.p - v0.p;
         Vec3f e2 = v2.p - v0.p;
@@ -87,7 +87,7 @@ namespace TK {
 
         *tHit = tempT;
         interaction->p = v0.p * (1 - u - v) + v1.p * u + v2.p * v;
-        interaction->n = invertNormals ? -normal : normal;
+        interaction->n = m_InvertNormals ? -normal : normal;
         interaction->dpdu = tangent;
         interaction->dpdv = bitangent;
         interaction->wo = -r.d;
@@ -99,7 +99,7 @@ namespace TK {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
 
         Vec3f e1 = v1.p - v0.p;
         Vec3f e2 = v2.p - v0.p;
@@ -136,16 +136,16 @@ namespace TK {
         Vertex v0;
         Vertex v1;
         Vertex v2;
-        mesh->getTriVertices(triIndex, &v0, &v1, &v2);
+        m_Mesh->getTriVertices(m_TriIndex, &v0, &v1, &v2);
         Vec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
         ret.p = bCoord.x * v0.p + bCoord.y * v1.p + bCoordZ * v2.p;
-        if (mesh->normalBuffer != nullptr)
+        if (m_Mesh->m_NormalBuffer != nullptr)
             ret.n = bCoord.x * v0.n + bCoord.y * v1.n + bCoordZ * v2.n;
         else
             ret.n = normalize(cross(v1.p - v0.p, v2.p - v0.p));
-        if (invertNormals)
+        if (m_InvertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);
         *pdf = getPdf(ref, ret);

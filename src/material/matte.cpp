@@ -5,7 +5,7 @@
 
 namespace TK {
     void Matte::computeScattering(BSDF* bsdf) const {
-        if (!kd.isBlack())
-            bsdf->addContribution(new Lambert(kd));
+        if (!m_Kd.isBlack())
+            bsdf->addContribution(new Lambert(m_Kd));
     }
 }  // namespace TK

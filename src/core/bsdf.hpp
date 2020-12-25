@@ -26,10 +26,10 @@ namespace TK {
     private:
         static constexpr int MAX_BXDF_COUNT = 8;
 
-        int numBxdf = 0;
-        BxDF* bxdfs[MAX_BXDF_COUNT];
-        Vec3f n;
-        Vec3f t;
-        Vec3f bt;
+        int m_NumBxdf = 0;
+        BxDF* m_Bxdfs[MAX_BXDF_COUNT];
+        Vec3f m_N;
+        Vec3f m_T;
+        Vec3f m_Bt;
     };
 }  // namespace TK

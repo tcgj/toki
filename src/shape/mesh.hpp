@@ -15,11 +15,11 @@ namespace TK {
 
         bool getTriVertices(int64_t index, Vertex* v0, Vertex* v1, Vertex* v2) const;
 
-        int64_t numTri;
-        int64_t numVert;
-        std::vector<int64_t> indexBuffer;  // std::vector to allow for easy triangle inversion
-        std::unique_ptr<Point3f[]> vertexBuffer;
-        std::unique_ptr<Vec3f[]> normalBuffer;
-        std::unique_ptr<Point2f[]> uvBuffer;
+        int64_t m_NumTri;
+        int64_t m_NumVert;
+        std::vector<int64_t> m_IndexBuffer;  // std::vector to allow for easy triangle inversion
+        std::unique_ptr<Point3f[]> m_VertexBuffer;
+        std::unique_ptr<Vec3f[]> m_NormalBuffer;
+        std::unique_ptr<Point2f[]> m_UvBuffer;
     };
 }  // namespace TK

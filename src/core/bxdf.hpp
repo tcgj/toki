@@ -14,7 +14,7 @@ namespace TK {
 
     class BxDF {
     public:
-        BxDF(BxDFType type) : type(type) {}
+        BxDF(BxDFType type) : m_Type(type) {}
 
         virtual ~BxDF() = default;
 
@@ -26,6 +26,6 @@ namespace TK {
 
         virtual tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const;
 
-        BxDFType type;
+        BxDFType m_Type;
     };
 }  // namespace TK

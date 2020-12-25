@@ -7,7 +7,7 @@
 
 namespace TK {
     bool BxDF::matchesType(BxDFType t) const {
-        return (t & type) == type;
+        return (t & m_Type) == m_Type;
     }
 
     tkSpectrum BxDF::sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp, tkFloat* pdf) const {

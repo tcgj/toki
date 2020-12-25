@@ -7,7 +7,7 @@ namespace TK {
     public:
         Triangle(const Transform* objectToWorld, const std::shared_ptr<Mesh>& mesh, int64_t triIndex,
                  bool invertNormals = false)
-            : Shape(objectToWorld, invertNormals), mesh(mesh), triIndex(triIndex) {}
+            : Shape(objectToWorld, invertNormals), m_Mesh(mesh), m_TriIndex(triIndex) {}
 
         AABBf objectBoundingBox() const override;
 
@@ -22,7 +22,7 @@ namespace TK {
         SurfaceInteraction sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const override;
 
     private:
-        std::shared_ptr<Mesh> mesh;
-        int64_t triIndex;
+        std::shared_ptr<Mesh> m_Mesh;
+        int64_t m_TriIndex;
     };
 }  // namespace TK

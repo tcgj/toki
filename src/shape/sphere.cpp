@@ -5,19 +5,19 @@
 
 namespace TK {
     AABBf Sphere::objectBoundingBox() const {
-        return AABBf(Point3f(-radius), Point3f(radius));
+        return AABBf(Point3f(-m_Radius), Point3f(m_Radius));
     }
 
     tkFloat Sphere::surfaceArea() const {
-        return 4 * TK_PI * radius * radius;
+        return 4 * TK_PI * m_Radius * m_Radius;
     }
 
     bool Sphere::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
-        Ray oRay = objectToWorld->applyInverse(r);
+        Ray oRay = m_ObjectToWorld->applyInverse(r);
         Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
-        tkFloat c = dot(r0, r0) - radius * radius;
+        tkFloat c = dot(r0, r0) - m_Radius * m_Radius;
 
         tkFloat t0;
         tkFloat t1;
@@ -31,10 +31,10 @@ namespace TK {
         *tHit = t0;
         Vec3f normal = Vec3f(oRay(*tHit));
         Vec3f tangent = cross(Vec3f(0, 0, 1), normal);
-        normal = (*objectToWorld)(normal, true);
-        tangent = (*objectToWorld)(tangent);
+        normal = (*m_ObjectToWorld)(normal, true);
+        tangent = (*m_ObjectToWorld)(tangent);
         interaction->p = r(*tHit);
-        interaction->n = normalize(invertNormals ? -normal : normal);
+        interaction->n = normalize(m_InvertNormals ? -normal : normal);
         interaction->dpdu = normalize(tangent);
         interaction->wo = -r.d;
         interaction->shape = this;
@@ -42,11 +42,11 @@ namespace TK {
     }
 
     bool Sphere::hasIntersect(const Ray& r) const {
-        Ray oRay = objectToWorld->applyInverse(r);
+        Ray oRay = m_ObjectToWorld->applyInverse(r);
         Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
-        tkFloat c = dot(r0, r0) - radius * radius;
+        tkFloat c = dot(r0, r0) - m_Radius * m_Radius;
 
         tkFloat t0;
         tkFloat t1;
@@ -59,7 +59,7 @@ namespace TK {
     }
 
     SurfaceInteraction Sphere::sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const {
-        Point3f center = (*objectToWorld)(Point3f::zero);
+        Point3f center = (*m_ObjectToWorld)(Point3f::zero);
         Vec3f centerToRef = ref.p - center;
         Vec3f z = normalize(centerToRef);
         Vec3f x;
@@ -68,14 +68,14 @@ namespace TK {
         SurfaceInteraction ret;
 
         tkFloat sqrDist = centerToRef.squaredMagnitude();
-        tkFloat sqrRadius = radius * radius;
+        tkFloat sqrRadius = m_Radius * m_Radius;
 
         // Check if ref is within sphere
         if (sqrDist <= sqrRadius) {
-            Vec3f n = radius * uniformSphereSample(samp[0], samp[1]);
-            ret.n = (*objectToWorld)(n, true);
-            ret.p = (*objectToWorld)(Point3f(n));
-            if (invertNormals)
+            Vec3f n = m_Radius * uniformSphereSample(samp[0], samp[1]);
+            ret.n = (*m_ObjectToWorld)(n, true);
+            ret.p = (*m_ObjectToWorld)(Point3f(n));
+            if (m_InvertNormals)
                 ret.n = -ret.n;
             ret.wo = normalize(ref.p - ret.p);
             *pdf = Shape::getPdf(ref, ret);
@@ -94,12 +94,12 @@ namespace TK {
         tkFloat sampleDist = dist * cosTheta - std::sqrt(sqrRadius - sqrDist * sinSqrTheta);
 
         // Find sample point perp-dist from z-axis(sinA) and z-value(cosA) in sphere frame
-        tkFloat cosA = (sqrDist + sqrRadius - sampleDist * sampleDist) / (2 * dist * radius);
+        tkFloat cosA = (sqrDist + sqrRadius - sampleDist * sampleDist) / (2 * dist * m_Radius);
         tkFloat sinA = std::sqrt(clamp(1 - cosA * cosA, 0, 1));
 
         ret.n = polarToVec3(sinA, cosA, phi, x, y, z);
-        ret.p = center + ret.n * radius;
-        if (invertNormals)
+        ret.p = center + ret.n * m_Radius;
+        if (m_InvertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);
         *pdf = uniformConePdf(cosMaxTheta);
@@ -107,8 +107,8 @@ namespace TK {
     }
 
     tkFloat Sphere::getPdf(const Interaction& ref, const Vec3f& wi) const {
-        Point3f center = (*objectToWorld)(Point3f::zero);
-        tkFloat sqrRadius = radius * radius;
+        Point3f center = (*m_ObjectToWorld)(Point3f::zero);
+        tkFloat sqrRadius = m_Radius * m_Radius;
         tkFloat sqrDist = squaredDistance(ref.p, center);
         if (sqrDist <= sqrRadius)
             return Shape::getPdf(ref, wi);

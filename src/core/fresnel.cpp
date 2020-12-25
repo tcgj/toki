@@ -34,11 +34,11 @@ namespace TK {
     }
 
     tkSpectrum ConductorFresnel::evaluate(tkFloat cosI) const {
-        return conductorFresnel(cosI, eta, etaK);
+        return conductorFresnel(cosI, m_Eta, m_EtaK);
     }
 
     tkSpectrum DielectricFresnel::evaluate(tkFloat cosI) const {
-        return dielectricFresnel(cosI, etaA, etaB);
+        return dielectricFresnel(cosI, m_EtaA, m_EtaB);
     }
 
     tkSpectrum NoOpFresnel::evaluate(tkFloat cosI) const {

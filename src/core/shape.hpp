@@ -9,7 +9,7 @@ namespace TK {
     class Shape {
     public:
         Shape(const Transform* objectToWorld, bool invertNormals = false)
-            : objectToWorld(objectToWorld), invertNormals(invertNormals) {}
+            : m_ObjectToWorld(objectToWorld), m_InvertNormals(invertNormals) {}
 
         virtual ~Shape() = default;
 
@@ -32,7 +32,7 @@ namespace TK {
         virtual tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const;
 
     protected:
-        const Transform* objectToWorld = nullptr;
-        bool invertNormals;
+        const Transform* m_ObjectToWorld = nullptr;
+        bool m_InvertNormals;
     };
 }  // namespace TK

@@ -6,20 +6,20 @@
 
 namespace TK {
     BSDF::~BSDF() {
-        for (int i = 0; i < numBxdf; ++i) {
-            delete bxdfs[i];
+        for (int i = 0; i < m_NumBxdf; ++i) {
+            delete m_Bxdfs[i];
         }
     }
 
     void BSDF::initialize(const SurfaceInteraction& interaction) {
-        n = interaction.n;
-        t = interaction.dpdu;
-        bt = normalize(cross(n, t));
+        m_N = interaction.n;
+        m_T = interaction.dpdu;
+        m_Bt = normalize(cross(m_N, m_T));
     }
 
     bool bxdfIsApplicable(BxDF* bxdf, bool sameHemisphere, BxDFType type) {
-        return bxdf->matchesType(type) && ((sameHemisphere && (bxdf->type & BXDF_REFLECTIVE)) ||
-                                           (!sameHemisphere && (bxdf->type & BXDF_TRANSMISSIVE)));
+        return bxdf->matchesType(type) && ((sameHemisphere && (bxdf->m_Type & BXDF_REFLECTIVE)) ||
+                                           (!sameHemisphere && (bxdf->m_Type & BXDF_TRANSMISSIVE)));
     }
 
     tkSpectrum BSDF::evaluate(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type) const {
@@ -27,9 +27,9 @@ namespace TK {
         Vec3f wi = worldToLocal(worldWi);
         tkSpectrum ret;
         bool sameSide = isSameHemisphere(wo, wi);
-        for (int i = 0; i < numBxdf; ++i) {
-            if (bxdfIsApplicable(bxdfs[i], sameSide, type))
-                ret += bxdfs[i]->evaluate(wo, wi);
+        for (int i = 0; i < m_NumBxdf; ++i) {
+            if (bxdfIsApplicable(m_Bxdfs[i], sameSide, type))
+                ret += m_Bxdfs[i]->evaluate(wo, wi);
         }
         return ret;
     }
@@ -39,9 +39,9 @@ namespace TK {
         std::vector<BxDF*> matching;
         *pdf = 0;
         // Collect bxdfs that match the type criteria
-        for (int i = 0; i < numBxdf; ++i) {
-            if (bxdfs[i]->matchesType(type))
-                matching.push_back(bxdfs[i]);
+        for (int i = 0; i < m_NumBxdf; ++i) {
+            if (m_Bxdfs[i]->matchesType(type))
+                matching.push_back(m_Bxdfs[i]);
         }
         int size = matching.size();
         if (size == 0)
@@ -61,17 +61,17 @@ namespace TK {
 
         *worldWi = localToWorld(wi);
         if (sampledType != nullptr)
-            *sampledType = sampleBxDF->type;
+            *sampledType = sampleBxDF->m_Type;
 
         // Compute pdf and bxdf values using matching bxdf contributions
         if (size > 1) {
-            if (!(sampleBxDF->type & BXDF_SPECULAR)) {
+            if (!(sampleBxDF->m_Type & BXDF_SPECULAR)) {
                 bool sameSide = isSameHemisphere(wo, wi);
                 for (BxDF* b : matching) {
                     if (b != sampleBxDF) {
                         *pdf += b->getPdf(wo, wi);
-                        if ((sameSide && (sampleBxDF->type & BXDF_REFLECTIVE)) ||
-                            (!sameSide && (sampleBxDF->type & BXDF_TRANSMISSIVE)))
+                        if ((sameSide && (sampleBxDF->m_Type & BXDF_REFLECTIVE)) ||
+                            (!sameSide && (sampleBxDF->m_Type & BXDF_TRANSMISSIVE)))
                             ret += b->evaluate(wo, wi);
                     }
                 }
@@ -88,9 +88,9 @@ namespace TK {
         tkFloat ret = 0;
         int count = 0;
         bool sameSide = isSameHemisphere(wo, wi);
-        for (int i = 0; i < numBxdf; ++i) {
-            if (bxdfIsApplicable(bxdfs[i], sameSide, type)) {
-                ret += bxdfs[i]->getPdf(wo, wi);
+        for (int i = 0; i < m_NumBxdf; ++i) {
+            if (bxdfIsApplicable(m_Bxdfs[i], sameSide, type)) {
+                ret += m_Bxdfs[i]->getPdf(wo, wi);
                 count++;
             }
         }
@@ -98,18 +98,18 @@ namespace TK {
     }
 
     bool BSDF::addContribution(BxDF* bxdf) {
-        if (numBxdf == MAX_BXDF_COUNT)
+        if (m_NumBxdf == MAX_BXDF_COUNT)
             return false;
 
-        bxdfs[numBxdf++] = bxdf;
+        m_Bxdfs[m_NumBxdf++] = bxdf;
         return true;
     }
 
     Vec3f BSDF::worldToLocal(const Vec3f& v) const {
-        return Vec3f(dot(t, v), dot(bt, v), dot(n, v));
+        return Vec3f(dot(m_T, v), dot(m_Bt, v), dot(m_N, v));
     }
     Vec3f BSDF::localToWorld(const Vec3f& v) const {
-        return Vec3f(t.x * v.x + bt.x * v.y + n.x * v.z, t.y * v.x + bt.y * v.y + n.y * v.z,
-                       t.z * v.x + bt.z * v.y + n.z * v.z);
+        return Vec3f(m_T.x * v.x + m_Bt.x * v.y + m_N.x * v.z, m_T.y * v.x + m_Bt.y * v.y + m_N.y * v.z,
+                       m_T.z * v.x + m_Bt.z * v.y + m_N.z * v.z);
     }
 }  // namespace TK

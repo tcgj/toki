@@ -6,7 +6,7 @@
 
 namespace TK {
     void Mirror::computeScattering(BSDF* bsdf) const {
-        if (!kr.isBlack())
-            bsdf->addContribution(new SpecularReflection(kr, new NoOpFresnel()));
+        if (!m_Kr.isBlack())
+            bsdf->addContribution(new SpecularReflection(m_Kr, new NoOpFresnel()));
     }
 }  // namespace TK

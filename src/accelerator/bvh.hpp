@@ -50,7 +50,7 @@ namespace TK {
         void buildSAH(int64_t nodeIndex, int64_t start, int64_t end, std::vector<PrimitiveUnit>& pSet);
 
         // BVH arrays
-        std::unique_ptr<Node[]> nodes = nullptr;
-        std::vector<std::shared_ptr<Primitive>> primitives;
+        std::unique_ptr<Node[]> m_Nodes;
+        std::vector<std::shared_ptr<Primitive>> m_Primitives;
     };
 }  // namespace TK

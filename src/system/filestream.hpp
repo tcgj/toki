@@ -14,41 +14,41 @@ namespace TK {
     public:
         FileStream() = default;
 
-        FileStream(const std::string filename, FileStreamMode fsm) : file(std::fstream(filename, fsm)) {
+        FileStream(const std::string filename, FileStreamMode fsm) : m_File(std::fstream(filename, fsm)) {
             // TODO: Setup a proper check for fail
         }
 
         bool open(std::string filename, FileStreamMode fsm, bool forceOpen = false) {
-            if (file.is_open()) {
+            if (m_File.is_open()) {
                 if (forceOpen)
-                    file.close();
+                    m_File.close();
                 else
                     return false;
             }
-            file.open(filename, fsm);
-            return file.is_open();
+            m_File.open(filename, fsm);
+            return m_File.is_open();
         }
 
         bool close() {
-            if (!file.is_open())
+            if (!m_File.is_open())
                 return false;
-            file.close();
+            m_File.close();
             return true;
         }
 
         // IStream operators
         FileStream& operator>>(tkFloat& f) override {
-            file.read(reinterpret_cast<char*>(&f), sizeof(f));
+            m_File.read(reinterpret_cast<char*>(&f), sizeof(f));
             return *this;
         }
 
         FileStream& operator>>(int& i) override {
-            file.read(reinterpret_cast<char*>(&i), sizeof(i));
+            m_File.read(reinterpret_cast<char*>(&i), sizeof(i));
             return *this;
         }
 
         FileStream& operator>>(unsigned int& u) override {
-            file.read(reinterpret_cast<char*>(&u), sizeof(u));
+            m_File.read(reinterpret_cast<char*>(&u), sizeof(u));
             return *this;
         }
 
@@ -56,60 +56,60 @@ namespace TK {
             s = "";
             char c;
             do {
-                file.read(&c, sizeof(c));
+                m_File.read(&c, sizeof(c));
                 if (c == 0)
                     break;
                 s += c;
-            } while (file.good());
+            } while (m_File.good());
             return *this;
         }
 
         FileStream& operator>>(bool& b) override {
-            file.read(reinterpret_cast<char*>(&b), sizeof(b));
+            m_File.read(reinterpret_cast<char*>(&b), sizeof(b));
             return *this;
         }
 
         FileStream& read(char* data, unsigned int size) override {
-            file.read(data, size);
+            m_File.read(data, size);
             return *this;
         }
 
         // OStream operators
         FileStream& operator<<(tkFloat f) override {
-            file.write(reinterpret_cast<const char*>(&f), sizeof(f));
+            m_File.write(reinterpret_cast<const char*>(&f), sizeof(f));
             return *this;
         }
 
         FileStream& operator<<(int i) override {
-            file.write(reinterpret_cast<const char*>(&i), sizeof(i));
+            m_File.write(reinterpret_cast<const char*>(&i), sizeof(i));
             return *this;
         }
 
         FileStream& operator<<(unsigned int u) override {
-            file.write(reinterpret_cast<const char*>(&u), sizeof(u));
+            m_File.write(reinterpret_cast<const char*>(&u), sizeof(u));
             return *this;
         }
 
         FileStream& operator<<(const std::string& s) override {
-            file.write(s.c_str(), s.size() + 1);
+            m_File.write(s.c_str(), s.size() + 1);
             return *this;
         }
 
         FileStream& operator<<(bool b) override {
-            file.write(reinterpret_cast<const char*>(&b), sizeof(b));
+            m_File.write(reinterpret_cast<const char*>(&b), sizeof(b));
             return *this;
         }
 
         FileStream& write(const char* data, unsigned int size) override {
-            file.write(data, size);
+            m_File.write(data, size);
             return *this;
         }
 
         void flush() override {
-            file.flush();
+            m_File.flush();
         }
 
     private:
-        std::fstream file;
+        std::fstream m_File;
     };
 }  // namespace TK

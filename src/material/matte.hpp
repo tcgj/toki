@@ -6,11 +6,11 @@
 namespace TK {
     class Matte : public Material {
     public:
-        Matte(const tkSpectrum& kd) : kd(kd) {}
+        Matte(const tkSpectrum& kd) : m_Kd(kd) {}
 
         void computeScattering(BSDF* bsdf) const override;
 
     private:
-        tkSpectrum kd;
+        tkSpectrum m_Kd;
     };
 }  // namespace TK

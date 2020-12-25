@@ -10,14 +10,14 @@ namespace TK {
         Transform() = default;
 
         Transform(const tkFloat d[16]) {
-            m = Matrix44(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12],
+            m_Matrix = Matrix44(d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12],
                          d[13], d[14], d[15]);
-            mInv = inverse(m);
+            m_InvMatrix = inverse(m_Matrix);
         }
 
-        Transform(const Matrix44& m) : m(m), mInv(inverse(m)) {}
+        Transform(const Matrix44& m) : m_Matrix(m), m_InvMatrix(inverse(m)) {}
 
-        Transform(const Matrix44& m, const Matrix44& mInv) : m(m), mInv(mInv) {}
+        Transform(const Matrix44& m, const Matrix44& mInv) : m_Matrix(m), m_InvMatrix(mInv) {}
 
         // Transform Application
         template <typename T>
@@ -62,25 +62,25 @@ namespace TK {
         friend Transform transpose(const Transform& t);
 
     private:
-        Matrix44 m;
-        Matrix44 mInv;
+        Matrix44 m_Matrix;
+        Matrix44 m_InvMatrix;
     };
 
     inline bool Transform::operator==(const Transform& t) const {
-        return t.m == m && t.mInv == mInv;
+        return t.m_Matrix == m_Matrix && t.m_InvMatrix == m_InvMatrix;
     }
 
     inline bool Transform::operator!=(const Transform& t) const {
-        return t.m != m || t.mInv != mInv;
+        return t.m_Matrix != m_Matrix || t.m_InvMatrix != m_InvMatrix;
     }
 
     template <typename T>
     inline Point3<T> Transform::operator()(const Point3<T>& p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = m.m_Entries[0] * px + m.m_Entries[1] * py + m.m_Entries[2] * pz + m.m_Entries[3];
-        T y = m.m_Entries[4] * px + m.m_Entries[5] * py + m.m_Entries[6] * pz + m.m_Entries[7];
-        T z = m.m_Entries[8] * px + m.m_Entries[9] * py + m.m_Entries[10] * pz + m.m_Entries[11];
-        T w = m.m_Entries[12] * px + m.m_Entries[13] * py + m.m_Entries[14] * pz + m.m_Entries[15];
+        T x = m_Matrix.m_Entries[0] * px + m_Matrix.m_Entries[1] * py + m_Matrix.m_Entries[2] * pz + m_Matrix.m_Entries[3];
+        T y = m_Matrix.m_Entries[4] * px + m_Matrix.m_Entries[5] * py + m_Matrix.m_Entries[6] * pz + m_Matrix.m_Entries[7];
+        T z = m_Matrix.m_Entries[8] * px + m_Matrix.m_Entries[9] * py + m_Matrix.m_Entries[10] * pz + m_Matrix.m_Entries[11];
+        T w = m_Matrix.m_Entries[12] * px + m_Matrix.m_Entries[13] * py + m_Matrix.m_Entries[14] * pz + m_Matrix.m_Entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
@@ -92,13 +92,13 @@ namespace TK {
         T vx = v.x, vy = v.y, vz = v.z;
 
         if (isNormal) {
-            return Vec3<T>(mInv.m_Entries[0] * vx + mInv.m_Entries[4] * vy + mInv.m_Entries[8] * vz,
-                           mInv.m_Entries[1] * vx + mInv.m_Entries[5] * vy + mInv.m_Entries[9] * vz,
-                           mInv.m_Entries[2] * vx + mInv.m_Entries[6] * vy + mInv.m_Entries[10] * vz);
+            return Vec3<T>(m_InvMatrix.m_Entries[0] * vx + m_InvMatrix.m_Entries[4] * vy + m_InvMatrix.m_Entries[8] * vz,
+                           m_InvMatrix.m_Entries[1] * vx + m_InvMatrix.m_Entries[5] * vy + m_InvMatrix.m_Entries[9] * vz,
+                           m_InvMatrix.m_Entries[2] * vx + m_InvMatrix.m_Entries[6] * vy + m_InvMatrix.m_Entries[10] * vz);
         } else {
-            return Vec3<T>(m.m_Entries[0] * vx + m.m_Entries[1] * vy + m.m_Entries[2] * vz,
-                           m.m_Entries[4] * vx + m.m_Entries[5] * vy + m.m_Entries[6] * vz,
-                           m.m_Entries[8] * vx + m.m_Entries[9] * vy + m.m_Entries[10] * vz);
+            return Vec3<T>(m_Matrix.m_Entries[0] * vx + m_Matrix.m_Entries[1] * vy + m_Matrix.m_Entries[2] * vz,
+                           m_Matrix.m_Entries[4] * vx + m_Matrix.m_Entries[5] * vy + m_Matrix.m_Entries[6] * vz,
+                           m_Matrix.m_Entries[8] * vx + m_Matrix.m_Entries[9] * vy + m_Matrix.m_Entries[10] * vz);
         }
     }
 
@@ -122,11 +122,11 @@ namespace TK {
     template <typename T>
     inline Point3<T> Transform::applyInverse(const Point3<T>& p) const {
         T px = p.x, py = p.y, pz = p.z;
-        T x = mInv.m_Entries[0] * px + mInv.m_Entries[1] * py + mInv.m_Entries[2] * pz + mInv.m_Entries[3];
-        T y = mInv.m_Entries[4] * px + mInv.m_Entries[5] * py + mInv.m_Entries[6] * pz + mInv.m_Entries[7];
-        T z = mInv.m_Entries[8] * px + mInv.m_Entries[9] * py + mInv.m_Entries[10] * pz + mInv.m_Entries[11];
+        T x = m_InvMatrix.m_Entries[0] * px + m_InvMatrix.m_Entries[1] * py + m_InvMatrix.m_Entries[2] * pz + m_InvMatrix.m_Entries[3];
+        T y = m_InvMatrix.m_Entries[4] * px + m_InvMatrix.m_Entries[5] * py + m_InvMatrix.m_Entries[6] * pz + m_InvMatrix.m_Entries[7];
+        T z = m_InvMatrix.m_Entries[8] * px + m_InvMatrix.m_Entries[9] * py + m_InvMatrix.m_Entries[10] * pz + m_InvMatrix.m_Entries[11];
         T w =
-            mInv.m_Entries[12] * px + mInv.m_Entries[13] * py + mInv.m_Entries[14] * pz + mInv.m_Entries[15];
+            m_InvMatrix.m_Entries[12] * px + m_InvMatrix.m_Entries[13] * py + m_InvMatrix.m_Entries[14] * pz + m_InvMatrix.m_Entries[15];
         if (w == 1)
             return Point3<T>(x, y, z);
         else
@@ -138,13 +138,13 @@ namespace TK {
         T vx = v.x, vy = v.y, vz = v.z;
 
         if (isNormal) {
-            return Vec3<T>(m.m_Entries[0] * vx + m.m_Entries[4] * vy + m.m_Entries[8] * vz,
-                           m.m_Entries[1] * vx + m.m_Entries[5] * vy + m.m_Entries[9] * vz,
-                           m.m_Entries[2] * vx + m.m_Entries[6] * vy + m.m_Entries[10] * vz);
+            return Vec3<T>(m_Matrix.m_Entries[0] * vx + m_Matrix.m_Entries[4] * vy + m_Matrix.m_Entries[8] * vz,
+                           m_Matrix.m_Entries[1] * vx + m_Matrix.m_Entries[5] * vy + m_Matrix.m_Entries[9] * vz,
+                           m_Matrix.m_Entries[2] * vx + m_Matrix.m_Entries[6] * vy + m_Matrix.m_Entries[10] * vz);
         } else {
-            return Vec3<T>(mInv.m_Entries[0] * vx + mInv.m_Entries[1] * vy + mInv.m_Entries[2] * vz,
-                           mInv.m_Entries[4] * vx + mInv.m_Entries[5] * vy + mInv.m_Entries[6] * vz,
-                           mInv.m_Entries[8] * vx + mInv.m_Entries[9] * vy + mInv.m_Entries[10] * vz);
+            return Vec3<T>(m_InvMatrix.m_Entries[0] * vx + m_InvMatrix.m_Entries[1] * vy + m_InvMatrix.m_Entries[2] * vz,
+                           m_InvMatrix.m_Entries[4] * vx + m_InvMatrix.m_Entries[5] * vy + m_InvMatrix.m_Entries[6] * vz,
+                           m_InvMatrix.m_Entries[8] * vx + m_InvMatrix.m_Entries[9] * vy + m_InvMatrix.m_Entries[10] * vz);
         }
     }
 
@@ -165,15 +165,15 @@ namespace TK {
     }
 
     inline std::string Transform::toString() const {
-        return m.toString();
+        return m_Matrix.toString();
     }
 
     inline Transform inverse(const Transform& t) {
-        return Transform(t.mInv, t.m);
+        return Transform(t.m_InvMatrix, t.m_Matrix);
     }
 
     inline Transform transpose(const Transform& t) {
-        return Transform(transpose(t.m), transpose(t.mInv));
+        return Transform(transpose(t.m_Matrix), transpose(t.m_InvMatrix));
     }
 
     inline Transform operator*(const Transform& t1, const Transform& t2) {

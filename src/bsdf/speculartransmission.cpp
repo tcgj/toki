@@ -10,14 +10,14 @@ namespace TK {
     tkSpectrum SpecularTransmission::sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp,
                                             tkFloat* pdf) const {
         bool exiting = cosTheta(wo) > 0;
-        tkFloat etaI = exiting ? etaB : etaA;
-        tkFloat etaT = exiting ? etaA : etaB;
+        tkFloat etaI = exiting ? m_EtaB : m_EtaA;
+        tkFloat etaT = exiting ? m_EtaA : m_EtaB;
         *wi = refract(wo, Vec3f::forward, etaT, etaI);
         if (*wi == Vec3f::zero)
             return 0;
 
         *pdf = 1;
-        return dht * (tkSpectrum(1.0f) - fresnel.evaluate(cosTheta(*wi))) / absCosTheta(*wi);
+        return m_Dht * (tkSpectrum(1.0f) - m_Fresnel.evaluate(cosTheta(*wi))) / absCosTheta(*wi);
     }
 
     tkFloat SpecularTransmission::getPdf(const Vec3f& wo, const Vec3f& wi) const {

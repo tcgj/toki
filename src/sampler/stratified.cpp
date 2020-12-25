@@ -4,7 +4,7 @@
 
 namespace TK {
     StratifiedSampler::StratifiedSampler(int xCount, int yCount, int dimensions)
-        : Sampler(xCount * yCount), xCount(xCount), yCount(yCount) {
+        : Sampler(xCount * yCount), m_XCount(xCount), m_YCount(yCount) {
         // Pre-initialize samples with a max dimension count
         for (int i = 0; i < dimensions; ++i) {
             Sampler::requestFloats(1);
@@ -43,29 +43,29 @@ namespace TK {
 
     void StratifiedSampler::setPixel(const Point2i &pixelCoord) {
         // Set up float set
-        for (auto &f : floatSet) {
+        for (auto &f : m_FloatSet) {
             generateFloatSamples(f.data(), samplesPerPixel);
             randomizeSamples(f.data(), samplesPerPixel);
         }
         // Set up vector set
-        for (auto &v : vectorSet) {
-            generateVectorSamples(v.data(), xCount, yCount);
-            randomizeSamples(v.data(), xCount * yCount);
+        for (auto &v : m_VectorSet) {
+            generateVectorSamples(v.data(), m_XCount, m_YCount);
+            randomizeSamples(v.data(), m_XCount * m_YCount);
         }
         Sampler::setPixel(pixelCoord);
     }
 
     tkFloat StratifiedSampler::nextFloat() {
-        if (currentFloatSet < floatSet.size()) {
-            return floatSet[currentFloatSet++][currentSample];
+        if (m_CurrentFloatSet < m_FloatSet.size()) {
+            return m_FloatSet[m_CurrentFloatSet++][m_CurrentSample];
         } else {
             return Random::nextFloat();
         }
     }
 
     Vec2f StratifiedSampler::nextVector() {
-        if (currentVectorSet < vectorSet.size()) {
-            return vectorSet[currentVectorSet++][currentSample];
+        if (m_CurrentVectorSet < m_VectorSet.size()) {
+            return m_VectorSet[m_CurrentVectorSet++][m_CurrentSample];
         } else {
             return Vec2f(Random::nextFloat(), Random::nextFloat());
         }

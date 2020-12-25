@@ -6,11 +6,11 @@ namespace TK {
     class WhittedIntegrator : public Integrator {
     public:
         WhittedIntegrator(int maxDepth)
-            : maxDepth(maxDepth) {}
+            : m_MaxDepth(maxDepth) {}
 
         tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const override;
 
     private:
-        int maxDepth;
+        int m_MaxDepth;
     };
 }  // namespace TK

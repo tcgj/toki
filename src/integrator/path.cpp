@@ -10,9 +10,9 @@
 
 namespace TK {
     void PathTracingIntegrator::preprocess(const Scene& scene) {
-        switch (strategy) {
+        switch (m_Strategy) {
             case POWER:
-                lightDist = lightPowerDistribution(scene);
+                m_LightDist = lightPowerDistribution(scene);
                 break;
             default:
                 break;
@@ -39,7 +39,7 @@ namespace TK {
             }
 
             // Break at max depth or if we hit nothing
-            if (!hit || bounces >= maxDepth)
+            if (!hit || bounces >= m_MaxDepth)
                 break;
 
             BSDF bsdf;
@@ -47,7 +47,7 @@ namespace TK {
 
             // Add direct lighting contribution with multiple importance sampling
             tkFloat lightPdf;
-            auto light = getLightByDist(scene, sampler, *lightDist, &lightPdf);
+            auto light = getLightByDist(scene, sampler, *m_LightDist, &lightPdf);
             li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
 
             // Spawn ray for next bounce

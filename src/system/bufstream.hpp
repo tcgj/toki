@@ -11,43 +11,43 @@ namespace TK {
         }
 
         void resize(unsigned int size) {
-            if (size <= capacity)
+            if (size <= m_Capacity)
                 return;
 
             std::unique_ptr<char[]> newBuf = std::make_unique<char[]>(size);
-            memcpy(newBuf.get(), buf.get(), capacity);
-            memset(newBuf.get() + capacity, 0, size - capacity);
-            capacity = size;
-            buf = std::move(newBuf);
+            memcpy(newBuf.get(), m_Buffer.get(), m_Capacity);
+            memset(newBuf.get() + m_Capacity, 0, size - m_Capacity);
+            m_Capacity = size;
+            m_Buffer = std::move(newBuf);
         }
 
         // IStream operators
         BufferedStream& operator>>(tkFloat& f) override {
-            if (rOffset + sizeof(f) > capacity)
+            if (m_ReadOffset + sizeof(f) > m_Capacity)
                 f = 0;
             else {
-                memcpy(&f, buf.get() + rOffset, sizeof(f));
-                rOffset += sizeof(f);
+                memcpy(&f, m_Buffer.get() + m_ReadOffset, sizeof(f));
+                m_ReadOffset += sizeof(f);
             }
             return *this;
         }
 
         BufferedStream& operator>>(int& i) override {
-            if (rOffset + sizeof(i) > capacity)
+            if (m_ReadOffset + sizeof(i) > m_Capacity)
                 i = 0;
             else {
-                memcpy(&i, buf.get() + rOffset, sizeof(i));
-                rOffset += sizeof(i);
+                memcpy(&i, m_Buffer.get() + m_ReadOffset, sizeof(i));
+                m_ReadOffset += sizeof(i);
             }
             return *this;
         }
 
         BufferedStream& operator>>(unsigned int& u) override {
-            if (rOffset + sizeof(u) > capacity)
+            if (m_ReadOffset + sizeof(u) > m_Capacity)
                 u = 0;
             else {
-                memcpy(&u, buf.get() + rOffset, sizeof(u));
-                rOffset += sizeof(u);
+                memcpy(&u, m_Buffer.get() + m_ReadOffset, sizeof(u));
+                m_ReadOffset += sizeof(u);
             }
             return *this;
         }
@@ -55,8 +55,8 @@ namespace TK {
         BufferedStream& operator>>(std::string& s) override {
             s = "";
             char c;
-            while (rOffset < capacity) {
-                c = buf[rOffset++];
+            while (m_ReadOffset < m_Capacity) {
+                c = m_Buffer[m_ReadOffset++];
                 if (c == 0)
                     break;
                 s += c;
@@ -65,97 +65,97 @@ namespace TK {
         }
 
         BufferedStream& operator>>(bool& b) override {
-            if (rOffset + sizeof(b) > capacity)
+            if (m_ReadOffset + sizeof(b) > m_Capacity)
                 b = 0;
             else {
-                memcpy(&b, buf.get() + rOffset, sizeof(b));
-                rOffset += sizeof(b);
+                memcpy(&b, m_Buffer.get() + m_ReadOffset, sizeof(b));
+                m_ReadOffset += sizeof(b);
             }
             return *this;
         }
 
         BufferedStream& read(char* data, unsigned int size) override {
-            if (rOffset + size > capacity)
+            if (m_ReadOffset + size > m_Capacity)
                 memset(data, 0, size);
             else {
-                memcpy(data, buf.get() + rOffset, size);
-                rOffset += size;
+                memcpy(data, m_Buffer.get() + m_ReadOffset, size);
+                m_ReadOffset += size;
             }
             return *this;
         }
 
         // OStream operators
         BufferedStream& operator<<(tkFloat f) override {
-            if (wOffset + sizeof(f) > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + sizeof(f) > m_Capacity) {
+                resize(2 * m_Capacity);
                 return *this << f;
             }
 
-            memcpy(buf.get() + wOffset, &f, sizeof(f));
-            wOffset += sizeof(f);
+            memcpy(m_Buffer.get() + m_WriteOffset, &f, sizeof(f));
+            m_WriteOffset += sizeof(f);
             return *this;
         }
 
         BufferedStream& operator<<(int i) override {
-            if (wOffset + sizeof(i) > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + sizeof(i) > m_Capacity) {
+                resize(2 * m_Capacity);
                 return *this << i;
             }
 
-            memcpy(buf.get() + wOffset, &i, sizeof(i));
-            wOffset += sizeof(i);
+            memcpy(m_Buffer.get() + m_WriteOffset, &i, sizeof(i));
+            m_WriteOffset += sizeof(i);
             return *this;
         }
 
         BufferedStream& operator<<(unsigned int u) override {
-            if (wOffset + sizeof(u) > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + sizeof(u) > m_Capacity) {
+                resize(2 * m_Capacity);
                 return *this << u;
             }
 
-            memcpy(buf.get() + wOffset, &u, sizeof(u));
-            wOffset += sizeof(u);
+            memcpy(m_Buffer.get() + m_WriteOffset, &u, sizeof(u));
+            m_WriteOffset += sizeof(u);
             return *this;
         }
 
         BufferedStream& operator<<(const std::string& s) override {
             size_t charCount = s.size() + 1;
-            if (wOffset + charCount > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + charCount > m_Capacity) {
+                resize(2 * m_Capacity);
                 return *this << s;
             }
 
-            memcpy(buf.get() + wOffset, s.c_str(), charCount);
-            wOffset += charCount;
+            memcpy(m_Buffer.get() + m_WriteOffset, s.c_str(), charCount);
+            m_WriteOffset += charCount;
             return *this;
         }
 
         BufferedStream& operator<<(bool b) override {
-            if (wOffset + sizeof(b) > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + sizeof(b) > m_Capacity) {
+                resize(2 * m_Capacity);
                 return *this << b;
             }
 
-            memcpy(buf.get() + wOffset, &b, sizeof(b));
-            wOffset += sizeof(b);
+            memcpy(m_Buffer.get() + m_WriteOffset, &b, sizeof(b));
+            m_WriteOffset += sizeof(b);
             return *this;
         }
 
         BufferedStream& write(const char* data, unsigned int size) override {
-            if (wOffset + size > capacity) {
-                resize(2 * capacity);
+            if (m_WriteOffset + size > m_Capacity) {
+                resize(2 * m_Capacity);
                 return write(data, size);
             }
 
-            memcpy(buf.get() + wOffset, &data, size);
-            wOffset += size;
+            memcpy(m_Buffer.get() + m_WriteOffset, &data, size);
+            m_WriteOffset += size;
             return *this;
         }
 
     private:
-        unsigned int rOffset;
-        unsigned int wOffset;
-        unsigned int capacity;
-        std::unique_ptr<char[]> buf;
+        unsigned int m_ReadOffset;
+        unsigned int m_WriteOffset;
+        unsigned int m_Capacity;
+        std::unique_ptr<char[]> m_Buffer;
     };
 }  // namespace TK

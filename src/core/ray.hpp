@@ -8,7 +8,7 @@ namespace TK {
         Ray() : tMax(TK_INFINITY) /*, time(0.0f), medium(nullptr)*/ {}
 
         Ray(const Point3f& o, const Vec3f& d, tkFloat tMax = TK_INFINITY
-            /*tkFloat time = 0.0f, const Medium *medium = nullptr*/)
+            /*tkFloat time = 0.0f, const Medium* medium = nullptr*/)
             : o(o), d(d), tMax(tMax) /*, time(time), medium(medium)*/ {}
 
         Point3f operator()(tkFloat t) const;
@@ -17,7 +17,7 @@ namespace TK {
         Vec3f d;
         mutable tkFloat tMax;
         // tkFloat time;
-        // const Medium *medium;
+        // const Medium* medium;
     };
 
     inline Point3f Ray::operator()(tkFloat t) const {

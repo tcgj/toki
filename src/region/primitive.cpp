@@ -7,12 +7,12 @@
 
 namespace TK {
     AABBf Primitive::worldBoundingBox() const {
-        return shape->worldBoundingBox();
+        return m_Shape->worldBoundingBox();
     }
 
     bool Primitive::intersect(const Ray& r, SurfaceInteraction* interaction) const {
         tkFloat tHit;
-        if (!shape->intersect(r, &tHit, interaction))
+        if (!m_Shape->intersect(r, &tHit, interaction))
             return false;
 
         r.tMax = tHit;
@@ -21,19 +21,19 @@ namespace TK {
     }
 
     bool Primitive::hasIntersect(const Ray& r) const {
-        return shape->hasIntersect(r);
+        return m_Shape->hasIntersect(r);
     }
 
     std::shared_ptr<Material> Primitive::getMaterial() const {
-        return material;
+        return m_Material;
     }
 
     std::shared_ptr<Light> Primitive::getLight() const {
-        return light;
+        return m_Light;
     }
 
     void Primitive::computeScattering(BSDF* bsdf) const {
-        if (material != nullptr)
-            material->computeScattering(bsdf);
+        if (m_Material != nullptr)
+            m_Material->computeScattering(bsdf);
     }
 }  // namespace TK

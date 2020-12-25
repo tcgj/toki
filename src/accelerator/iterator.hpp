@@ -7,18 +7,18 @@
 namespace TK {
     class Iterator : public Region {
     public:
-        Iterator(std::vector<std::shared_ptr<Primitive>>& primitives) : primitives(primitives) {
+        Iterator(std::vector<std::shared_ptr<Primitive>>& primitives) : m_Primitives(primitives) {
             for (const auto& p : primitives) {
-                worldBB = bbUnion(worldBB, p->worldBoundingBox());
+                m_WorldBB = bbUnion(m_WorldBB, p->worldBoundingBox());
             }
         }
 
         AABBf worldBoundingBox() const override {
-            return worldBB;
+            return m_WorldBB;
         }
 
         bool hasIntersect(const Ray& r) const override {
-            for (const auto& prim : primitives) {
+            for (const auto& prim : m_Primitives) {
                 if (prim->hasIntersect(r)) {
                     return true;
                 }
@@ -28,7 +28,7 @@ namespace TK {
 
         bool intersect(const Ray& r, SurfaceInteraction* interaction) const override {
             bool hasIntersected = false;
-            for (const auto& prim : primitives) {
+            for (const auto& prim : m_Primitives) {
                 if (prim->intersect(r, interaction)) {
                     hasIntersected = true;
                 }
@@ -36,7 +36,7 @@ namespace TK {
             return hasIntersected;
         }
 
-        std::vector<std::shared_ptr<Primitive>> primitives;
-        AABBf worldBB;
+        std::vector<std::shared_ptr<Primitive>> m_Primitives;
+        AABBf m_WorldBB;
     };
 }  // namespace TK

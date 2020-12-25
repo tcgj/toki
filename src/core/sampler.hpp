@@ -30,21 +30,21 @@ namespace TK {
 
     protected:
         // --Sampler state values--
-        Point2i currentPixel;
-        int64_t currentSample;
-        int currentFloatSet;
-        int currentVectorSet;
-        std::vector<int> floatSetSizes;
-        std::vector<int> vectorSetSizes;
-        std::vector<std::vector<tkFloat>> floatSet;
-        std::vector<std::vector<Vec2f>> vectorSet;
+        Point2i m_CurrentPixel;
+        int64_t m_CurrentSample;
+        int m_CurrentFloatSet;
+        int m_CurrentVectorSet;
+        std::vector<int> m_FloatSetSizes;
+        std::vector<int> m_VectorSetSizes;
+        std::vector<std::vector<tkFloat>> m_FloatSet;
+        std::vector<std::vector<Vec2f>> m_VectorSet;
     };
 
     inline void Sampler::setPixel(const Point2i& pixelCoord) {
-        currentPixel = pixelCoord;
-        currentSample = 0;
-        currentFloatSet = 0;
-        currentVectorSet = 0;
+        m_CurrentPixel = pixelCoord;
+        m_CurrentSample = 0;
+        m_CurrentFloatSet = 0;
+        m_CurrentVectorSet = 0;
     }
 
     inline CameraSample Sampler::getCameraSample(const Point2i& pixelCoord) {
@@ -55,19 +55,19 @@ namespace TK {
     }
 
     inline void Sampler::requestFloats(int count) {
-        floatSetSizes.push_back(count);
-        floatSet.push_back(std::vector<tkFloat>(count * samplesPerPixel));
+        m_FloatSetSizes.push_back(count);
+        m_FloatSet.push_back(std::vector<tkFloat>(count * samplesPerPixel));
     }
 
     inline void Sampler::requestVectors(int count) {
-        vectorSetSizes.push_back(count);
-        vectorSet.push_back(std::vector<Vec2f>(count * samplesPerPixel));
+        m_VectorSetSizes.push_back(count);
+        m_VectorSet.push_back(std::vector<Vec2f>(count * samplesPerPixel));
     }
 
     inline bool Sampler::nextSample() {
-        currentSample++;
-        currentFloatSet = 0;
-        currentVectorSet = 0;
-        return currentSample < samplesPerPixel;
+        m_CurrentSample++;
+        m_CurrentFloatSet = 0;
+        m_CurrentVectorSet = 0;
+        return m_CurrentSample < samplesPerPixel;
     }
 }  // namespace TK

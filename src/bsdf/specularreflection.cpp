@@ -11,7 +11,7 @@ namespace TK {
                                           tkFloat* pdf) const {
         *wi = Vec3f(-wo.x, -wo.y, wo.z);
         *pdf = 1;
-        return dhr * fresnel->evaluate(cosTheta(*wi)) / absCosTheta(*wi);
+        return m_Dhr * m_Fresnel->evaluate(cosTheta(*wi)) / absCosTheta(*wi);
     }
 
     tkFloat SpecularReflection::getPdf(const Vec3f& wo, const Vec3f& wi) const {

@@ -8,10 +8,10 @@ namespace TK {
     public:
         SpecularTransmission(const tkSpectrum& dht, tkFloat etaA, tkFloat etaB)
             : BxDF(BxDFType(BXDF_TRANSMISSIVE | BXDF_SPECULAR)),
-              dht(dht),
-              fresnel(etaA, etaB),
-              etaA(etaA),
-              etaB(etaB) {}
+              m_Dht(dht),
+              m_Fresnel(etaA, etaB),
+              m_EtaA(etaA),
+              m_EtaB(etaB) {}
 
         tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const override;
 
@@ -20,9 +20,9 @@ namespace TK {
         tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const override;
 
     private:
-        tkSpectrum dht;  // directional-hemispherical transmittance
-        DielectricFresnel fresnel;
-        tkFloat etaA;
-        tkFloat etaB;
+        tkSpectrum m_Dht;  // directional-hemispherical transmittance
+        DielectricFresnel m_Fresnel;
+        tkFloat m_EtaA;
+        tkFloat m_EtaB;
     };
 }  // namespace TK

@@ -16,7 +16,7 @@ namespace TK {
         std::unique_ptr<Sampler> getClone() override;
 
     private:
-        int xCount;
-        int yCount;
+        int m_XCount;
+        int m_YCount;
     };
 }  // namespace TK

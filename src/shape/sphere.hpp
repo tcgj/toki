@@ -6,7 +6,7 @@ namespace TK {
     class Sphere : public Shape {
     public:
         Sphere(const Transform* objectToWorld, tkFloat radius, bool invertNormals = false)
-            : Shape(objectToWorld, invertNormals), radius(radius) {}
+            : Shape(objectToWorld, invertNormals), m_Radius(radius) {}
 
         AABBf objectBoundingBox() const override;
 
@@ -21,6 +21,6 @@ namespace TK {
         tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const override;
 
     private:
-        tkFloat radius;
+        tkFloat m_Radius;
     };
 }  // namespace TK

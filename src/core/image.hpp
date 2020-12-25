@@ -20,11 +20,11 @@ namespace TK {
 
         virtual void write() = 0;
 
-        Vec2i resolution;
-        std::string filename;
+        Vec2i m_Resolution;
+        std::string m_Filename;
 
     protected:
-        std::unique_ptr<tkSpectrum[]> pixels;
-        std::unique_ptr<int[]> numSamples;
+        std::unique_ptr<tkSpectrum[]> m_Pixels;
+        std::unique_ptr<int[]> m_NumSamples;
     };
 }  // namespace TK

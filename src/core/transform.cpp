@@ -6,26 +6,26 @@ namespace TK {
     bool Transform::willSwapHandedness() const {
         // Coordinate system swaps handedness only when
         // determinant of upper left 3x3 matrix is negative
-        tkFloat det = m.m_Entries[0] * (m.m_Entries[5] * m.m_Entries[10] - m.m_Entries[6] * m.m_Entries[9]) -
-                      m.m_Entries[1] * (m.m_Entries[4] * m.m_Entries[10] - m.m_Entries[6] * m.m_Entries[8]) +
-                      m.m_Entries[2] * (m.m_Entries[4] * m.m_Entries[9] - m.m_Entries[5] * m.m_Entries[8]);
+        tkFloat det = m_Matrix.m_Entries[0] * (m_Matrix.m_Entries[5] * m_Matrix.m_Entries[10] - m_Matrix.m_Entries[6] * m_Matrix.m_Entries[9]) -
+                      m_Matrix.m_Entries[1] * (m_Matrix.m_Entries[4] * m_Matrix.m_Entries[10] - m_Matrix.m_Entries[6] * m_Matrix.m_Entries[8]) +
+                      m_Matrix.m_Entries[2] * (m_Matrix.m_Entries[4] * m_Matrix.m_Entries[9] - m_Matrix.m_Entries[5] * m_Matrix.m_Entries[8]);
         return det < 0;
     }
 
     bool Transform::isIdentity() const {
         return (
-            m.m_Entries[0] == 1.0f && m.m_Entries[1] == 0.0f && m.m_Entries[2] == 0.0f && m.m_Entries[3] == 0.0f &&
-            m.m_Entries[4] == 0.0f && m.m_Entries[5] == 1.0f && m.m_Entries[6] == 0.0f && m.m_Entries[7] == 0.0f &&
-            m.m_Entries[8] == 0.0f && m.m_Entries[9] == 0.0f && m.m_Entries[10] == 1.0f && m.m_Entries[11] == 0.0f &&
-            m.m_Entries[12] == 0.0f && m.m_Entries[13] == 0.0f && m.m_Entries[14] == 0.0f && m.m_Entries[15] == 1.0f);
+            m_Matrix.m_Entries[0] == 1.0f && m_Matrix.m_Entries[1] == 0.0f && m_Matrix.m_Entries[2] == 0.0f && m_Matrix.m_Entries[3] == 0.0f &&
+            m_Matrix.m_Entries[4] == 0.0f && m_Matrix.m_Entries[5] == 1.0f && m_Matrix.m_Entries[6] == 0.0f && m_Matrix.m_Entries[7] == 0.0f &&
+            m_Matrix.m_Entries[8] == 0.0f && m_Matrix.m_Entries[9] == 0.0f && m_Matrix.m_Entries[10] == 1.0f && m_Matrix.m_Entries[11] == 0.0f &&
+            m_Matrix.m_Entries[12] == 0.0f && m_Matrix.m_Entries[13] == 0.0f && m_Matrix.m_Entries[14] == 0.0f && m_Matrix.m_Entries[15] == 1.0f);
     }
 
     const Matrix44& Transform::getMatrix() const {
-        return m;
+        return m_Matrix;
     }
 
     const Matrix44& Transform::getInverse() const {
-        return mInv;
+        return m_InvMatrix;
     }
 
     // IO stream operators

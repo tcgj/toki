@@ -24,7 +24,7 @@ namespace TK {
 
     class Light {
     public:
-        Light(const Transform& lightToWorld) : lightToWorld(lightToWorld) {}
+        Light(const Transform& lightToWorld) : m_LightToWorld(lightToWorld) {}
 
         virtual ~Light() = default;
 
@@ -50,7 +50,7 @@ namespace TK {
         }
 
     protected:
-        Transform lightToWorld;
+        Transform m_LightToWorld;
     };
 
     std::unique_ptr<Distribution> lightPowerDistribution(const Scene& scene);
