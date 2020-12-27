@@ -7,7 +7,7 @@ namespace TK {
     public:
         StratifiedSampler(int xCount, int yCount, int dimensions);
 
-        void setPixel(const Point2i& pixelCoord) override;
+        void setPixel(int x, int y) override;
 
         tkFloat nextFloat() override;
 

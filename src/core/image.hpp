@@ -12,9 +12,9 @@ namespace TK {
 
         tkFloat getAspectRatio() const;
 
-        Vec3f getPixelColor(const Point2i& pixelCoord) const;
+        Vec3f getPixelColor(int x, int y) const;
 
-        void updatePixelColor(const Point2i& pixelCoord, const tkSpectrum& colorContribution);
+        void updatePixelColor(int x, int y, const tkSpectrum& colorContribution);
 
         virtual Vec3f gammaCorrect(const Vec3f& rgb) const;
 

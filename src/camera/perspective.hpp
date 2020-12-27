@@ -6,8 +6,8 @@ namespace TK {
     class PerspectiveCamera : public ProjectionCamera {
     public:
         PerspectiveCamera(const Transform& cameraToWorld, tkFloat lensRadius, tkFloat focalLength,
-                          tkFloat fovy /*, const Medium *medium*/, Image* image);
+                          tkFloat fovy, Image* image);
 
-        tkFloat generateRay(const CameraSample& sample, Ray& r) const override;
+        Ray generateRay(int x, int y, const CameraSample& sample) const override;
     };
 }  // namespace TK

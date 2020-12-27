@@ -10,15 +10,15 @@ namespace TK {
         return (tkFloat)m_Resolution.x / m_Resolution.y;
     }
 
-    Vec3f Image::getPixelColor(const Point2i& pixelCoord) const {
-        tkSpectrum avg = m_Pixels[pixelCoord.y * m_Resolution.x + pixelCoord.x] /
-                         m_NumSamples[pixelCoord.y * m_Resolution.x + pixelCoord.x];
+    Vec3f Image::getPixelColor(int x, int y) const {
+        tkSpectrum avg = m_Pixels[y * m_Resolution.x + x] /
+                         m_NumSamples[y * m_Resolution.x + x];
         return avg.toRGB();
     }
 
-    void Image::updatePixelColor(const Point2i& pixelCoord, const tkSpectrum& colorContribution) {
-        m_Pixels[pixelCoord.y * m_Resolution.x + pixelCoord.x] += colorContribution;
-        m_NumSamples[pixelCoord.y * m_Resolution.x + pixelCoord.x]++;
+    void Image::updatePixelColor(int x, int y, const tkSpectrum& colorContribution) {
+        m_Pixels[y * m_Resolution.x + x] += colorContribution;
+        m_NumSamples[y * m_Resolution.x + x]++;
     }
 
     Vec3f Image::gammaCorrect(const Vec3f& rgb) const {

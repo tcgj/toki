@@ -41,7 +41,7 @@ namespace TK {
         }
     }
 
-    void StratifiedSampler::setPixel(const Point2i &pixelCoord) {
+    void StratifiedSampler::setPixel(int x, int y) {
         // Set up float set
         for (auto &f : m_FloatSet) {
             generateFloatSamples(f.data(), samplesPerPixel);
@@ -52,7 +52,7 @@ namespace TK {
             generateVectorSamples(v.data(), m_XCount, m_YCount);
             randomizeSamples(v.data(), m_XCount * m_YCount);
         }
-        Sampler::setPixel(pixelCoord);
+        Sampler::setPixel(x, y);
     }
 
     tkFloat StratifiedSampler::nextFloat() {

@@ -10,9 +10,9 @@ namespace TK {
 
         virtual ~Sampler() = default;
 
-        virtual void setPixel(const Point2i& pixelCoord);
+        virtual void setPixel(int x, int y);
 
-        CameraSample getCameraSample(const Point2i& pixelCoord);
+        CameraSample getCameraSample();
 
         virtual void requestFloats(int count);
 
@@ -40,18 +40,15 @@ namespace TK {
         std::vector<std::vector<Vec2f>> m_VectorSet;
     };
 
-    inline void Sampler::setPixel(const Point2i& pixelCoord) {
-        m_CurrentPixel = pixelCoord;
+    inline void Sampler::setPixel(int x, int y) {
+        m_CurrentPixel = Point2i(x, y);
         m_CurrentSample = 0;
         m_CurrentFloatSet = 0;
         m_CurrentVectorSet = 0;
     }
 
-    inline CameraSample Sampler::getCameraSample(const Point2i& pixelCoord) {
-        CameraSample ret;
-        ret.imgCoord = (Point2f)pixelCoord + nextVector();
-        ret.lens = nextVector();
-        return ret;
+    inline CameraSample Sampler::getCameraSample() {
+        return { nextVector(), nextVector() };
     }
 
     inline void Sampler::requestFloats(int count) {

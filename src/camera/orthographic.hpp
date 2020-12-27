@@ -5,11 +5,9 @@
 namespace TK {
     class OrthographicCamera : public ProjectionCamera {
     public:
-        OrthographicCamera(const Transform& cameraToWorld, tkFloat lensRadius,
-                           tkFloat focalLength /*, const Medium *medium*/, Image* image)
-            : ProjectionCamera(cameraToWorld, orthographic(0, 1), lensRadius, focalLength /*, medium*/,
-                               image) {}
+        OrthographicCamera(const Transform& cameraToWorld, tkFloat lensRadius, tkFloat focalLength,
+                           Image* image);
 
-        tkFloat generateRay(const CameraSample& sample, Ray& r) const override;
+        Ray generateRay(int x, int y, const CameraSample& sample) const override;
     };
 }  // namespace TK

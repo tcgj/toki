@@ -7,31 +7,28 @@
 
 namespace TK {
     struct CameraSample {
-        Point2f imgCoord;
-        Vec2f lens;
+        Vec2f pixelOffset;
+        Vec2f lensOffset;
     };
 
     class Camera {
     public:
-        Camera(const Transform& cameraToWorld /*, const Medium *medium*/, Image* image)
-            : m_CameraToWorld(cameraToWorld) /*, m_Medium(medium)*/, m_Image(image) {}
+        Camera(const Transform& cameraToWorld, Image* image)
+            : m_CameraToWorld(cameraToWorld), m_Image(image) {}
 
         virtual ~Camera() = default;
 
-        virtual tkFloat generateRay(const CameraSample& sample, Ray& r) const = 0;
+        virtual Ray generateRay(int x, int y, const CameraSample& sample) const = 0;
 
         Transform m_CameraToWorld;
         Image* m_Image;
-        // const Medium* m_Medium;
     };
 
     class ProjectionCamera : public Camera {
     public:
         ProjectionCamera(const Transform& cameraToWorld, const Transform& cameraToNDC, tkFloat lensRadius,
-                         tkFloat focalLength
-                         /*, const Medium *medium*/,
-                         Image* image)
-            : Camera(cameraToWorld /*, medium*/, image), m_LensRadius(lensRadius), m_FocalLength(focalLength) {
+                         tkFloat focalLength, Image* image)
+            : Camera(cameraToWorld, image), m_LensRadius(lensRadius), m_FocalLength(focalLength) {
             // image space has boundaries from (0, 0) to (res.x, res.y)
             Transform imageToNDC = translate(Vec3f(-1, -1, 0)) * scale((tkFloat)2 / image->m_Resolution.x,
                                                                          (tkFloat)2 / image->m_Resolution.y, 1);

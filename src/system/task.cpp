@@ -37,13 +37,9 @@ namespace TK
 
         for (int y = m_MinPt.y; y < m_MaxPt.y; ++y) {
             for (int x = m_MinPt.x; x < m_MaxPt.x; ++x) {
-                Point2i pix(x, y);
-                CameraSample sample = m_Sampler->getCameraSample(pix);
-
-                Ray ray;
-                camera->generateRay(sample, ray);
+                Ray ray = camera->generateRay(x, y, m_Sampler->getCameraSample());
                 tkSpectrum li = integrator->Li(m_Scene, ray, *m_Sampler);
-                camera->m_Image->updatePixelColor(pix, li);
+                camera->m_Image->updatePixelColor(x, y, li);
             }
         }
 
