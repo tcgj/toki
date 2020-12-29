@@ -3,7 +3,7 @@
 #define LOG(level, format, ...)           \
     Logger* logger = g_Context.logger(); \
     if (logger != nullptr)                \
-        logger->log(level, __FILE__, __LINE__, format, __VA_ARGS__);
+        logger->log(level, __FILE__, __LINE__, format, ##__VA_ARGS__);
 
 namespace TK {
     enum LogLevel {
