@@ -6,19 +6,19 @@ namespace TK {
     }
 
     tkSpectrum AreaLight::power() const {
-        return radiance * area * TK_PI;
+        return m_Radiance * m_Area * TK_PI;
     }
 
     tkSpectrum AreaLight::Le(const SurfaceInteraction& interaction, const Vec3f& wo) const {
         if (dot(interaction.n, wo) <= 0)
             return 0;
 
-        return radiance;
+        return m_Radiance;
     }
 
     tkSpectrum AreaLight::sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
                                  OcclusionChecker* occCheck) const {
-        SurfaceInteraction samplePt = shape->sample(ref, samp, pdf);
+        SurfaceInteraction samplePt = m_Shape->sample(ref, samp, pdf);
         *wi = -samplePt.wo;
         *occCheck = OcclusionChecker(ref, samplePt);
 
@@ -26,6 +26,6 @@ namespace TK {
     }
 
     tkFloat AreaLight::getPdf(const Interaction& ref, const Vec3f& wi) const {
-        return shape->getPdf(ref, wi);
+        return m_Shape->getPdf(ref, wi);
     }
 }  // namespace TK

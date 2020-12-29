@@ -8,7 +8,7 @@ namespace TK {
     public:
         AreaLight(const Transform& lightToWorld, const std::shared_ptr<Shape>& shape,
                   const tkSpectrum& radiance)
-            : Light(lightToWorld), shape(shape), radiance(radiance), area(shape->surfaceArea()) {}
+            : Light(lightToWorld), m_Shape(shape), m_Radiance(radiance), m_Area(shape->surfaceArea()) {}
 
         bool isDelta() const override;
 
@@ -22,8 +22,8 @@ namespace TK {
         tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const override;
 
     private:
-        std::shared_ptr<Shape> shape;
-        tkSpectrum radiance;
-        tkFloat area;
+        std::shared_ptr<Shape> m_Shape;
+        tkSpectrum m_Radiance;
+        tkFloat m_Area;
     };
 }  // namespace TK

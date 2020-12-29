@@ -6,7 +6,7 @@ namespace TK {
     class DirectionalLight : public Light {
     public:
         DirectionalLight(const Transform& lightToWorld, const tkSpectrum& radiance)
-            : Light(lightToWorld), radiance(radiance), dir(normalize(lightToWorld(Vec3f::right))) {}
+            : Light(lightToWorld), m_Radiance(radiance), m_Dir(normalize(lightToWorld(Vec3f::right))) {}
 
         void preprocess(const Scene& scene) override;
 
@@ -16,9 +16,9 @@ namespace TK {
                           OcclusionChecker* occCheck) const override;
 
     private:
-        tkSpectrum radiance;
-        Vec3f dir;
-        Point3f sceneCenter;
-        tkFloat sceneRadius;
+        tkSpectrum m_Radiance;
+        Vec3f m_Dir;
+        Point3f m_SceneCenter;
+        tkFloat m_SceneRadius;
     };
 }  // namespace TK
