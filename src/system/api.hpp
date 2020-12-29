@@ -9,6 +9,7 @@ namespace TK {
         std::string outfile;
         int threadCount = -1;
         bool fastRender = false;
+        bool gui = false;
     };
 
     namespace RenderAPI {

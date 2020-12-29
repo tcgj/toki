@@ -34,6 +34,7 @@ namespace TK {
         g_Context.m_Outfile = options.outfile;
         g_Context.m_ThreadCount = options.threadCount;
         g_Context.m_FastRender = options.fastRender;
+        g_Context.m_Gui = options.gui;
 
         // Setup logger
 #ifdef TK_DEBUG_MODE
@@ -334,6 +335,11 @@ namespace TK {
                 SCHEDULE_TASK(RenderTask, scene, g_Context.getSamplerClone(), minPt, maxPt,
                               g_Context.m_SamplesPerPixel);
             }
+        }
+
+        if (g_Context.m_Gui) {
+            // timeraster::setImageBuffer(g_Context.image());
+            // timeraster::mainLoop();
         }
     }
 

@@ -26,6 +26,8 @@ namespace TK {
                 options.outfile = argv[i];
             } else if (strcmp(str, "-f")) {
                 options.fastRender = true;
+            } else if (strcmp(str, "-g")) {
+                options.gui = true;
             } else {
                 inputFile = argv[i];
             }

@@ -33,6 +33,7 @@ namespace TK {
         std::string m_Outfile;
         int m_ThreadCount = 0;
         bool m_FastRender = false;
+        bool m_Gui = false;
 
         // Render Options
         int m_TileSize = 16;
