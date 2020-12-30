@@ -6,7 +6,7 @@
 namespace TK {
     class Sampler {
     public:
-        Sampler(int64_t samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
+        Sampler(int64_t samplesPerPixel) : m_SamplesPerPixel(samplesPerPixel) {}
 
         virtual ~Sampler() = default;
 
@@ -26,7 +26,7 @@ namespace TK {
 
         virtual std::unique_ptr<Sampler> getClone() = 0;
 
-        int64_t samplesPerPixel;
+        int64_t m_SamplesPerPixel;
 
     protected:
         // --Sampler state values--
@@ -53,18 +53,18 @@ namespace TK {
 
     inline void Sampler::requestFloats(int count) {
         m_FloatSetSizes.push_back(count);
-        m_FloatSet.push_back(std::vector<tkFloat>(count * samplesPerPixel));
+        m_FloatSet.push_back(std::vector<tkFloat>(count * m_SamplesPerPixel));
     }
 
     inline void Sampler::requestVectors(int count) {
         m_VectorSetSizes.push_back(count);
-        m_VectorSet.push_back(std::vector<Vec2f>(count * samplesPerPixel));
+        m_VectorSet.push_back(std::vector<Vec2f>(count * m_SamplesPerPixel));
     }
 
     inline bool Sampler::nextSample() {
         m_CurrentSample++;
         m_CurrentFloatSet = 0;
         m_CurrentVectorSet = 0;
-        return m_CurrentSample < samplesPerPixel;
+        return m_CurrentSample < m_SamplesPerPixel;
     }
 }  // namespace TK

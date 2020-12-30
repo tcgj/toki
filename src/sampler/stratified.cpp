@@ -44,8 +44,8 @@ namespace TK {
     void StratifiedSampler::setPixel(int x, int y) {
         // Set up float set
         for (auto &f : m_FloatSet) {
-            generateFloatSamples(f.data(), samplesPerPixel);
-            randomizeSamples(f.data(), samplesPerPixel);
+            generateFloatSamples(f.data(), m_SamplesPerPixel);
+            randomizeSamples(f.data(), m_SamplesPerPixel);
         }
         // Set up vector set
         for (auto &v : m_VectorSet) {
