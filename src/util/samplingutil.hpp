@@ -90,13 +90,13 @@ namespace TK {
     /* ----- Triangle Sampling ----- */
     inline Vec2f uniformTriangleSample(tkFloat u, tkFloat v) {
         // Uses the Eric Heitz Square-to-Triangle Mapping
-        Vec2f ret;
+        Vec2f ret(u, v);
         if (v > u) {
-            ret.x = u * 0.5f;
-            ret.y = v - ret.x;
+            ret.x *= 0.5f;
+            ret.y -= ret.x;
         } else {
-            ret.y = v * 0.5f;
-            ret.x = u - ret.y;
+            ret.y *= 0.5f;
+            ret.x -= ret.y;
         }
         return ret;
     }
