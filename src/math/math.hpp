@@ -24,6 +24,21 @@ namespace TK {
     constexpr tkFloat TK_MAXFLOAT = std::numeric_limits<tkFloat>::max();
     constexpr tkFloat TK_INFINITY = std::numeric_limits<tkFloat>::infinity();
 
+    // FMA-optimized operations
+    inline tkFloat differenceOfProducts(tkFloat a, tkFloat b, tkFloat c, tkFloat d) {
+        tkFloat cd = c * d;
+        tkFloat err = std::fma(-c, d, cd);
+        tkFloat dop = std::fma(a, b, -cd);
+        return dop + err;
+    }
+
+    inline tkFloat sumOfProducts(tkFloat a, tkFloat b, tkFloat c, tkFloat d) {
+        tkFloat cd = c * d;
+        tkFloat err = std::fma(c, d, -cd);
+        tkFloat sop = std::fma(a, b, cd);
+        return sop + err;
+    }
+
     // Generic math functions
     template <typename T, typename U>
     inline T lerp(const T& a, const T& b, U t) {
@@ -41,12 +56,11 @@ namespace TK {
     }
 
     inline bool quadratic(tkFloat a, tkFloat b, tkFloat c, tkFloat* t0, tkFloat* t1) {
-        double discriminant = (double)b * (double)b - 4 * (double)a * (double)c;
+        double discriminant = differenceOfProducts(b, b, 4 * a, c);
         if (discriminant < 0)
             return false;
 
-        double rootDiscriminant = std::sqrt(discriminant);
-        double x = -0.5 * (b < 0 ? b - rootDiscriminant : b + rootDiscriminant);
+        double x = -0.5 * (b + std::copysign(std::sqrt(discriminant), b));
         *t0 = x / a;
         *t1 = c / x;
         if (*t0 > *t1)

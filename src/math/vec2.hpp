@@ -194,12 +194,12 @@ namespace TK {
 
     template <typename T>
     inline tkFloat dot(const Vec2<T>& v1, const Vec2<T>& v2) {
-        return v1.x * v2.x + v1.y * v2.y;
+        return sumOfProducts(v1.x, v2.x, v1.y, v2.y);
     }
 
     template <typename T>
     inline tkFloat cross(const Vec2<T>& v1, const Vec2<T>& v2) {
-        return v1.x * v2.y - v1.y * v2.x;
+        return differenceOfProducts(v1.x, v2.y, v1.y, v2.x);
     }
 
     template <typename T>

@@ -30,7 +30,7 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
 endif ()
 
 # add flags
-set(CMAKE_CXX_FLAGS "-Wshadow-uncaptured-local")
+set(CMAKE_CXX_FLAGS "-Wshadow-uncaptured-local -march=native")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 

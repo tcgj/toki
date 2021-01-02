@@ -225,14 +225,14 @@ namespace TK {
 
     template <typename T>
     inline tkFloat dot(const Vec3<T>& v1, const Vec3<T>& v2) {
-        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+        return std::fma(v1.x, v2.x, sumOfProducts(v1.y, v2.y, v1.z, v2.z));
     }
 
     template <typename T>
     inline Vec3<T> cross(const Vec3<T>& v1, const Vec3<T>& v2) {
-        double v1x = v1.x, v1y = v1.y, v1z = v1.z;
-        double v2x = v2.x, v2y = v2.y, v2z = v2.z;
-        return Vec3<T>(v1y * v2z - v1z * v2y, v1z * v2x - v1x * v2z, v1x * v2y - v1y * v2x);
+        return Vec3<T>(differenceOfProducts(v1.y, v2.z, v1.z, v2.y),
+                       differenceOfProducts(v1.z, v2.x, v1.x, v2.z),
+                       differenceOfProducts(v1.x, v2.y, v1.y, v2.x));
     }
 
     template <typename T>
