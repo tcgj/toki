@@ -17,8 +17,7 @@ namespace TK {
 
             Ray test = interaction.spawnRayTo(w);
             test.tMax = m_MaxDist;
-            SurfaceInteraction its;
-            if (dotP == 0 || !scene.intersect(test, &its))
+            if (dotP == 0 || !scene.hasIntersect(test))
                 clearCount++;
         }
         return (tkFloat)clearCount / m_NumSamples;
