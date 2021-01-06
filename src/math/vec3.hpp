@@ -245,6 +245,11 @@ namespace TK {
     }
 
     template <typename T>
+    inline int maxAxis(const Vec3<T>& v) {
+        return v.x > v.y ? (v.x > v.z ? 0 : 2) : (v.y > v.z ? 1 : 2);
+    }
+
+    template <typename T>
     inline Vec3<T> swizzle(const Vec3<T>& v, int x, int y, int z) {
         return Vec3<T>(v[x], v[y], v[z]);
     }

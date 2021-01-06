@@ -13,8 +13,6 @@ namespace TK {
         Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V, const int64_t* I,
              const Vec3f* N, const Vec3f* UV);
 
-        bool getTriVertices(int64_t index, Vertex* v0, Vertex* v1, Vertex* v2) const;
-
         int64_t m_NumTri;
         int64_t m_NumVert;
         std::vector<int64_t> m_IndexBuffer;  // std::vector to allow for easy triangle inversion

@@ -5,9 +5,8 @@
 namespace TK {
     class Triangle : public Shape {
     public:
-        Triangle(const Transform* objectToWorld, const std::shared_ptr<Mesh>& mesh, int64_t triIndex,
-                 bool invertNormals = false)
-            : Shape(objectToWorld, invertNormals), m_Mesh(mesh), m_TriIndex(triIndex) {}
+        Triangle(const Transform* objectToWorld, std::shared_ptr<Mesh> mesh, int64_t triIndex,
+                 bool invertNormals = false);
 
         AABBf objectBoundingBox() const override;
 
@@ -23,6 +22,7 @@ namespace TK {
 
     private:
         std::shared_ptr<Mesh> m_Mesh;
-        int64_t m_TriIndex;
+        int64_t* m_Id;
+
     };
 }  // namespace TK
