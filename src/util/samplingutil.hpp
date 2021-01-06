@@ -107,6 +107,8 @@ namespace TK {
         Distribution(const std::vector<tkFloat> &f)
             : func(f), cdf(f.size() + 1) {
             int n = f.size();
+            if (n == 0)
+                LOG(LEVEL_WARNING, "Distribution [ EMPTY DISTRIBUTION SUPPLIED ]");
             cdf[0] = 0;
             for (int i = 1; i < n + 1; ++i) {
                 cdf[i] = cdf[i - 1] + f[i - 1] / n;
