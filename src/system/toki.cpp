@@ -39,14 +39,26 @@ namespace TK {
         std::cout << "This build is currently running in debug mode\n";
 #endif
 
-        // Init
-        RenderAPI::configure(options);
-        RenderAPI::parse(inputFile);
-        // Run
-        RenderAPI::render();
+        {
+            using clock = std::chrono::system_clock;
+            using ms = std::chrono::duration<double>;
 
-        // Cleanup
-        RenderAPI::shutdown();
+            const auto before = clock::now();
+
+            // Init
+            RenderAPI::configure(options);
+            RenderAPI::parse(inputFile);
+
+            // Run
+            RenderAPI::render();
+
+            // Cleanup
+            RenderAPI::shutdown();
+
+            const ms duration = clock::now() - before;
+
+            std::cout << "Process took: " << duration.count() << "s\n";
+        }
         return 0;
     }
 }  // namespace TK

@@ -244,16 +244,6 @@ namespace TK {
 
         // Scene
         g_Context.setScene(std::make_unique<Scene>(accel, lights, camera, integrator));
-        {
-            using clock = std::chrono::system_clock;
-            using ms = std::chrono::duration<double, std::milli>;
-
-            const auto before = clock::now();
-            // integrator.render(scene);
-            const ms duration = clock::now() - before;
-
-            std::cout << "Process took: " << duration.count() << "ms\n";
-        }
     }
 
     void testScene() {
