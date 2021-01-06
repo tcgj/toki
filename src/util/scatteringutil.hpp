@@ -60,12 +60,12 @@ namespace TK {
     inline Vec3f refract(const Vec3f& v, const Vec3f& n, tkFloat etaI, tkFloat etaT) {
         tkFloat eta = etaI / etaT;
         tkFloat cosI = dot(v, n);
-        tkFloat sinSqrI = std::max((tkFloat)0, 1 - cosI * cosI);
+        tkFloat sinSqrI = std::max((tkFloat)0, std::fma(-cosI, cosI, 1.0f));
         tkFloat sinSqrT = eta * eta * sinSqrI;
         if (sinSqrT >= 1)
             return Vec3f::zero;
 
         tkFloat cosT = std::sqrt(1 - sinSqrT);
-        return -eta * v + (eta * cosI - cosT) * n;
+        return -eta * v + std::fma(eta, cosI, -cosT) * n;
     }
 }  // namespace TK
