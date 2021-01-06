@@ -21,6 +21,10 @@ namespace TK {
         return Ray(p, d, 1.0f - TK_EPSILON);
     }
 
+    SurfaceInteraction::SurfaceInteraction(const Point3f& p, const Vec3f& n, const Vec3f& dpdu,
+                                           const Vec3f& dpdv, const Vec3f& wo, const Shape* shape)
+        : Interaction(p), n(n), dpdu(dpdu), dpdv(dpdv), wo(wo), shape(shape) {}
+
     Point3f SurfaceInteraction::offsetRayOrigin(const Point3f& p, const Vec3f& n) const {
         Vec3i offset(intOffsetScale * n.x, intOffsetScale * n.y, intOffsetScale * n.z);
 

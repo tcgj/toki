@@ -17,7 +17,7 @@ namespace TK {
         Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
-        tkFloat c = dot(r0, r0) - m_Radius * m_Radius;
+        tkFloat c = std::fma(-m_Radius, m_Radius, dot(r0, r0));
 
         tkFloat t0;
         tkFloat t1;
@@ -25,19 +25,16 @@ namespace TK {
             return false;
         if (t1 < TK_EPSILON || t0 > r.tMax)
             return false;
+
         if (t0 < TK_EPSILON)
             t0 = t1;
-
         *tHit = t0;
-        Vec3f normal = Vec3f(oRay(*tHit));
+
+        Vec3f normal(oRay(*tHit));
         Vec3f tangent = cross(Vec3f(0, 0, 1), normal);
-        normal = (*m_ObjectToWorld)(normal, true);
-        tangent = (*m_ObjectToWorld)(tangent);
-        interaction->p = r(*tHit);
-        interaction->n = normalize(m_InvertNormals ? -normal : normal);
-        interaction->dpdu = normalize(tangent);
-        interaction->wo = -r.d;
-        interaction->shape = this;
+        normal = normalize((*m_ObjectToWorld)(m_InvertNormals ? -normal : normal, true));
+        tangent = normalize((*m_ObjectToWorld)(tangent));
+        *interaction = SurfaceInteraction(r(*tHit), normal, tangent, Vec3f::zero, normalize(-r.d), this);
         return true;
     }
 
@@ -46,7 +43,7 @@ namespace TK {
         Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
         tkFloat b = 2 * dot(oRay.d, r0);
-        tkFloat c = dot(r0, r0) - m_Radius * m_Radius;
+        tkFloat c = std::fma(-m_Radius, m_Radius, dot(r0, r0));
 
         tkFloat t0;
         tkFloat t1;

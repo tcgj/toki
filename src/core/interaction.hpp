@@ -20,6 +20,11 @@ namespace TK {
 
     class SurfaceInteraction : public Interaction {
     public:
+        SurfaceInteraction() = default;
+
+        SurfaceInteraction(const Point3f& p, const Vec3f& n, const Vec3f& dpdu, const Vec3f& dpdv,
+                           const Vec3f& wo, const Shape* shape);
+
         Point3f offsetRayOrigin(const Point3f& o, const Vec3f& n) const;
 
         Ray spawnRayTo(const Vec3f& d) const override;
