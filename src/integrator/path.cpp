@@ -46,9 +46,11 @@ namespace TK {
             interaction.computeScattering(&bsdf);
 
             // Add direct lighting contribution with multiple importance sampling
-            tkFloat lightPdf;
-            auto light = getLightByDist(scene, sampler, *m_LightDist, &lightPdf);
-            li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
+            if (m_LightDist != nullptr) {
+                tkFloat lightPdf;
+                auto light = getLightByDist(scene, sampler, *m_LightDist, &lightPdf);
+                li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
+            }
 
             // Spawn ray for next bounce
             Vec3f wi;
