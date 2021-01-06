@@ -20,7 +20,7 @@ namespace TK {
                                  OcclusionChecker* occCheck) const {
         SurfaceInteraction samplePt = m_Shape->sample(ref, samp, pdf);
         *wi = -samplePt.wo;
-        *occCheck = OcclusionChecker(ref, samplePt);
+        *occCheck = OcclusionChecker(samplePt, ref);
 
         return Le(samplePt, samplePt.wo);
     }
