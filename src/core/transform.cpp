@@ -118,17 +118,4 @@ namespace TK {
 
         return Transform(inverse(viewMatrix), viewMatrix);
     }
-
-    // Projection Transform
-    Transform orthographic(tkFloat near, tkFloat far) {
-        return scale(1, 1, 1 / (far - near)) * translate(Vec3f(0, 0, near));
-    }
-
-    Transform perspective(tkFloat fovy, tkFloat aspect, tkFloat near, tkFloat far) {
-        tkFloat fMinusN = far - near;
-        tkFloat oneOverTan = -1 / std::tan(degToRad(fovy) * 0.5);
-        Matrix44 persp(oneOverTan / aspect, 0, 0, 0, 0, oneOverTan, 0, 0, 0, 0, far / fMinusN,
-                       near * far / fMinusN, 0, 0, 1, 0);
-        return Transform(persp);
-    }
 }  // namespace TK

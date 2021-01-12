@@ -7,8 +7,8 @@
 
 namespace TK {
     struct CameraSample {
-        Vec2f pixelOffset;
-        Vec2f lensOffset;
+        Vec2f pixelRand;
+        Vec2f lensRand;
     };
 
     class Camera {
@@ -26,18 +26,12 @@ namespace TK {
 
     class ProjectionCamera : public Camera {
     public:
-        ProjectionCamera(const Transform& cameraToWorld, const Transform& cameraToNDC, tkFloat lensRadius,
-                         tkFloat focalLength, Image* image)
-            : Camera(cameraToWorld, image), m_LensRadius(lensRadius), m_FocalLength(focalLength) {
-            // image space has boundaries from (0, 0) to (res.x, res.y)
-            Transform imageToNDC = translate(Vec3f(-1, -1, 0)) * scale((tkFloat)2 / image->m_Resolution.x,
-                                                                         (tkFloat)2 / image->m_Resolution.y, 1);
-            m_ImageToCamera = inverse(cameraToNDC) * imageToNDC;
-        }
+        ProjectionCamera(const Transform& cameraToWorld, tkFloat apertureRadius,
+                         tkFloat focalDistance, Image* image)
+            : Camera(cameraToWorld, image), m_ApertureRadius(apertureRadius), m_FocalDistance(focalDistance) {}
 
-        // protected:
-        Transform m_ImageToCamera;
-        tkFloat m_LensRadius;
-        tkFloat m_FocalLength;
+    protected:
+        tkFloat m_ApertureRadius;
+        tkFloat m_FocalDistance;
     };
 }  // namespace TK
