@@ -131,13 +131,13 @@ namespace TK {
         return Point3<T>(p.x - v.x, p.y - v.y, p.z - v.z);
     }
 
-    template <typename T, typename U>
-    inline Point3<T> operator*(const Point3<T>& p, U s) {
-        return Point3(p.x * s, p.y * s, p.z * s);
+    template <typename T>
+    inline Point3<T> operator*(const Point3<T>& p, T s) {
+        return Point3<T>(p.x * s, p.y * s, p.z * s);
     }
 
-    template <typename T, typename U>
-    inline Point3<T> operator*(U s, const Point3<T>& p) {
+    template <typename T>
+    inline Point3<T> operator*(T s, const Point3<T>& p) {
         return Point3<T>(p.x * s, p.y * s, p.z * s);
     }
 

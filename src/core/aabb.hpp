@@ -94,7 +94,7 @@ namespace TK {
 
     template <typename T>
     inline Point3<T> AABB<T>::center() const {
-        return 0.5 * (m_Min + m_Max);
+        return 0.5f * (m_Min + m_Max);
     }
 
     template <typename T>
