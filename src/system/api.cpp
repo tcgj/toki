@@ -13,6 +13,7 @@
 #include "sampler/stratified.hpp"
 #include "integrator/whitted.hpp"
 #include "integrator/path.hpp"
+#include "integrator/ao.hpp"
 #include "region/primitive.hpp"
 #include "shape/triangle.hpp"
 #include "shape/sphere.hpp"
@@ -62,11 +63,11 @@ namespace TK {
 
         // Cornell Box
         Point3f eye(278, 273, -800);
-        Point3f at(278, 273, 0);
+        Point3f at(278, 273, 100);
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
 
         g_Context.setImage(std::make_unique<PNGImage>(g_Context.m_Resolution, g_Context.m_Outfile));
-        auto camera = std::make_shared<PerspectiveCamera>(cameraToWorld, 1.0f, (at - eye).magnitude(), 40.0f,
+        auto camera = std::make_shared<PerspectiveCamera>(cameraToWorld, 100.0f, (at - eye).magnitude(), 40.0f,
                                                           g_Context.image());
         // Round samplesPerPixel to nearest power of 2, then set to x/y, and get number of dimensions needed
         g_Context.setSampler(std::make_unique<StratifiedSampler>(8, 8, 0));
@@ -84,16 +85,16 @@ namespace TK {
 
         // Lights
         std::vector<std::shared_ptr<Light>> lights;
-        // lights.push_back(std::make_shared<DirectionalLight>(rotateY(degToRad(-90)), tkSpectrum(0.7)));
+        // lights.push_back(std::make_shared<DirectionalLight>(rotateZ(degToRad(-90)), tkSpectrum(10.0f)));
         // lights.push_back(std::make_shared<PointLight>(
         //     translate(Vec3f(343, 540, 227)), tkSpectrum(100000)));
         // lights.push_back(std::make_shared<PointLight>(
         //     translate(Vec3f(213, 540, 332)), tkSpectrum(100000)));
-        Transform lightPos = translate(Vec3f(278, 548.8, 279.5));
-        auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
-        auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(10.0f));
-        lights.push_back(areaLight);
-        prims.push_back(std::make_shared<Primitive>(sphereLight, matteWhite, areaLight));
+        // Transform lightPos = translate(Vec3f(278, 548.8, 279.5));
+        // auto sphereLight = std::make_shared<Sphere>(&lightPos, 65);
+        // auto areaLight = std::make_shared<AreaLight>(Transform(), sphereLight, tkSpectrum(10.0f));
+        // lights.push_back(areaLight);
+        // prims.push_back(std::make_shared<Primitive>(sphereLight, matteWhite, areaLight));
 
         // Geometry
         Transform tf = translate(Vec3f::zero);
@@ -111,15 +112,13 @@ namespace TK {
             Point3f(556, 548.8, 559.2),
             // Right wall 8-9
             Point3f(0, 0, 559.2), Point3f(0, 0, 0), Point3f(0, 548.8, 0), Point3f(0, 548.8, 559.2),
-            // Left wall 1011
+            // Left wall 10-11
             Point3f(552.8, 0, 0), Point3f(549.6, 0, 559.2), Point3f(556, 548.8, 559.2),
             Point3f(556, 548.8, 0),
             // Short block 12-21
-            Point3f(130, 165, 65), Point3f(82, 165, 225), Point3f(240, 165, 272),
-            Point3f(290, 165, 114),
+            Point3f(130, 165, 65), Point3f(82, 165, 225), Point3f(240, 165, 272), Point3f(290, 165, 114),
 
-            Point3f(290, 0, 114), Point3f(290, 165, 114), Point3f(240, 165, 272),
-            Point3f(240, 0, 272),
+            Point3f(290, 0, 114), Point3f(290, 165, 114), Point3f(240, 165, 272), Point3f(240, 0, 272),
 
             Point3f(130, 0, 65), Point3f(130, 165, 65), Point3f(290, 165, 114), Point3f(290, 0, 114),
 
@@ -127,17 +126,13 @@ namespace TK {
 
             Point3f(240, 0, 272), Point3f(240, 165, 272), Point3f(82, 165, 225), Point3f(82, 0, 225),
             // Tall Block 22-31
-            Point3f(423, 330, 247), Point3f(265, 330, 296), Point3f(314, 330, 456),
-            Point3f(472, 330, 406),
+            Point3f(423, 330, 247), Point3f(265, 330, 296), Point3f(314, 330, 456), Point3f(472, 330, 406),
 
-            Point3f(423, 0, 247), Point3f(423, 330, 247), Point3f(472, 330, 406),
-            Point3f(472, 0, 406),
+            Point3f(423, 0, 247), Point3f(423, 330, 247), Point3f(472, 330, 406), Point3f(472, 0, 406),
 
-            Point3f(472, 0, 406), Point3f(472, 330, 406), Point3f(314, 330, 456),
-            Point3f(314, 0, 456),
+            Point3f(472, 0, 406), Point3f(472, 330, 406), Point3f(314, 330, 456), Point3f(314, 0, 456),
 
-            Point3f(314, 0, 456), Point3f(314, 330, 456), Point3f(265, 330, 296),
-            Point3f(265, 0, 296),
+            Point3f(314, 0, 456), Point3f(314, 330, 456), Point3f(265, 330, 296), Point3f(265, 0, 296),
 
             Point3f(265, 0, 296), Point3f(265, 330, 296), Point3f(423, 330, 247), Point3f(423, 0, 247)
         };
@@ -200,7 +195,8 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri9, matteGreen));
         prims.push_back(std::make_shared<Primitive>(tri10, matteRed));
         prims.push_back(std::make_shared<Primitive>(tri11, matteRed));
-        /*prims.push_back(std::make_shared<Primitive>(tri12, matteWhite));
+        // Start blocks
+        prims.push_back(std::make_shared<Primitive>(tri12, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri13, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri14, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri15, matteWhite));
@@ -219,7 +215,8 @@ namespace TK {
         prims.push_back(std::make_shared<Primitive>(tri28, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri29, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri30, matteWhite));
-        prims.push_back(std::make_shared<Primitive>(tri31, matteWhite));*/
+        prims.push_back(std::make_shared<Primitive>(tri31, matteWhite));
+        // End blocks
         prims.push_back(std::make_shared<Primitive>(tri32, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri33, matteWhite));
         prims.push_back(std::make_shared<Primitive>(tri34, matteWhite));
@@ -231,16 +228,16 @@ namespace TK {
         auto mirrorSphere = std::make_shared<Sphere>(&sphereTf, 103);
         prims.push_back(std::make_shared<Primitive>(mirrorSphere, mirror));*/
 
-        // lights.push_back(areaLight1);
-        // lights.push_back(areaLight2);
+        lights.push_back(areaLight1);
+        lights.push_back(areaLight2);
 
         // Accel Structure
         // auto accel = std::make_shared<Iterator>(prims, AABBf(Point3f(0), Point3f(560, 560, -560)));
         auto accel = std::make_shared<BVH>(prims);
 
-
-        // WhittedIntegrator integrator(3, camera, sampler);
+        // auto integrator = std::make_shared<WhittedIntegrator>(3);
         auto integrator = std::make_shared<PathTracingIntegrator>(20);
+        // auto integrator = std::make_shared<AOIntegrator>(100, 40);
 
         // Scene
         g_Context.setScene(std::make_unique<Scene>(accel, lights, camera, integrator));
