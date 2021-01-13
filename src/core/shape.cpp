@@ -8,8 +8,8 @@ namespace TK {
     // Default inefficient intersection test
     bool Shape::hasIntersect(const Ray& r) const {
         tkFloat tHit;
-        SurfaceInteraction interaction;
-        return intersect(r, &tHit, &interaction);
+        SurfaceInteraction its;
+        return intersect(r, tHit, its);
     }
 
     tkFloat Shape::getPdf(const Interaction& ref, const SurfaceInteraction& surface) const {
@@ -25,10 +25,10 @@ namespace TK {
     tkFloat Shape::getPdf(const Interaction& ref, const Vec3f& wi) const {
         Ray r = ref.spawnRayTo(wi);
         tkFloat tHit;
-        SurfaceInteraction interaction;
-        if (!intersect(r, &tHit, &interaction))
+        SurfaceInteraction its;
+        if (!intersect(r, tHit, its))
             return 0;
 
-        return getPdf(ref, interaction);
+        return getPdf(ref, its);
     }
 }  // namespace TK

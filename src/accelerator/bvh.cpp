@@ -53,12 +53,12 @@ namespace TK {
     }
 
     // Traverse the BVH to find the closest surface interaction
-    bool BVH::intersect(const Ray& r, SurfaceInteraction* interaction) const {
-        return intersectNode(r, 0, interaction);
+    bool BVH::intersect(const Ray& r, SurfaceInteraction& out_its) const {
+        return intersectNode(r, 0, &out_its);
     }
 
     // Start traversal from particular node
-    bool BVH::intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* interaction) const {
+    bool BVH::intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* out_its) const {
         // Pre-calculation for aabb intersection test
         Vec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
         int dirNegative[3] = { invD.x < 0, invD.y < 0, invD.z < 0 };
@@ -74,9 +74,9 @@ namespace TK {
             }
             // Intersected bounding box, check if leaf/interior
             if (m_Nodes[curr].count > 0) {
-                if (interaction != nullptr) {
+                if (out_its != nullptr) {
                     for (int64_t i = 0; i < m_Nodes[curr].count; ++i) {
-                        if (m_Primitives[m_Nodes[curr].offset + i]->intersect(r, interaction))
+                        if (m_Primitives[m_Nodes[curr].offset + i]->intersect(r, *out_its))
                             hit = true;
                     }
                 } else {

@@ -11,21 +11,21 @@
 namespace TK {
     tkSpectrum WhittedIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const {
         tkSpectrum li;
-        SurfaceInteraction interaction;
-        if (!scene.intersect(r, &interaction)) {
+        SurfaceInteraction its;
+        if (!scene.intersect(r, its)) {
             // TODO: get radiance contribution from
             // light source along the ray if any (sky light etc)
             return li;
         }
 
         BSDF bsdf;
-        interaction.computeScattering(&bsdf);
+        its.computeScattering(&bsdf);
 
-        Vec3f normal = interaction.n;
-        Vec3f wo = interaction.wo;
+        Vec3f normal = its.n;
+        Vec3f wo = its.wo;
 
         // Add emission contribution if interaction with light
-        li += interaction.Le();
+        li += its.Le();
 
         // Add contribution of lighting on surface point
         for (const auto& light : scene.m_Lights) {
@@ -36,7 +36,7 @@ namespace TK {
             Vec3f wi;
             tkFloat pdf;
             OcclusionChecker occCheck;
-            tkSpectrum ld = light->sample(interaction, &wi, sampler.nextVector(), &pdf, &occCheck);
+            tkSpectrum ld = light->sample(its, sampler.nextVector(), wi, pdf, occCheck);
             if (pdf == 0 || ld.isBlack())
                 continue;
 
@@ -48,8 +48,8 @@ namespace TK {
         // Spawn secondary rays from intersection point
         // if depth is under max depth
         if (depth < m_MaxDepth - 1) {
-            li += specularReflectedLi(interaction, scene, r, sampler, depth);
-            li += specularRefractedLi(interaction, scene, r, sampler, depth);
+            li += specularReflectedLi(its, scene, r, sampler, depth);
+            li += specularRefractedLi(its, scene, r, sampler, depth);
         }
 
         return li;

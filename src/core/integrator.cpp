@@ -57,22 +57,22 @@ namespace TK {
     }
     */
 
-    tkSpectrum Integrator::specularReflectedLi(const SurfaceInteraction& interaction,
+    tkSpectrum Integrator::specularReflectedLi(const SurfaceInteraction& its,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
                                                       int depth) const {
-        Vec3f wo = interaction.wo;
+        Vec3f wo = its.wo;
         Vec3f wi;
         tkFloat pdf;
         BxDFType type = BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE);
-        tkSpectrum f = interaction.bsdf->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
-        tkFloat cosTheta = std::abs(dot(interaction.n, wi));
+        tkSpectrum f = its.bsdf->sample(wo, &wi, sampler.nextVector(), &pdf, 0, type);
+        tkFloat cosTheta = std::abs(dot(its.n, wi));
         if (pdf == 0 || f.isBlack() || cosTheta == 0)
             return 0;
-        Ray reflectedRay = interaction.spawnRayTo(wi);
+        Ray reflectedRay = its.spawnRayTo(wi);
         return f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / pdf;
     }
 
-    tkSpectrum Integrator::specularRefractedLi(const SurfaceInteraction& interaction,
+    tkSpectrum Integrator::specularRefractedLi(const SurfaceInteraction& its,
                                                       const Scene& scene, const Ray& r, Sampler& sampler,
                                                       int depth) const {
         // Not implemented yet
@@ -96,25 +96,25 @@ namespace TK {
         OcclusionChecker occCheck;
 
         // Sampling the light
-        tkSpectrum lightLd = light->sample(ref, &wi, sampler.nextVector(), &lightPdf, &occCheck);
+        tkSpectrum lightLd = light->sample(ref, sampler.nextVector(), wi, lightPdf, occCheck);
         if (lightPdf > 0 && !lightLd.isBlack()) {
             tkSpectrum f = ref.bsdf->evaluate(ref.wo, wi);
             if (!f.isBlack() && occCheck.notOccluded(scene)) {
                 tkFloat weight = 1;
                 // If light is delta, don't use MIS
-                if (!light->isDelta()) {
+                // if (!light->isDelta()) {
                     scatterPdf = ref.bsdf->getPdf(ref.wo, wi);
                     weight = powerHeuristic(1, lightPdf, 1, scatterPdf);
-                }
+                // }
 
                 ld += f * lightLd * weight * std::abs(dot(wi, ref.n)) / lightPdf;
             }
         }
 
         // Sampling the BSDF
-        if (light->isDelta()) {
+        // if (light->isDelta()) {
             return ld;
-        }
+        // }
 
         BxDFType sampledType;
         tkSpectrum f = ref.bsdf->sample(ref.wo, &wi, sampler.nextVector(), &scatterPdf, &sampledType);
@@ -131,7 +131,7 @@ namespace TK {
             SurfaceInteraction lightInteraction;
             Ray r = ref.spawnRayTo(wi);
             tkSpectrum scatterLd;
-            if (scene.intersect(r, &lightInteraction) && lightInteraction.primitive->getLight() == light)
+            if (scene.intersect(r, lightInteraction) && lightInteraction.primitive->getLight() == light)
                 scatterLd += lightInteraction.Le();
 
             if (!scatterLd.isBlack()) {

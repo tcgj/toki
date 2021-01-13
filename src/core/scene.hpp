@@ -11,7 +11,7 @@ namespace TK {
 
         const AABBf& worldBoundingBox() const;
 
-        bool intersect(const Ray& r, SurfaceInteraction* interaction) const;
+        bool intersect(const Ray& r, SurfaceInteraction& out_its) const;
 
         bool hasIntersect(const Ray& r) const;
 

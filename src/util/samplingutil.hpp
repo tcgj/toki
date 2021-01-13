@@ -126,7 +126,7 @@ namespace TK {
             }
         }
 
-        tkFloat sampleContinuous(tkFloat u, tkFloat *pdf) const {
+        tkFloat sampleContinuous(tkFloat u, tkFloat *pdf = nullptr) const {
             int index = getInterval(cdf.size(), [&](int i) { return cdf[i] <= u; });
             tkFloat offset = u - cdf[index];
             int diff = (cdf[index + 1] - cdf[index]);

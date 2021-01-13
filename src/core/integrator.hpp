@@ -13,10 +13,10 @@ namespace TK {
 
         virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth = 0) const = 0;
 
-        tkSpectrum specularReflectedLi(const SurfaceInteraction& interaction, const Scene& scene,
+        tkSpectrum specularReflectedLi(const SurfaceInteraction& its, const Scene& scene,
                                        const Ray& r, Sampler& sampler, int depth) const;
 
-        tkSpectrum specularRefractedLi(const SurfaceInteraction& interaction, const Scene& scene,
+        tkSpectrum specularRefractedLi(const SurfaceInteraction& its, const Scene& scene,
                                        const Ray& r, Sampler& sampler, int depth) const;
     };
 

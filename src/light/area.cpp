@@ -9,18 +9,18 @@ namespace TK {
         return m_Radiance * m_Area * TK_PI;
     }
 
-    tkSpectrum AreaLight::Le(const SurfaceInteraction& interaction, const Vec3f& wo) const {
-        if (dot(interaction.n, wo) <= 0)
+    tkSpectrum AreaLight::Le(const SurfaceInteraction& its, const Vec3f& wo) const {
+        if (dot(its.n, wo) <= 0)
             return 0;
 
         return m_Radiance;
     }
 
-    tkSpectrum AreaLight::sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
-                                 OcclusionChecker* occCheck) const {
-        SurfaceInteraction samplePt = m_Shape->sample(ref, samp, pdf);
-        *wi = -samplePt.wo;
-        *occCheck = OcclusionChecker(samplePt, ref);
+    tkSpectrum AreaLight::sample(const Interaction& ref, const Vec2f& u, Vec3f& out_wi, tkFloat& out_pdf,
+                                 OcclusionChecker& out_checker) const {
+        SurfaceInteraction samplePt = m_Shape->sample(ref, u, out_pdf);
+        out_wi = -samplePt.wo;
+        out_checker = OcclusionChecker(samplePt, ref);
 
         return Le(samplePt, samplePt.wo);
     }

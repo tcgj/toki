@@ -21,8 +21,8 @@ namespace TK {
         return m_WorldBB;
     }
 
-    bool Scene::intersect(const Ray& r, SurfaceInteraction* interaction) const {
-        return m_Region->intersect(r, interaction);
+    bool Scene::intersect(const Ray& r, SurfaceInteraction& out_its) const {
+        return m_Region->intersect(r, out_its);
     }
 
     bool Scene::hasIntersect(const Ray& r) const {

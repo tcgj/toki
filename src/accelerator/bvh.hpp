@@ -14,7 +14,7 @@ namespace TK {
 
         bool hasIntersect(const Ray& r) const override;
 
-        bool intersect(const Ray& r, SurfaceInteraction* interaction) const override;
+        bool intersect(const Ray& r, SurfaceInteraction& out_its) const override;
 
     private:
         struct PrimitiveUnit;
@@ -44,7 +44,7 @@ namespace TK {
         };
 
         // Stack-based BVH traversal
-        bool intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* interaction = nullptr) const;
+        bool intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* out_its = nullptr) const;
 
         // BVH Construction Functions
         void buildSAH(int64_t nodeIndex, int64_t start, int64_t end, std::vector<PrimitiveUnit>& pSet);

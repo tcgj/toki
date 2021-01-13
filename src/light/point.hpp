@@ -14,8 +14,8 @@ namespace TK {
 
         tkSpectrum power() const override;
 
-        tkSpectrum sample(const Interaction& ref, Vec3f* wi, const Vec2f& samp, tkFloat* pdf,
-                          OcclusionChecker* occCheck) const override;
+        tkSpectrum sample(const Interaction& ref, const Vec2f& u, Vec3f& out_wi, tkFloat& out_pdf,
+                          OcclusionChecker& out_checker) const override;
 
     private:
         tkSpectrum m_Intensity;

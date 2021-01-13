@@ -24,16 +24,16 @@ namespace TK {
         tkSpectrum li;
         tkSpectrum throughput(1);
         Ray ray(r);
-        SurfaceInteraction interaction;
+        SurfaceInteraction its;
 
         for (int bounces = 0;; ++bounces) {
-            bool hit = scene.intersect(ray, &interaction);
+            bool hit = scene.intersect(ray, its);
             // Emission is not included in computation as we compute direct lighting during each bounce
             // and we want to avoid sampling the same surface again if it was reached on the next bounce.
             // However, emission contribution is included for bounce 0 as no direct lighting was done prior.
             if (bounces == 0) {
                 if (hit)
-                    li += throughput * interaction.Le();
+                    li += throughput * its.Le();
                 // else
                 // li += scene.Le();
             }
@@ -43,24 +43,24 @@ namespace TK {
                 break;
 
             BSDF bsdf;
-            interaction.computeScattering(&bsdf);
+            its.computeScattering(&bsdf);
 
             // Add direct lighting contribution with multiple importance sampling
             if (m_LightDist != nullptr) {
                 tkFloat lightPdf;
                 auto light = getLightByDist(scene, sampler, *m_LightDist, &lightPdf);
-                li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
+                li += throughput * miSampleLd(its, scene, light, sampler) / lightPdf;
             }
 
             // Spawn ray for next bounce
             Vec3f wi;
             tkFloat pdf;
             BxDFType sampledType;
-            tkSpectrum f = bsdf.sample(interaction.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
+            tkSpectrum f = bsdf.sample(its.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
             if (pdf == 0 || f.isBlack())
                 break;
-            throughput *= f * std::abs(dot(wi, interaction.n)) / pdf;
-            ray = interaction.spawnRayTo(wi);
+            throughput *= f * std::abs(dot(wi, its.n)) / pdf;
+            ray = its.spawnRayTo(wi);
         }
         return li;
     }

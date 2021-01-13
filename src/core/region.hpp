@@ -9,7 +9,7 @@ namespace TK {
 
         virtual AABBf worldBoundingBox() const = 0;
 
-        virtual bool intersect(const Ray& r, SurfaceInteraction* interaction) const = 0;
+        virtual bool intersect(const Ray& r, SurfaceInteraction& out_its) const = 0;
 
         virtual bool hasIntersect(const Ray& r) const = 0;
     };

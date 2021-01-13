@@ -11,9 +11,9 @@ namespace TK {
         }
     }
 
-    void BSDF::initialize(const SurfaceInteraction& interaction) {
-        m_N = interaction.n;
-        m_T = interaction.dpdu;
+    void BSDF::initialize(const SurfaceInteraction& its) {
+        m_N = its.n;
+        m_T = its.dpdu;
         m_Bt = normalize(cross(m_N, m_T));
     }
 

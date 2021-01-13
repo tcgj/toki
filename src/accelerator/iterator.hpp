@@ -26,10 +26,10 @@ namespace TK {
             return false;
         }
 
-        bool intersect(const Ray& r, SurfaceInteraction* interaction) const override {
+        bool intersect(const Ray& r, SurfaceInteraction& out_its) const override {
             bool hasIntersected = false;
             for (const auto& prim : m_Primitives) {
-                if (prim->intersect(r, interaction)) {
+                if (prim->intersect(r, out_its)) {
                     hasIntersected = true;
                 }
             }

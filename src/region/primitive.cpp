@@ -10,13 +10,13 @@ namespace TK {
         return m_Shape->worldBoundingBox();
     }
 
-    bool Primitive::intersect(const Ray& r, SurfaceInteraction* interaction) const {
+    bool Primitive::intersect(const Ray& r, SurfaceInteraction& out_its) const {
         tkFloat tHit;
-        if (!m_Shape->intersect(r, &tHit, interaction))
+        if (!m_Shape->intersect(r, tHit, out_its))
             return false;
 
         r.tMax = tHit;
-        interaction->primitive = this;
+        out_its.primitive = this;
         return true;
     }
 

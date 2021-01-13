@@ -12,7 +12,7 @@ namespace TK {
         return 4 * TK_PI * m_Radius * m_Radius;
     }
 
-    bool Sphere::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
+    bool Sphere::intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const {
         Ray oRay = m_ObjectToWorld->applyInverse(r);
         Vec3f r0 = Vec3f(oRay.o);
         tkFloat a = dot(oRay.d, oRay.d);
@@ -28,13 +28,13 @@ namespace TK {
 
         if (t0 < TK_EPSILON)
             t0 = t1;
-        *tHit = t0;
+        out_tHit = t0;
 
-        Vec3f normal(oRay(*tHit));
+        Vec3f normal(oRay(out_tHit));
         Vec3f tangent = cross(Vec3f(0, 0, 1), normal);
         normal = normalize((*m_ObjectToWorld)(m_InvertNormals ? -normal : normal, true));
         tangent = normalize((*m_ObjectToWorld)(tangent));
-        *interaction = SurfaceInteraction(r(*tHit), normal, tangent, Vec3f::zero, normalize(-r.d), this);
+        out_its = SurfaceInteraction(r(out_tHit), normal, tangent, Vec3f::zero, normalize(-r.d), this);
         return true;
     }
 
@@ -55,7 +55,7 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Sphere::sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const {
+    SurfaceInteraction Sphere::sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const {
         Point3f center = (*m_ObjectToWorld)(Point3f::zero);
         Vec3f centerToRef = ref.p - center;
         Vec3f z = normalize(centerToRef);
@@ -69,13 +69,13 @@ namespace TK {
 
         // Check if ref is within sphere
         if (sqrDist <= sqrRadius) {
-            Vec3f n = m_Radius * uniformSphereSample(samp[0], samp[1]);
+            Vec3f n = m_Radius * uniformSphereSample(u[0], u[1]);
             ret.n = (*m_ObjectToWorld)(n, true);
             ret.p = (*m_ObjectToWorld)(Point3f(n));
             if (m_InvertNormals)
                 ret.n = -ret.n;
             ret.wo = normalize(ref.p - ret.p);
-            *pdf = Shape::getPdf(ref, ret);
+            out_pdf = Shape::getPdf(ref, ret);
             return ret;
         }
 
@@ -83,9 +83,9 @@ namespace TK {
         tkFloat cosMaxTheta = std::sqrt(clamp(cosSqrTheta, 0, 1));
 
         // Random sample cone
-        tkFloat cosTheta = 1 + (cosMaxTheta - 1) * samp[0];
+        tkFloat cosTheta = 1 + (cosMaxTheta - 1) * u[0];
         tkFloat sinSqrTheta = 1 - cosTheta * cosTheta;
-        tkFloat phi = 2 * TK_PI * samp[1];
+        tkFloat phi = 2 * TK_PI * u[1];
 
         tkFloat dist = std::sqrt(sqrDist);
         tkFloat sampleDist = dist * cosTheta - std::sqrt(sqrRadius - sqrDist * sinSqrTheta);
@@ -99,7 +99,7 @@ namespace TK {
         if (m_InvertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);
-        *pdf = uniformConePdf(cosMaxTheta);
+        out_pdf = uniformConePdf(cosMaxTheta);
         return ret;
     }
 

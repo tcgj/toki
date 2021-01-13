@@ -8,7 +8,7 @@ namespace TK {
     public:
         ~BSDF();
 
-        void initialize(const SurfaceInteraction& interaction);
+        void initialize(const SurfaceInteraction& its);
 
         tkSpectrum evaluate(const Vec3f& worldWo, const Vec3f& worldWi, BxDFType type = BXDF_ALL) const;
 

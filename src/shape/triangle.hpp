@@ -5,7 +5,7 @@
 namespace TK {
     class Triangle : public Shape {
     public:
-        Triangle(const Transform* objectToWorld, std::shared_ptr<Mesh> mesh, int64_t triIndex,
+        Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex,
                  bool invertNormals = false);
 
         AABBf objectBoundingBox() const override;
@@ -14,11 +14,11 @@ namespace TK {
 
         tkFloat surfaceArea() const override;
 
-        bool intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const override;
+        bool intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const override;
 
         bool hasIntersect(const Ray& r) const override;
 
-        SurfaceInteraction sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const override;
+        SurfaceInteraction sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const override;
 
     private:
         std::shared_ptr<Mesh> m_Mesh;

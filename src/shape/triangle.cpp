@@ -6,9 +6,9 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    Triangle::Triangle(const Transform* objectToWorld, std::shared_ptr<Mesh> mesh, int64_t triIndex,
+    Triangle::Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex,
                        bool invertNormals)
-        : Shape(objectToWorld, invertNormals), m_Mesh(std::move(mesh)) {
+        : Shape(nullptr, invertNormals), m_Mesh(std::move(mesh)) {
         m_Id = &(m_Mesh->m_IndexBuffer[3 * triIndex]);
     }
 
@@ -17,8 +17,7 @@ namespace TK {
         Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
         Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
 
-        return bbUnion(AABBf(m_ObjectToWorld->applyInverse(p0), m_ObjectToWorld->applyInverse(p1)),
-                       m_ObjectToWorld->applyInverse(p2));
+        return bbUnion(AABBf(Point3f(), Point3f(p1 - p0)), Point3f(p2 - p0));
     }
 
     AABBf Triangle::worldBoundingBox() const {
@@ -38,7 +37,7 @@ namespace TK {
 
     // Implementation of Woop et al. Watertight Ray/Triangle Intersection from
     // http://jcgt.org/published/0002/01/05/paper.pdf
-    bool Triangle::intersect(const Ray& r, tkFloat* tHit, SurfaceInteraction* interaction) const {
+    bool Triangle::intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const {
         Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
         Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
         Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
@@ -135,10 +134,10 @@ namespace TK {
             bitangent = normalize((duv1[0] * v02 - duv2[0] * v01) * invDet);
         }
 
-        *tHit = t;
+        out_tHit = t;
         Point3f hitP = b0 * p0 + b1 * p1 + b2 * p2;
         // TODO: set shading normal based on whether normal was provided for vertices
-        *interaction = SurfaceInteraction(hitP, m_InvertNormals ? -normal : normal, tangent, bitangent,
+        out_its = SurfaceInteraction(hitP, m_InvertNormals ? -normal : normal, tangent, bitangent,
                                           normalize(-r.d), this);
         return true;
     }
@@ -213,13 +212,13 @@ namespace TK {
         return true;
     }
 
-    SurfaceInteraction Triangle::sample(const Interaction& ref, const Vec2f& samp, tkFloat* pdf) const {
+    SurfaceInteraction Triangle::sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const {
         SurfaceInteraction ret;
 
         Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
         Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
         Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
-        Vec2f bCoord = uniformTriangleSample(samp[0], samp[1]);
+        Vec2f bCoord = uniformTriangleSample(u[0], u[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
         ret.p = bCoord.x * p0 + bCoord.y * p1 + bCoordZ * p2;
@@ -231,7 +230,8 @@ namespace TK {
         if (m_InvertNormals)
             ret.n = -ret.n;
         ret.wo = normalize(ref.p - ret.p);
-        *pdf = getPdf(ref, ret);
+
+        out_pdf = getPdf(ref, ret);
         return ret;
     }
 }  // namespace TK
