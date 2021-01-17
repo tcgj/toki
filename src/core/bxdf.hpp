@@ -12,6 +12,20 @@ namespace TK {
         BXDF_ALL = BXDF_REFLECTIVE | BXDF_TRANSMISSIVE | BXDF_DIFFUSE | BXDF_GLOSSY | BXDF_SPECULAR
     };
 
+    struct BSDFSample {
+        BSDFSample() = default;
+
+        BSDFSample(const tkSpectrum& f, const Vec3f& wi, tkFloat pdf) : f(f), wi(wi), pdf(pdf) {}
+
+        operator bool() const {
+            return pdf > 0;
+        }
+
+        tkSpectrum f;
+        Vec3f wi;
+        tkFloat pdf = 0;
+    };
+
     class BxDF {
     public:
         BxDF(BxDFType type) : m_Type(type) {}
@@ -22,9 +36,9 @@ namespace TK {
 
         virtual tkSpectrum evaluate(const Vec3f& wo, const Vec3f& wi) const = 0;
 
-        virtual tkSpectrum sample(const Vec3f& wo, Vec3f* wi, const Vec2f& samp, tkFloat* pdf) const;
+        virtual BSDFSample sample(const Vec3f& wo, const Vec2f& u, BxDFType type = BXDF_ALL) const;
 
-        virtual tkFloat getPdf(const Vec3f& wo, const Vec3f& wi) const;
+        virtual tkFloat getPdf(const Vec3f& wo, const Vec3f& wi, BxDFType type = BXDF_ALL) const;
 
         BxDFType m_Type;
     };
