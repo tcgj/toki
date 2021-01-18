@@ -137,8 +137,7 @@ namespace TK {
         out_tHit = t;
         Point3f hitP = b0 * p0 + b1 * p1 + b2 * p2;
         // TODO: set shading normal based on whether normal was provided for vertices
-        out_its = SurfaceInteraction(hitP, m_InvertNormals ? -normal : normal, tangent, bitangent,
-                                          normalize(-r.d), this);
+        out_its = SurfaceInteraction(hitP, m_InvertNormals ? -normal : normal, tangent, bitangent, normalize(-r.d));
         return true;
     }
 

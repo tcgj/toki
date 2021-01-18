@@ -34,7 +34,7 @@ namespace TK {
         Vec3f tangent = cross(Vec3f(0, 0, 1), normal);
         normal = normalize((*m_ObjectToWorld)(m_InvertNormals ? -normal : normal, true));
         tangent = normalize((*m_ObjectToWorld)(tangent));
-        out_its = SurfaceInteraction(r(out_tHit), normal, tangent, Vec3f::zero, normalize(-r.d), this);
+        out_its = SurfaceInteraction(r(out_tHit), normal, tangent, Vec3f::zero, normalize(-r.d));
         return true;
     }
 
