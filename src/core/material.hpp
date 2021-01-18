@@ -7,6 +7,6 @@ namespace TK {
     public:
         virtual ~Material() = default;
 
-        virtual void computeScattering(BSDF* bsdf) const = 0;
+        virtual BSDF getBSDF(const SurfaceInteraction& its) const = 0;
     };
 }  // namespace TK

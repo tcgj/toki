@@ -4,11 +4,11 @@
 #include "core/spectrum.hpp"
 
 namespace TK {
-    class Matte : public Material {
+    class Diffuse : public Material {
     public:
-        Matte(const tkSpectrum& kd) : m_Kd(kd) {}
+        Diffuse(const tkSpectrum& kd) : m_Kd(kd) {}
 
-        void computeScattering(BSDF* bsdf) const override;
+        BSDF getBSDF(const SurfaceInteraction& its) const override;
 
     private:
         tkSpectrum m_Kd;
