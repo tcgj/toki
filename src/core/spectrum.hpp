@@ -48,17 +48,12 @@ namespace TK {
 
         bool operator!=(const Spectrum& s) const;
 
-        bool isBlack() const;
+        explicit operator bool() const;
 
         std::string toString() const;
 
         friend Spectrum operator*(tkFloat f, const Spectrum& s) {
-            Spectrum ret = s;
-            for (int i = 0; i < N; ++i) {
-                ret.c[i] *= f;
-            }
-
-            return ret;
+            return s * f;
         }
 
         inline Spectrum sqrt(const Spectrum& s) {
@@ -120,50 +115,31 @@ namespace TK {
     template <int N>
     inline Spectrum<N> Spectrum<N>::operator+(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
-        for (int i = 0; i < N; ++i) {
-            ret.c[i] += s.c[i];
-        }
-
-        return ret;
+        return ret += s;
     }
 
     template <int N>
     inline Spectrum<N> Spectrum<N>::operator-(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
-        for (int i = 0; i < N; ++i) {
-            ret.c[i] -= s.c[i];
-        }
-
-        return ret;
+        return ret -= s;
     }
 
     template <int N>
     inline Spectrum<N> Spectrum<N>::operator*(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
-        for (int i = 0; i < N; ++i) {
-            ret.c[i] *= s.c[i];
-        }
-
-        return ret;
+        return ret *= s;
     }
 
     template <int N>
     inline Spectrum<N> Spectrum<N>::operator/(const Spectrum<N>& s) const {
         Spectrum<N> ret = *this;
-        for (int i = 0; i < N; ++i)
-            ret.c[i] /= s.c[i];
-
-        return ret;
+        return ret /= s;
     }
 
     template <int N>
     inline Spectrum<N> Spectrum<N>::operator*(tkFloat f) const {
         Spectrum<N> ret = *this;
-        for (int i = 0; i < N; ++i) {
-            ret.c[i] *= f;
-        }
-
-        return ret;
+        return ret *= f;
     }
 
     template <int N>
@@ -254,7 +230,7 @@ namespace TK {
 
     // Spectrum operations
     template <int N>
-    inline bool Spectrum<N>::isBlack() const {
+    inline Spectrum<N>::operator bool() const {
         for (int i = 0; i < N; ++i) {
             if (c[i] != 0.0)
                 return false;

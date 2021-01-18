@@ -12,12 +12,6 @@ namespace TK {
         virtual void preprocess(const Scene& scene) {}
 
         virtual tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth = 0) const = 0;
-
-        tkSpectrum specularReflectedLi(const SurfaceInteraction& its, const Scene& scene,
-                                       const Ray& r, Sampler& sampler, int depth) const;
-
-        tkSpectrum specularRefractedLi(const SurfaceInteraction& its, const Scene& scene,
-                                       const Ray& r, Sampler& sampler, int depth) const;
     };
 
     std::shared_ptr<Light> getLightByDist(const Scene& scene, Sampler& sampler, const Distribution& dist,

@@ -18,8 +18,7 @@ namespace TK {
             return li;
         }
 
-        BSDF bsdf;
-        its.computeScattering(&bsdf);
+        BSDF bsdf = its.getBSDF();
 
         Vec3f normal = its.n;
         Vec3f wo = its.wo;
@@ -37,19 +36,24 @@ namespace TK {
             tkFloat pdf;
             OcclusionChecker occCheck;
             tkSpectrum ld = light->sample(its, sampler.nextVector(), wi, pdf, occCheck);
-            if (pdf == 0 || ld.isBlack())
+            if (pdf == 0 || !ld)
                 continue;
 
             tkSpectrum f = bsdf.evaluate(wo, wi);
-            if (!f.isBlack() && occCheck.notOccluded(scene))
+            if (f && occCheck.notOccluded(scene))
                 li += f * ld * std::abs(dot(wi, normal)) / pdf;
         }
 
         // Spawn secondary rays from intersection point
         // if depth is under max depth
         if (depth < m_MaxDepth - 1) {
-            li += specularReflectedLi(its, scene, r, sampler, depth);
-            li += specularRefractedLi(its, scene, r, sampler, depth);
+            BSDFSample bs = bsdf.sample(wo, sampler.nextVector(), BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE));
+            if (bs && bs.f) {
+                tkFloat cosTheta = std::abs(dot(its.n, bs.wi));
+                Ray reflectedRay = its.spawnRayTo(bs.wi);
+                li += bs.f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / bs.pdf;
+            }
+            // li += specularRefractedLi(its, scene, r, sampler, depth);
         }
 
         return li;

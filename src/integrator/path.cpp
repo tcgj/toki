@@ -42,8 +42,7 @@ namespace TK {
             if (!hit || bounces >= m_MaxDepth)
                 break;
 
-            BSDF bsdf;
-            its.computeScattering(&bsdf);
+            BSDF bsdf = its.getBSDF();
 
             // Add direct lighting contribution with multiple importance sampling
             if (m_LightDist != nullptr) {
@@ -53,14 +52,11 @@ namespace TK {
             }
 
             // Spawn ray for next bounce
-            Vec3f wi;
-            tkFloat pdf;
-            BxDFType sampledType;
-            tkSpectrum f = bsdf.sample(its.wo, &wi, sampler.nextVector(), &pdf, &sampledType);
-            if (pdf == 0 || f.isBlack())
+            BSDFSample bs = bsdf.sample(its.wo, sampler.nextVector());
+            if (!bs || !bs.f)
                 break;
-            throughput *= f * std::abs(dot(wi, its.n)) / pdf;
-            ray = its.spawnRayTo(wi);
+            throughput *= bs.f * std::abs(dot(bs.wi, its.n)) / bs.pdf;
+            ray = its.spawnRayTo(bs.wi);
         }
         return li;
     }
