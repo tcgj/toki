@@ -16,24 +16,12 @@ namespace TK {
             return false;
 
         r.tMax = tHit;
-        out_its.primitive = this;
+        out_its.material = m_Material;
+        out_its.light = m_Light;
         return true;
     }
 
     bool Primitive::hasIntersect(const Ray& r) const {
         return m_Shape->hasIntersect(r);
-    }
-
-    std::shared_ptr<Material> Primitive::getMaterial() const {
-        return m_Material;
-    }
-
-    std::shared_ptr<Light> Primitive::getLight() const {
-        return m_Light;
-    }
-
-    void Primitive::computeScattering(BSDF* bsdf) const {
-        if (m_Material != nullptr)
-            m_Material->computeScattering(bsdf);
     }
 }  // namespace TK

@@ -3,9 +3,12 @@
 #include "core/region.hpp"
 
 namespace TK {
+    class Diffuse;
+
     class Primitive : public Region {
     public:
-        Primitive(const std::shared_ptr<Shape>& shape, const std::shared_ptr<Material>& material,
+        Primitive(const std::shared_ptr<Shape>& shape,
+                  const std::shared_ptr<Material>& material = std::make_shared<Diffuse>(0.6),
                   const std::shared_ptr<Light>& light = nullptr)
             : m_Shape(shape), m_Material(material), m_Light(light) {}
 
@@ -14,12 +17,6 @@ namespace TK {
         bool intersect(const Ray& r, SurfaceInteraction& out_its) const override;
 
         bool hasIntersect(const Ray& r) const override;
-
-        std::shared_ptr<Material> getMaterial() const;
-
-        std::shared_ptr<Light> getLight() const;
-
-        void computeScattering(BSDF* bsdf) const;
 
     private:
         std::shared_ptr<Shape> m_Shape;
