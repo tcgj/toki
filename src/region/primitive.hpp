@@ -3,14 +3,11 @@
 #include "core/region.hpp"
 
 namespace TK {
-    class Diffuse;
-
     class Primitive : public Region {
     public:
         Primitive(const std::shared_ptr<Shape>& shape,
-                  const std::shared_ptr<Material>& material = std::make_shared<Diffuse>(0.6),
-                  const std::shared_ptr<Light>& light = nullptr)
-            : m_Shape(shape), m_Material(material), m_Light(light) {}
+                  const std::shared_ptr<Material>& material = nullptr,
+                  const std::shared_ptr<Light>& light = nullptr);
 
         AABBf worldBoundingBox() const override;
 
