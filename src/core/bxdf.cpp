@@ -16,7 +16,7 @@ namespace TK {
         Vec3f wi = cosineHemisphereSample(u[0], u[1]);
         if (wo.z < 0)
             wi.z *= -1;
-        tkFloat pdf = getPdf(wo, wi, type);
+        tkFloat pdf = absCosTheta(wi) * TK_INVPI;
         return BSDFSample(evaluate(wo, wi), wi, pdf);
     }
 
