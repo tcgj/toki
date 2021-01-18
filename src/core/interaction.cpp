@@ -3,8 +3,8 @@
 #include "ray.hpp"
 #include "spectrum.hpp"
 #include "light.hpp"
+#include "material.hpp"
 #include "bsdf.hpp"
-#include "region/primitive.hpp"
 #include "util/fputil.hpp"
 
 namespace TK {
@@ -22,8 +22,8 @@ namespace TK {
     }
 
     SurfaceInteraction::SurfaceInteraction(const Point3f& p, const Vec3f& n, const Vec3f& dpdu,
-                                           const Vec3f& dpdv, const Vec3f& wo, const Shape* shape)
-        : Interaction(p), n(n), dpdu(dpdu), dpdv(dpdv), wo(wo), shape(shape) {}
+                                           const Vec3f& dpdv, const Vec3f& wo)
+        : Interaction(p), n(n), dpdu(dpdu), dpdv(dpdv), wo(wo) {}
 
     Point3f SurfaceInteraction::offsetRayOrigin(const Point3f& p, const Vec3f& n) const {
         Vec3i offset(intOffsetScale * n.x, intOffsetScale * n.y, intOffsetScale * n.z);
@@ -48,14 +48,11 @@ namespace TK {
         return Ray(o, d, 1.0f - TK_EPSILON);
     }
 
-    void SurfaceInteraction::computeScattering(BSDF* s) {
-        s->initialize(*this);
-        primitive->computeScattering(s);
-        bsdf = s;
+    BSDF SurfaceInteraction::getBSDF() const {
+        return material->getBSDF(*this);
     }
 
     tkSpectrum SurfaceInteraction::Le() const {
-        std::shared_ptr<Light> light = primitive->getLight();
         if (light == nullptr)
             return 0;
 

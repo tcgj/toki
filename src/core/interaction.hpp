@@ -23,7 +23,7 @@ namespace TK {
         SurfaceInteraction() = default;
 
         SurfaceInteraction(const Point3f& p, const Vec3f& n, const Vec3f& dpdu, const Vec3f& dpdv,
-                           const Vec3f& wo, const Shape* shape);
+                           const Vec3f& wo);
 
         Point3f offsetRayOrigin(const Point3f& o, const Vec3f& n) const;
 
@@ -31,7 +31,7 @@ namespace TK {
 
         Ray spawnRayTo(const Interaction& ref) const override;
 
-        void computeScattering(BSDF* s);
+        BSDF getBSDF() const;
 
         tkSpectrum Le() const;
 
@@ -39,8 +39,7 @@ namespace TK {
         Vec3f dpdu;
         Vec3f dpdv;
         Vec3f wo;
-        const Shape* shape = nullptr;
-        const Primitive* primitive = nullptr;
-        BSDF* bsdf = nullptr;
+        std::shared_ptr<Material> material;
+        std::shared_ptr<Light> light;
     };
 }  // namespace TK
