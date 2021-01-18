@@ -1,6 +1,7 @@
 #pragma once
 
 #include "system/toki.hpp"
+#include "spectrum.hpp"
 
 namespace TK {
     enum BxDFType {
@@ -17,7 +18,7 @@ namespace TK {
 
         BSDFSample(const tkSpectrum& f, const Vec3f& wi, tkFloat pdf) : f(f), wi(wi), pdf(pdf) {}
 
-        operator bool() const {
+        explicit operator bool() const {
             return pdf > 0;
         }
 
