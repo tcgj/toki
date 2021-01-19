@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/material.hpp"
-#include "core/spectrum.hpp"
+#include "bsdf/lambert.hpp"
 
 namespace TK {
     class Diffuse : public Material {

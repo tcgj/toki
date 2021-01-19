@@ -5,7 +5,7 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    BSDF::BSDF(const SurfaceInteraction& its, const BxDF& bxdf) : m_Bxdf(bxdf) {
+    BSDF::BSDF(const SurfaceInteraction& its, BxDF* bxdf) : m_Bxdf(bxdf) {
         m_N = its.n;
         m_T = its.dpdu;
         m_Bt = normalize(cross(m_N, m_T));
@@ -22,7 +22,7 @@ namespace TK {
         if (wo.z == 0) // Ray incident parallel to surface
             return 0;
 
-        return m_Bxdf.evaluate(wo, wi);
+        return m_Bxdf->evaluate(wo, wi);
     }
 
     BSDFSample BSDF::sample(const Vec3f& worldWo, const Vec2f& u, BxDFType type) const {
@@ -30,7 +30,7 @@ namespace TK {
         if (wo.z == 0)
             return {};
 
-        BSDFSample ret = m_Bxdf.sample(wo, u, type);
+        BSDFSample ret = m_Bxdf->sample(wo, u, type);
         if (!ret)
             return {};
 
@@ -44,7 +44,7 @@ namespace TK {
         if (wo.z == 0)
             return 0;
 
-        return m_Bxdf.getPdf(wo, wi, type);
+        return m_Bxdf->getPdf(wo, wi, type);
     }
 
     Vec3f BSDF::worldToLocal(const Vec3f& v) const {

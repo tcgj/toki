@@ -6,7 +6,7 @@
 namespace TK {
     class BSDF {
     public:
-        BSDF(const SurfaceInteraction& its, const BxDF& bxdf);
+        BSDF(const SurfaceInteraction& its, BxDF* bxdf);
 
         tkSpectrum evaluate(const Vec3f& worldWo, const Vec3f& worldWi) const;
 
@@ -19,7 +19,7 @@ namespace TK {
         Vec3f localToWorld(const Vec3f& v) const;
 
     private:
-        const BxDF& m_Bxdf;
+        BxDF* m_Bxdf;
         Vec3f m_N;
         Vec3f m_T;
         Vec3f m_Bt;
