@@ -233,10 +233,10 @@ namespace TK {
     inline Spectrum<N>::operator bool() const {
         for (int i = 0; i < N; ++i) {
             if (c[i] != 0.0)
-                return false;
+                return true;
         }
 
-        return true;
+        return false;
     }
 
     template <int N>
