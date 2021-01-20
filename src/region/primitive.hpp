@@ -5,9 +5,8 @@
 namespace TK {
     class Primitive : public Region {
     public:
-        Primitive(const std::shared_ptr<Shape>& shape,
-                  const std::shared_ptr<Material>& material = nullptr,
-                  const std::shared_ptr<Light>& light = nullptr);
+        Primitive(std::shared_ptr<Shape> shape, std::shared_ptr<Material> material = nullptr,
+                  std::shared_ptr<Light> light = nullptr);
 
         AABBf worldBoundingBox() const override;
 

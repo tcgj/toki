@@ -10,8 +10,8 @@ namespace TK {
     };
 
     struct Mesh {
-        Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V, const int64_t* I,
-             const Vec3f* N, const Vec3f* UV);
+        Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V,
+             const int64_t* I, const Vec3f* N, const Vec3f* UV);
 
         int64_t m_NumTri;
         int64_t m_NumVert;

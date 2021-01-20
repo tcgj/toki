@@ -5,8 +5,7 @@
 namespace TK {
     class Triangle : public Shape {
     public:
-        Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex,
-                 bool invertNormals = false);
+        Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex, bool invertNormals = false);
 
         AABBf objectBoundingBox() const override;
 

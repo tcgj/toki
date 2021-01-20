@@ -6,8 +6,7 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    Triangle::Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex,
-                       bool invertNormals)
+    Triangle::Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex, bool invertNormals)
         : Shape(nullptr, invertNormals), m_Mesh(std::move(mesh)) {
         m_Id = &(m_Mesh->m_IndexBuffer[3 * triIndex]);
     }
