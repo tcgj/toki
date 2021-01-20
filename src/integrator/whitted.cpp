@@ -32,16 +32,13 @@ namespace TK {
             // if (!light->isDelta())
             // continue;
 
-            Vec3f wi;
-            tkFloat pdf;
-            OcclusionChecker occCheck;
-            tkSpectrum ld = light->sample(its, sampler.nextVector(), wi, pdf, occCheck);
-            if (pdf == 0 || !ld)
+            LightSample ls = light->sample(its, sampler.nextVector());
+            if (!ls || !ls.l)
                 continue;
 
-            tkSpectrum f = bsdf.evaluate(wo, wi);
-            if (f && occCheck.notOccluded(scene))
-                li += f * ld * std::abs(dot(wi, normal)) / pdf;
+            tkSpectrum f = bsdf.evaluate(wo, ls.wi);
+            if (f && !ls.isOccluded(scene, its))
+                li += f * ls.l * std::abs(dot(ls.wi, normal)) / ls.pdf;
         }
 
         // Spawn secondary rays from intersection point

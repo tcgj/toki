@@ -8,18 +8,22 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    class OcclusionChecker {
-    public:
-        OcclusionChecker() = default;
-        OcclusionChecker(const Interaction& p0, const Interaction& p1) : p0(p0), p1(p1) {}
+    struct LightSample {
+        LightSample() = default;
 
-        bool notOccluded(const Scene& scene) const {
-            return !scene.hasIntersect(p0.spawnRayTo(p1));
+        LightSample(const tkSpectrum& l, const Vec3f& wi, const Interaction& its, tkFloat pdf)
+            : l(l), wi(wi), its(its), pdf(pdf) {}
+
+        bool isOccluded(const Scene& scene, const Interaction& ref) const;
+
+        explicit operator bool() const {
+            return pdf > 0;
         }
 
-    private:
-        Interaction p0;
-        Interaction p1;
+        tkSpectrum l;
+        Vec3f wi;
+        Interaction its;
+        tkFloat pdf = 0;
     };
 
     class Light {
@@ -42,8 +46,7 @@ namespace TK {
             return 0;
         };
 
-        virtual tkSpectrum sample(const Interaction& ref, const Vec2f& u, Vec3f& out_wi, tkFloat& out_pdf,
-                                  OcclusionChecker& out_checker) const = 0;
+        virtual LightSample sample(const Interaction& ref, const Vec2f& u) const = 0;
 
         virtual tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const {
             return 0;

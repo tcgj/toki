@@ -21,25 +21,21 @@ namespace TK {
     tkSpectrum miSampleLd(const SurfaceInteraction& ref, const Scene& scene,
                           const std::shared_ptr<Light>& light, Sampler& sampler) {
         tkSpectrum ld;
-
-        Vec3f wi;
-        tkFloat lightPdf;
-        OcclusionChecker occCheck;
         BSDF bsdf = ref.getBSDF();
 
         // Sampling the light
-        tkSpectrum lightLd = light->sample(ref, sampler.nextVector(), wi, lightPdf, occCheck);
-        if (lightPdf > 0 && lightLd) {
-            tkSpectrum f = bsdf.evaluate(ref.wo, wi);
-            if (f && occCheck.notOccluded(scene)) {
+        LightSample ls = light->sample(ref, sampler.nextVector());
+        if (ls && ls.l) {
+            tkSpectrum f = bsdf.evaluate(ref.wo, ls.wi);
+            if (f && !ls.isOccluded(scene, ref)) {
                 tkFloat weight = 1;
                 // If light is delta, don't use MIS
                 // if (!light->isDelta()) {
-                    tkFloat scatterPdf = bsdf.getPdf(ref.wo, wi);
-                    weight = powerHeuristic(1, lightPdf, 1, scatterPdf);
+                    tkFloat scatterPdf = bsdf.getPdf(ref.wo, ls.wi);
+                    weight = powerHeuristic(1, ls.pdf, 1, scatterPdf);
                 // }
 
-                ld += f * lightLd * weight * std::abs(dot(wi, ref.n)) / lightPdf;
+                ld += f * ls.l * weight * std::abs(dot(ls.wi, ref.n)) / ls.pdf;
             }
         }
 
@@ -54,20 +50,20 @@ namespace TK {
             tkFloat weight = 1;
             // If specular(delta) bxdf sampled, don't use MIS
             if (!(sampledType & BXDF_SPECULAR)) {
-                lightPdf = light->getPdf(ref, wi);
+                tkFloat lightPdf = light->getPdf(ref, bs.wi);
                 // Bypass trying to trace light if pdf is 0
                 if (lightPdf == 0)
                     return ld;
                 weight = powerHeuristic(1, bs.pdf, 1, lightPdf);
             }
             SurfaceInteraction lightInteraction;
-            Ray r = ref.spawnRayTo(wi);
+            Ray r = ref.spawnRayTo(bs.wi);
             tkSpectrum scatterLd;
             if (scene.intersect(r, lightInteraction) && lightInteraction.light == light)
                 scatterLd += lightInteraction.Le();
 
             if (scatterLd) {
-                ld += bs.f * scatterLd * weight * std::abs(dot(wi, ref.n)) / bs.pdf;
+                ld += bs.f * scatterLd * weight * std::abs(dot(bs.wi, ref.n)) / bs.pdf;
             }
         }
 

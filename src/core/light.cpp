@@ -1,6 +1,10 @@
 #include "light.hpp"
 
 namespace TK {
+    bool LightSample::isOccluded(const Scene& scene, const Interaction& ref) const {
+        return scene.hasIntersect(ref.spawnRayTo(its));
+    }
+
     std::unique_ptr<Distribution> lightPowerDistribution(const Scene& scene) {
         if (scene.m_Lights.empty())
             return 0;

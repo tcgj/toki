@@ -16,13 +16,10 @@ namespace TK {
         return m_Radiance;
     }
 
-    tkSpectrum AreaLight::sample(const Interaction& ref, const Vec2f& u, Vec3f& out_wi, tkFloat& out_pdf,
-                                 OcclusionChecker& out_checker) const {
-        SurfaceInteraction samplePt = m_Shape->sample(ref, u, out_pdf);
-        out_wi = -samplePt.wo;
-        out_checker = OcclusionChecker(samplePt, ref);
-
-        return Le(samplePt, samplePt.wo);
+    LightSample AreaLight::sample(const Interaction& ref, const Vec2f& u) const {
+        tkFloat pdf;
+        SurfaceInteraction samplePt = m_Shape->sample(ref, u, pdf);
+        return LightSample(Le(samplePt, samplePt.wo), -samplePt.wo, samplePt, pdf);
     }
 
     tkFloat AreaLight::getPdf(const Interaction& ref, const Vec3f& wi) const {
