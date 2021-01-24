@@ -8,28 +8,28 @@
 namespace TK {
     Triangle::Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex, bool invertNormals)
         : Shape(nullptr, invertNormals), m_Mesh(std::move(mesh)) {
-        m_Id = &(m_Mesh->m_IndexBuffer[3 * triIndex]);
+        m_Id = &(m_Mesh->m_IBuf[3 * triIndex]);
     }
 
     AABBf Triangle::objectBoundingBox() const {
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
 
         return bbUnion(AABBf(Point3f(), Point3f(p1 - p0)), Point3f(p2 - p0));
     }
 
     AABBf Triangle::worldBoundingBox() const {
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
         return bbUnion(AABBf(p0, p1), p2);
     }
 
     tkFloat Triangle::surfaceArea() const {
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
 
         return cross(p1 - p0, p2 - p0).magnitude() * 0.5;
     }
@@ -37,9 +37,9 @@ namespace TK {
     // Implementation of Woop et al. Watertight Ray/Triangle Intersection from
     // http://jcgt.org/published/0002/01/05/paper.pdf
     bool Triangle::intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const {
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
 
         // translate to origin
         Point3f p0t = p0 - Vec3f(r.o);
@@ -115,12 +115,12 @@ namespace TK {
         Vec3f v02 = p2 - p0;
         Vec3f normal = cross(v01, v02).normalized();
 
-        Point2f& uv0 = m_Mesh->m_UvBuffer[m_Id[0]];
+        Point2f& uv0 = m_Mesh->m_UvBuf[m_Id[0]];
         Vec2f duv1;
         Vec2f duv2;
-        if (m_Mesh->m_UvBuffer != nullptr) {
-            duv1 = m_Mesh->m_UvBuffer[m_Id[1]] - uv0;
-            duv2 = m_Mesh->m_UvBuffer[m_Id[2]] - uv0;
+        if (m_Mesh->m_UvBuf != nullptr) {
+            duv1 = m_Mesh->m_UvBuf[m_Id[1]] - uv0;
+            duv2 = m_Mesh->m_UvBuf[m_Id[2]] - uv0;
         }
         tkFloat uvDet = duv1[0] * duv2[1] - duv1[1] * duv2[0];
         Vec3f tangent;
@@ -141,9 +141,9 @@ namespace TK {
     }
 
     bool Triangle::hasIntersect(const Ray& r) const {
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
 
         // translate to origin
         Point3f p0t = p0 - Vec3f(r.o);
@@ -213,16 +213,16 @@ namespace TK {
     SurfaceInteraction Triangle::sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const {
         SurfaceInteraction ret;
 
-        Point3f& p0 = m_Mesh->m_VertexBuffer[m_Id[0]];
-        Point3f& p1 = m_Mesh->m_VertexBuffer[m_Id[1]];
-        Point3f& p2 = m_Mesh->m_VertexBuffer[m_Id[2]];
+        Point3f& p0 = m_Mesh->m_VBuf[m_Id[0]];
+        Point3f& p1 = m_Mesh->m_VBuf[m_Id[1]];
+        Point3f& p2 = m_Mesh->m_VBuf[m_Id[2]];
         Vec2f bCoord = uniformTriangleSample(u[0], u[1]);
         tkFloat bCoordZ = (1 - bCoord.x - bCoord.y);
 
         ret.p = bCoord.x * p0 + bCoord.y * p1 + bCoordZ * p2;
-        if (m_Mesh->m_NormalBuffer != nullptr)
-            ret.n = bCoord.x * m_Mesh->m_NormalBuffer[m_Id[0]] + bCoord.y * m_Mesh->m_NormalBuffer[m_Id[1]] +
-                    bCoordZ * m_Mesh->m_NormalBuffer[m_Id[2]];
+        if (m_Mesh->m_NBuf != nullptr)
+            ret.n = bCoord.x * m_Mesh->m_NBuf[m_Id[0]] + bCoord.y * m_Mesh->m_NBuf[m_Id[1]] +
+                    bCoordZ * m_Mesh->m_NBuf[m_Id[2]];
         else
             ret.n = normalize(cross(p1 - p0, p2 - p0));
         if (m_InvertNormals)

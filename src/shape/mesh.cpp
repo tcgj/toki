@@ -3,24 +3,21 @@
 #include "core/transform.hpp"
 
 namespace TK {
-    // mesh is initialized in world space to eliminate need for transformation
-    // during ray intersection check
-    Mesh::Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V,
-               const int64_t* I, const Vec3f* N, const Vec3f* UV)
-        : m_NumTri(numTri), m_NumVert(numVert), m_IndexBuffer(I, I + 3 * numTri) {
-        // clear ptr and set ownership
-        m_VertexBuffer = std::make_unique<Point3f[]>(numVert);
-        for (int64_t i = 0; i < numVert; ++i)
-            m_VertexBuffer[i] = objectToWorld(V[i]);
+    Mesh::Mesh(const Transform& objectToWorld, std::vector<int64_t> I, const std::vector<Point3f>& V,
+                 const std::vector<Vec3f>& N, const std::vector<Point2f>& UV)
+        : m_NumTri(I.size() / 3), m_NumVert(V.size()), m_IBuf(std::move(I)) {
+        m_VBuf = std::make_unique<Point3f[]>(m_NumVert);
+        for (int64_t i = 0; i < m_NumVert; ++i)
+            m_VBuf[i] = objectToWorld(V[i]);
 
-        if (N != nullptr) {
-            m_NormalBuffer = std::make_unique<Vec3f[]>(numVert);
-            for (int64_t i = 0; i < numVert; ++i)
-                m_NormalBuffer[i] = objectToWorld(N[i]);
+        if (!N.empty()) {
+            m_NBuf = std::make_unique<Vec3f[]>(m_NumVert);
+            for (int64_t i = 0; i < m_NumVert; ++i)
+                m_NBuf[i] = objectToWorld(N[i], true);
         }
-        if (UV != nullptr) {
-            m_UvBuffer = std::make_unique<Point2f[]>(numVert);
-            memcpy(m_UvBuffer.get(), UV, numVert * sizeof(Point2f));
+        if (!UV.empty()) {
+            m_UvBuf = std::make_unique<Point2f[]>(m_NumVert);
+            memcpy(m_UvBuf.get(), UV.data(), m_NumVert * sizeof(Point2f));
         }
     }
 }  // namespace TK

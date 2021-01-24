@@ -10,14 +10,14 @@ namespace TK {
     };
 
     struct Mesh {
-        Mesh(const Transform& objectToWorld, int64_t numVert, int64_t numTri, const Point3f* V,
-             const int64_t* I, const Vec3f* N, const Vec3f* UV);
+        Mesh(const Transform& objectToWorld, std::vector<int64_t> I, const std::vector<Point3f>& V,
+             const std::vector<Vec3f>& N, const std::vector<Point2f>& UV);
 
         int64_t m_NumTri;
         int64_t m_NumVert;
-        std::vector<int64_t> m_IndexBuffer;  // std::vector to allow for easy triangle inversion
-        std::unique_ptr<Point3f[]> m_VertexBuffer;
-        std::unique_ptr<Vec3f[]> m_NormalBuffer;
-        std::unique_ptr<Point2f[]> m_UvBuffer;
+        std::vector<int64_t> m_IBuf;
+        std::unique_ptr<Point3f[]> m_VBuf;
+        std::unique_ptr<Vec3f[]> m_NBuf;
+        std::unique_ptr<Point2f[]> m_UvBuf;
     };
 }  // namespace TK
