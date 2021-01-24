@@ -31,6 +31,7 @@ namespace TK {
 
         // System Options
         std::string m_Outfile;
+        int m_InputType = 0;
         int m_ThreadCount = 0;
         bool m_FastRender = false;
         bool m_Gui = false;

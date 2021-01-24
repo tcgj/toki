@@ -36,6 +36,7 @@ namespace TK {
         g_Context.m_ThreadCount = options.threadCount;
         g_Context.m_FastRender = options.fastRender;
         g_Context.m_Gui = options.gui;
+        g_Context.m_InputType = options.inputType;
 
         // Setup logger
 #ifdef TK_DEBUG_MODE
