@@ -123,17 +123,12 @@ namespace TK {
         // Adjust for scale, we want to get the longest axis and make that 80% of the image
         auto bb = accel->worldBoundingBox();
         Vec3f diag = bb.diagonal();
-        Vec3f dir = Vec3f(0, 0, 1);
-        tkFloat atOffset = diag.z / 2;
         tkFloat fovy = 40.0f;
-        tkFloat halfLength = std::max(diag.x, std::max(diag.y, diag.z)) / 1.8;
-        if (diag.z > diag.x) {
-            dir = Vec3f(-1, 0, 0);
-            atOffset = diag.x / 2;
-        }
+        tkFloat halfLength = diag.magnitude() / 0.95 / 2;
         tkFloat dist = halfLength / tan(degToRad(fovy / 2));
 
-        Point3f at = bb.center() + dir * atOffset;
+        Vec3f dir = normalize(cross(diag, Vec3f(0, 1, 0)) + Vec3f(0, diag.y / 8, 0));
+        Point3f at = bb.center();
         Point3f eye = at + dir * dist;
         Transform cameraToWorld = lookAt(eye, at, Vec3f(0, 1, 0));
         g_Context.setImage(std::make_unique<PNGImage>(g_Context.m_Resolution, g_Context.m_Outfile));
