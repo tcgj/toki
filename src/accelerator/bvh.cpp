@@ -59,6 +59,9 @@ namespace TK {
 
     // Start traversal from particular node
     bool BVH::intersectNode(const Ray& r, int64_t nodeIndex, SurfaceInteraction* out_its) const {
+        if (m_Primitives.size() == 0)
+            return false;
+
         // Pre-calculation for aabb intersection test
         Vec3f invD(1.0 / r.d.x, 1.0 / r.d.y, 1.0 / r.d.z);
         int dirNegative[3] = { invD.x < 0, invD.y < 0, invD.z < 0 };
