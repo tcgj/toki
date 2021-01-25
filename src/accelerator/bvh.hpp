@@ -8,7 +8,7 @@ namespace TK {
     public:
         enum Strategy { BINNED_SAH };
 
-        BVH(const std::vector<std::shared_ptr<Primitive>>& primitives, Strategy type = BINNED_SAH);
+        BVH(std::vector<std::unique_ptr<Primitive>> primitives, Strategy type = BINNED_SAH);
 
         AABBf worldBoundingBox() const override;
 
@@ -51,6 +51,6 @@ namespace TK {
 
         // BVH arrays
         std::unique_ptr<Node[]> m_Nodes;
-        std::vector<std::shared_ptr<Primitive>> m_Primitives;
+        std::vector<std::unique_ptr<Primitive>> m_Primitives;
     };
 }  // namespace TK

@@ -14,7 +14,7 @@ namespace TK {
     };
 
     // Construct a BVH based on the provided construction type
-    BVH::BVH(const std::vector<std::shared_ptr<Primitive>>& primitiveList, Strategy type) {
+    BVH::BVH(std::vector<std::unique_ptr<Primitive>> primitiveList, Strategy type) {
         int64_t pCount = primitiveList.size();
         if (pCount == 0)
             return;
@@ -23,6 +23,7 @@ namespace TK {
         m_Nodes = std::make_unique<Node[]>(2 * pCount - 1);
 
         std::vector<PrimitiveUnit> pSet;
+        pSet.reserve(pCount);
         for (int64_t i = 0; i < pCount; ++i) {
             pSet.emplace_back(i, primitiveList[i]->worldBoundingBox());
         }
@@ -35,9 +36,10 @@ namespace TK {
                 break;
         }
 
-        std::vector<std::shared_ptr<Primitive>> pSorted;
+        std::vector<std::unique_ptr<Primitive>> pSorted;
+        pSorted.reserve(pCount);
         for (int64_t i = 0; i < pCount; ++i) {
-            pSorted.push_back(primitiveList[pSet[i].index]);
+            pSorted.push_back(std::move(primitiveList[pSet[i].index]));
         }
         m_Primitives.swap(pSorted);
         pSet.clear();

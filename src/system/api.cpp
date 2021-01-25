@@ -68,10 +68,19 @@ namespace TK {
         auto& attrib = reader.GetAttrib();
         auto& shapes = reader.GetShapes();
 
+        size_t numVert = 0;
+        for (const auto& s : shapes) {
+            numVert += s.mesh.num_face_vertices.size() * 3;
+        }
+
         std::vector<Point3f> V;
+        V.reserve(numVert);
         std::vector<int64_t> I;
+        I.reserve(numVert);
         std::vector<Vec3f> N;
+        N.reserve(numVert);
         std::vector<Point2f> UV;
+        UV.reserve(numVert);
 
         for (const auto& s : shapes) {
             size_t indexOffset = 0;
@@ -110,17 +119,17 @@ namespace TK {
 
         auto mesh = std::make_shared<Mesh>(Transform(), I, V, N, UV);
 
-        auto prims = std::vector<std::shared_ptr<Primitive>>(mesh->m_NumTri);
+        auto prims = std::vector<std::unique_ptr<Primitive>>(mesh->m_NumTri);
         for (int i = 0; i < mesh->m_NumTri; ++i) {
             auto tri = std::make_shared<Triangle>(mesh, i);
-            prims[i] = std::make_shared<Primitive>(tri);
+            prims[i] = std::make_unique<Primitive>(tri);
         }
 
-        auto accel = std::make_shared<BVH>(prims);
+        auto accel = std::make_shared<BVH>(std::move(prims));
         auto lights = std::vector<std::shared_ptr<Light>>();
         // lights.push_back(std::make_shared<DistantLight>(rotateZ(degToRad(-90)), tkSpectrum(10.0f)));
 
-        // Adjust for scale, we want to get the longest axis and make that 80% of the image
+        // Adjust for scale, we want to get the longest axis and make that 95% of the image
         auto bb = accel->worldBoundingBox();
         Vec3f diag = bb.diagonal();
         tkFloat fovy = 40.0f;
@@ -174,7 +183,7 @@ namespace TK {
         // tkSpectrum mirrorKd(tkSpectrum::fromRGB(Vec3f(0.9, 0.9, 0.9)));
         // auto mirror = std::make_shared<Mirror>(mirrorKd);
 
-        std::vector<std::shared_ptr<Primitive>> prims;
+        std::vector<std::unique_ptr<Primitive>> prims;
 
         // Lights
         std::vector<std::shared_ptr<Light>> lights;
@@ -276,46 +285,46 @@ namespace TK {
         auto tri37 = std::make_shared<Triangle>(mesh, 37);
         auto areaLight1 = std::make_shared<AreaLight>(tf, tri36, tkSpectrum(50.0f));
         auto areaLight2 = std::make_shared<AreaLight>(tf, tri37, tkSpectrum(50.0f));
-        prims.push_back(std::make_shared<Primitive>(tri0, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri1, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri2, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri3, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri4, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri5, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri6, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri7, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri8, diffuseGreen));
-        prims.push_back(std::make_shared<Primitive>(tri9, diffuseGreen));
-        prims.push_back(std::make_shared<Primitive>(tri10, diffuseRed));
-        prims.push_back(std::make_shared<Primitive>(tri11, diffuseRed));
+        prims.push_back(std::make_unique<Primitive>(tri0, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri1, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri2, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri3, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri4, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri5, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri6, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri7, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri8, diffuseGreen));
+        prims.push_back(std::make_unique<Primitive>(tri9, diffuseGreen));
+        prims.push_back(std::make_unique<Primitive>(tri10, diffuseRed));
+        prims.push_back(std::make_unique<Primitive>(tri11, diffuseRed));
         /* Start blocks */
-        prims.push_back(std::make_shared<Primitive>(tri12, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri13, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri14, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri15, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri16, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri17, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri18, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri19, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri20, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri21, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri22, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri23, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri24, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri25, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri26, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri27, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri28, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri29, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri30, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri31, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri12, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri13, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri14, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri15, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri16, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri17, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri18, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri19, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri20, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri21, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri22, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri23, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri24, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri25, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri26, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri27, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri28, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri29, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri30, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri31, diffuseWhite));
         /* End blocks */
-        prims.push_back(std::make_shared<Primitive>(tri32, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri33, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri34, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri35, diffuseWhite));
-        prims.push_back(std::make_shared<Primitive>(tri36, diffuseWhite, areaLight1));
-        prims.push_back(std::make_shared<Primitive>(tri37, diffuseWhite, areaLight2));
+        prims.push_back(std::make_unique<Primitive>(tri32, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri33, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri34, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri35, diffuseWhite));
+        prims.push_back(std::make_unique<Primitive>(tri36, diffuseWhite, areaLight1));
+        prims.push_back(std::make_unique<Primitive>(tri37, diffuseWhite, areaLight2));
 
         /*Transform sphereTf = translate(Vec3f(185, 397, 353));
         auto mirrorSphere = std::make_shared<Sphere>(&sphereTf, 103);
@@ -326,7 +335,7 @@ namespace TK {
 
         // Accel Structure
         // auto accel = std::make_shared<Iterator>(prims);
-        auto accel = std::make_shared<BVH>(prims);
+        auto accel = std::make_shared<BVH>(std::move(prims));
 
         // auto integrator = std::make_shared<WhittedIntegrator>(3);
         auto integrator = std::make_shared<PathTracingIntegrator>(20);
