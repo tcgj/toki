@@ -14,13 +14,12 @@ namespace TK {
         static tkFloat nextFloat() {
             thread_local std::unique_ptr<std::mt19937> gen = std::make_unique<std::mt19937>(seed());
 
-            return dist_float(*gen);
+            return s_FloatDist(*gen);
         }
 
-        static size_t systemRand(void *dst, size_t dstlen) {
-            char *buffer = reinterpret_cast<char *>(dst);
-            std::ifstream stream("/dev/urandom",
-                                 std::ios_base::binary | std::ios_base::in);
+        static size_t systemRand(void* dst, size_t dstlen) {
+            char* buffer = reinterpret_cast<char*>(dst);
+            std::ifstream stream("/dev/urandom", std::ios_base::binary | std::ios_base::in);
             stream.read(buffer, dstlen);
 
             return dstlen;
@@ -28,6 +27,6 @@ namespace TK {
 
     private:
         Random() = default;
-        static std::uniform_real_distribution<tkFloat> dist_float;
+        static std::uniform_real_distribution<tkFloat> s_FloatDist;
     };
-} // namespace TK
+}  // namespace TK

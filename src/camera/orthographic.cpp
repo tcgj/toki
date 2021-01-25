@@ -3,13 +3,15 @@
 #include "core/ray.hpp"
 
 namespace TK {
-    tkFloat OrthographicCamera::generateRay(const CameraSample &sample, Ray *r) const {
-        tkPoint3f cs_pos = imageToCamera(tkPoint3f(sample.imgCoord));
-        *r = Ray(cs_pos, tkVec3f(0, 0, -1)); // camera space ray
-        // TODO: Handle depth of field here
+    OrthographicCamera::OrthographicCamera(const Transform& cameraToWorld, tkFloat apertureRadius,
+                                           tkFloat focalDistance, Image* image)
+        : ProjectionCamera(cameraToWorld, apertureRadius, focalDistance, image) {}
 
-        // r->medium = medium;
-        *r = cameraToWorld(*r);
-        return 1;
+    Ray OrthographicCamera::generateRay(int x, int y, const CameraSample& sample) const {
+        // TODO: Fix ortho camera
+        Point3f samplePos(x + sample.pixelRand.x, y + sample.pixelRand.y, 0);
+        Point3f origin = (samplePos);
+        Ray r(origin, Vec3f(0, 0, -1));
+        return m_CameraToWorld(r);
     }
-} // namespace TK
+}  // namespace TK

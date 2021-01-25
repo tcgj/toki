@@ -5,21 +5,18 @@
 namespace TK {
     class Primitive : public Region {
     public:
-        Primitive(const std::shared_ptr<Shape> &shape,
-                  const std::shared_ptr<Material> &material,
-                  const std::shared_ptr<Light> &light = nullptr)
-            : shape(shape), material(material), light(light) {}
+        Primitive(std::shared_ptr<Shape> shape, std::shared_ptr<Material> material = nullptr,
+                  std::shared_ptr<Light> light = nullptr);
 
-        tkAABBf worldBoundingBox() const override;
-        bool intersect(const Ray &r, SurfaceInteraction *interaction) const override;
-        bool hasIntersect(const Ray &r) const override;
-        std::shared_ptr<Material> getMaterial() const;
-        std::shared_ptr<Light> getLight() const;
-        void computeScattering(Scattering *scattering) const;
+        AABBf worldBoundingBox() const override;
+
+        bool intersect(const Ray& r, SurfaceInteraction& out_its) const override;
+
+        bool hasIntersect(const Ray& r) const override;
 
     private:
-        std::shared_ptr<Shape> shape;
-        std::shared_ptr<Material> material;
-        std::shared_ptr<Light> light;
+        std::shared_ptr<Shape> m_Shape;
+        std::shared_ptr<Material> m_Material;
+        std::shared_ptr<Light> m_Light;
     };
-} // namespace TK
+}  // namespace TK

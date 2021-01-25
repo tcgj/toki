@@ -1,27 +1,23 @@
 #pragma once
 
 #include "system/toki.hpp"
-#include "math/math.hpp"
 
 namespace TK {
     struct Vertex {
-        tkPoint3f p;
-        tkVec3f n;
-        tkPoint2f uv;
+        Point3f p;
+        Vec3f n;
+        Point2f uv;
     };
 
     struct Mesh {
-        Mesh(const Transform &objectToWorld, tkI64 numVert, tkI64 numTri,
-             const tkPoint3f *V, const tkI64 *I, const tkVec3f *N,
-             const tkVec3f *UV);
+        Mesh(const Transform& objectToWorld, std::vector<int64_t> I, const std::vector<Point3f>& V,
+             const std::vector<Vec3f>& N, const std::vector<Point2f>& UV);
 
-        bool getTriVertices(tkI64 index, Vertex *v0, Vertex *v1, Vertex *v2) const;
-
-        tkI64 numTri;
-        tkI64 numVert;
-        std::vector<tkI64> indexBuffer; // std::vector to allow for easy triangle inversion
-        std::unique_ptr<tkPoint3f[]> vertexBuffer;
-        std::unique_ptr<tkVec3f[]> normalBuffer;
-        std::unique_ptr<tkPoint2f[]> uvBuffer;
+        int64_t m_NumTri;
+        int64_t m_NumVert;
+        std::vector<int64_t> m_IBuf;
+        std::unique_ptr<Point3f[]> m_VBuf;
+        std::unique_ptr<Vec3f[]> m_NBuf;
+        std::unique_ptr<Point2f[]> m_UvBuf;
     };
-} // namespace TK
+}  // namespace TK

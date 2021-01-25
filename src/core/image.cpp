@@ -1,26 +1,29 @@
 #include "image.hpp"
 
 namespace TK {
-    Image::Image(const tkVec2i &res, const std::string &filename)
-        : resolution(res), filename(filename) {
-        pixels = std::make_unique<tkSpectrum[]>(res.x * res.y);
+    Image::Image(const Vec2i& res, const std::string& filename) : m_Resolution(res), m_Filename(filename) {
+        m_Pixels = std::make_unique<tkSpectrum[]>(res.x * res.y);
+        m_NumSamples = std::make_unique<int[]>(res.x * res.y);
     }
 
     tkFloat Image::getAspectRatio() const {
-        return (tkFloat)resolution.x / resolution.y;
+        return (tkFloat)m_Resolution.x / m_Resolution.y;
     }
 
-    tkVec3f Image::getPixelColor(const tkPoint2i &pixelCoord) const {
-        return pixels[pixelCoord.y * resolution.x + pixelCoord.x].toRGB();
+    Vec3f Image::getPixelColor(int x, int y) const {
+        tkSpectrum avg = m_Pixels[y * m_Resolution.x + x] /
+                         m_NumSamples[y * m_Resolution.x + x];
+        return avg.toRGB();
     }
 
-    void Image::updatePixelColor(const tkPoint2i &pixelCoord, const tkSpectrum &colorContribution) {
-        pixels[pixelCoord.y * resolution.x + pixelCoord.x] += colorContribution;
+    void Image::updatePixelColor(int x, int y, const tkSpectrum& colorContribution) {
+        m_Pixels[y * m_Resolution.x + x] += colorContribution;
+        m_NumSamples[y * m_Resolution.x + x]++;
     }
 
-    tkVec3f Image::gammaCorrect(const tkVec3f &rgb) const {
-        tkVec3f ret;
-        for (tkInt i = 0; i < 3; ++i) {
+    Vec3f Image::gammaCorrect(const Vec3f& rgb) const {
+        Vec3f ret;
+        for (int i = 0; i < 3; ++i) {
             if (rgb[i] <= 0.0031308f)
                 ret[i] = 12.92f * rgb[i];
             else
@@ -28,4 +31,4 @@ namespace TK {
         }
         return ret;
     }
-} // namespace TK
+}  // namespace TK

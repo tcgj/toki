@@ -1,65 +1,70 @@
 #pragma once
 
 #include "system/toki.hpp"
-#include "math/math.hpp"
 #include "camera.hpp"
 
 namespace TK {
     class Sampler {
     public:
-        Sampler(tkI64 samplesPerPixel) : samplesPerPixel(samplesPerPixel) {}
+        Sampler(int64_t samplesPerPixel) : m_SamplesPerPixel(samplesPerPixel) {}
+
         virtual ~Sampler() = default;
 
-        virtual void setPixel(const tkPoint2i &pixelCoord);
-        CameraSample getCameraSample(const tkPoint2i &pixelCoord);
-        virtual void requestFloats(tkInt count);
-        virtual void requestVectors(tkInt count);
+        virtual void setPixel(int x, int y);
+
+        CameraSample getCameraSample();
+
+        virtual void requestFloats(int count);
+
+        virtual void requestVectors(int count);
+
         virtual tkFloat nextFloat() = 0;
-        virtual tkVec2f nextVector() = 0;
+
+        virtual Vec2f nextVector() = 0;
+
         virtual bool nextSample();
+
         virtual std::unique_ptr<Sampler> getClone() = 0;
 
-        tkI64 samplesPerPixel;
+        int64_t m_SamplesPerPixel;
+
     protected:
         // --Sampler state values--
-        tkPoint2i currentPixel;
-        tkI64 currentSample;
-        tkInt currentFloatSet;
-        tkInt currentVectorSet;
-        std::vector<tkInt> floatSetSizes;
-        std::vector<tkInt> vectorSetSizes;
-        std::vector<std::vector<tkFloat>> floatSet;
-        std::vector<std::vector<tkVec2f>> vectorSet;
+        Point2i m_CurrentPixel;
+        int64_t m_CurrentSample;
+        int m_CurrentFloatSet;
+        int m_CurrentVectorSet;
+        std::vector<int> m_FloatSetSizes;
+        std::vector<int> m_VectorSetSizes;
+        std::vector<std::vector<tkFloat>> m_FloatSet;
+        std::vector<std::vector<Vec2f>> m_VectorSet;
     };
 
-    inline void Sampler::setPixel(const tkPoint2i &pixelCoord) {
-        currentPixel = pixelCoord;
-        currentSample = 0;
-        currentFloatSet = 0;
-        currentVectorSet = 0;
+    inline void Sampler::setPixel(int x, int y) {
+        m_CurrentPixel = Point2i(x, y);
+        m_CurrentSample = 0;
+        m_CurrentFloatSet = 0;
+        m_CurrentVectorSet = 0;
     }
 
-    inline CameraSample Sampler::getCameraSample(const tkPoint2i &pixelCoord) {
-        CameraSample ret;
-        ret.imgCoord = (tkPoint2f)pixelCoord + nextVector();
-        ret.lens = nextVector();
-        return ret;
+    inline CameraSample Sampler::getCameraSample() {
+        return { nextVector(), nextVector() };
     }
 
-    inline void Sampler::requestFloats(tkInt count) {
-        floatSetSizes.push_back(count);
-        floatSet.push_back(std::vector<tkFloat>(count * samplesPerPixel));
+    inline void Sampler::requestFloats(int count) {
+        m_FloatSetSizes.push_back(count);
+        m_FloatSet.push_back(std::vector<tkFloat>(count * m_SamplesPerPixel));
     }
 
-    inline void Sampler::requestVectors(tkInt count) {
-        vectorSetSizes.push_back(count);
-        vectorSet.push_back(std::vector<tkVec2f>(count * samplesPerPixel));
+    inline void Sampler::requestVectors(int count) {
+        m_VectorSetSizes.push_back(count);
+        m_VectorSet.push_back(std::vector<Vec2f>(count * m_SamplesPerPixel));
     }
 
     inline bool Sampler::nextSample() {
-        currentSample++;
-        currentFloatSet = 0;
-        currentVectorSet = 0;
-        return currentSample < samplesPerPixel;
+        m_CurrentSample++;
+        m_CurrentFloatSet = 0;
+        m_CurrentVectorSet = 0;
+        return m_CurrentSample < m_SamplesPerPixel;
     }
-} // namespace TK
+}  // namespace TK

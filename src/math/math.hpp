@@ -1,13 +1,5 @@
 #pragma once
 
-#include "system/toki.hpp"
-#include "util/mathutil.hpp"
-#include "vec2.hpp"
-#include "vec3.hpp"
-#include "point2.hpp"
-#include "point3.hpp"
-#include "matrix44.hpp"
-
 #define TK_PI 3.141592653589793
 #define TK_INVPI 0.31830988618
 #define TK_INV2PI 0.15915494309
@@ -32,45 +24,63 @@ namespace TK {
     constexpr tkFloat TK_MAXFLOAT = std::numeric_limits<tkFloat>::max();
     constexpr tkFloat TK_INFINITY = std::numeric_limits<tkFloat>::infinity();
 
-    // Explicit casts
-    template <typename T>
-    inline Vec2<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
+    // FMA-optimized operations
+    inline tkFloat differenceOfProducts(tkFloat a, tkFloat b, tkFloat c, tkFloat d) {
+        tkFloat cd = c * d;
+        tkFloat err = std::fma(-c, d, cd);
+        tkFloat dop = std::fma(a, b, -cd);
+        return dop + err;
     }
-    template <typename T>
-    inline Vec2<T>::operator Vec3<T>() const {
-        return Vec3<T>(x, y, 0);
+
+    inline tkFloat sumOfProducts(tkFloat a, tkFloat b, tkFloat c, tkFloat d) {
+        tkFloat cd = c * d;
+        tkFloat err = std::fma(c, d, -cd);
+        tkFloat sop = std::fma(a, b, cd);
+        return sop + err;
     }
-    template <typename T>
-    inline Vec3<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
+
+    // Generic math functions
+    template <typename T, typename U>
+    inline T lerp(const T& a, const T& b, U t) {
+        return (static_cast<U>(1) - t) * a + t * b;
     }
-    template <typename T>
-    inline Vec3<T>::operator Point3<T>() const {
-        return Point3<T>(x, y, z);
+
+    template <typename T, typename U, typename V>
+    inline T clamp(const T& val, const U& lo, const V& hi) {
+        if (val < lo)
+            return lo;
+        else if (val > hi)
+            return hi;
+        else
+            return val;
     }
-    template <typename T>
-    inline Vec3<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
+
+    inline bool quadratic(tkFloat a, tkFloat b, tkFloat c, tkFloat* t0, tkFloat* t1) {
+        double discriminant = differenceOfProducts(b, b, 4 * a, c);
+        if (discriminant < 0)
+            return false;
+
+        double x = -0.5 * (b + std::copysign(std::sqrt(discriminant), b));
+        *t0 = x / a;
+        *t1 = c / x;
+        if (*t0 > *t1)
+            std::swap(*t0, *t1);
+
+        return true;
     }
-    template <typename T>
-    inline Point2<T>::operator Point3<T>() const {
-        return Point3<T>(x, y, 0);
+
+    // Obtain tightest interval [i, i + 1] in [0, size) that passes predicate(i)
+    template <typename Predicate>
+    inline int getInterval(int size, const Predicate& pred) {
+        int start = 0, end = size - 1;
+        int mid;
+        while (start < end) {
+            mid = (start + end) >> 1;
+            if (pred(mid))
+                start = mid + 1;
+            else
+                end = mid;
+        }
+        return clamp(start - 1, 0, size - 2);
     }
-    template <typename T>
-    inline Point2<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Point2<T>() const {
-        return Point2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Vec2<T>() const {
-        return Vec2<T>(x, y);
-    }
-    template <typename T>
-    inline Point3<T>::operator Vec3<T>() const {
-        return Vec3<T>(x, y, z);
-    }
-} // namespace TK
+}  // namespace TK

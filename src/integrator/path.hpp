@@ -4,26 +4,20 @@
 #include "util/samplingutil.hpp"
 
 namespace TK {
-    enum LightSampleStrategy {
-        POWER
-    };
+    enum LightSampleStrategy { POWER };
 
-    class PathTracingIntegrator : public SamplerIntegrator {
+    class PathTracingIntegrator : public Integrator {
     public:
-        PathTracingIntegrator(tkInt maxDepth, std::shared_ptr<Camera> camera,
-                              std::shared_ptr<Sampler> sampler,
-                              LightSampleStrategy strategy = POWER)
-            : SamplerIntegrator(camera, sampler),
-              maxDepth(maxDepth),
-              strategy(strategy) {}
+        PathTracingIntegrator(int maxDepth, LightSampleStrategy strategy = POWER)
+            : m_MaxDepth(maxDepth), m_Strategy(strategy) {}
 
-        void preprocess(const Scene &scene) override;
-        tkSpectrum Li(const Scene &scene, const Ray &r, Sampler &sampler,
-                             tkInt depth) const override;
+        void preprocess(const Scene& scene) override;
+
+        tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const override;
 
     private:
-        tkInt maxDepth;
-        LightSampleStrategy strategy;
-        std::unique_ptr<Distribution> lightDist;
+        int m_MaxDepth;
+        LightSampleStrategy m_Strategy;
+        std::unique_ptr<Distribution> m_LightDist;
     };
-} // namespace TK
+}  // namespace TK

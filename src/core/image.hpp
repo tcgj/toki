@@ -1,24 +1,30 @@
 #pragma once
 
 #include "system/toki.hpp"
-#include "math/math.hpp"
 #include "spectrum.hpp"
 
 namespace TK {
     class Image {
     public:
-        Image(const tkVec2i &res, const std::string &filename);
+        Image(const Vec2i& res, const std::string& filename);
+
+        virtual ~Image() = default;
 
         tkFloat getAspectRatio() const;
-        tkVec3f getPixelColor(const tkPoint2i &pixelCoord) const;
-        void updatePixelColor(const tkPoint2i &pixelCoord,
-                              const tkSpectrum &colorContribution);
-        virtual tkVec3f gammaCorrect(const tkVec3f &rgb) const;
+
+        Vec3f getPixelColor(int x, int y) const;
+
+        void updatePixelColor(int x, int y, const tkSpectrum& colorContribution);
+
+        virtual Vec3f gammaCorrect(const Vec3f& rgb) const;
+
         virtual void write() = 0;
 
-        tkVec2i resolution;
-        std::string filename;
+        Vec2i m_Resolution;
+        std::string m_Filename;
+
     protected:
-        std::unique_ptr<tkSpectrum[]> pixels;
+        std::unique_ptr<tkSpectrum[]> m_Pixels;
+        std::unique_ptr<int[]> m_NumSamples;
     };
-} // namespace TK
+}  // namespace TK

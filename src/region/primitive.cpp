@@ -3,37 +3,32 @@
 #include "core/aabb.hpp"
 #include "core/ray.hpp"
 #include "core/shape.hpp"
-#include "core/material.hpp"
+#include "material/diffuse.hpp"
 
 namespace TK {
-    tkAABBf Primitive::worldBoundingBox() const {
-        return shape->worldBoundingBox();
+    Primitive::Primitive(std::shared_ptr<Shape> shape, std::shared_ptr<Material> material,
+                         std::shared_ptr<Light> light)
+        : m_Shape(std::move(shape)), m_Material(std::move(material)), m_Light(std::move(light)) {
+        if (m_Material == nullptr)
+            m_Material = std::make_shared<Diffuse>(0.6);
     }
 
-    bool Primitive::intersect(const Ray &r, SurfaceInteraction *interaction) const {
+    AABBf Primitive::worldBoundingBox() const {
+        return m_Shape->worldBoundingBox();
+    }
+
+    bool Primitive::intersect(const Ray& r, SurfaceInteraction& out_its) const {
         tkFloat tHit;
-        if (!shape->intersect(r, &tHit, interaction))
+        if (!m_Shape->intersect(r, tHit, out_its))
             return false;
 
         r.tMax = tHit;
-        interaction->primitive = this;
+        out_its.material = m_Material;
+        out_its.light = m_Light;
         return true;
     }
 
-    bool Primitive::hasIntersect(const Ray &r) const {
-        return shape->hasIntersect(r);
+    bool Primitive::hasIntersect(const Ray& r) const {
+        return m_Shape->hasIntersect(r);
     }
-
-    std::shared_ptr<Material> Primitive::getMaterial() const {
-        return material;
-    }
-
-    std::shared_ptr<Light> Primitive::getLight() const {
-        return light;
-    }
-
-    void Primitive::computeScattering(Scattering *scattering) const {
-        if (material != nullptr)
-            material->computeScattering(scattering);
-    }
-} // namespace TK
+}  // namespace TK

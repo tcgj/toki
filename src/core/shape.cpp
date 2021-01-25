@@ -1,20 +1,19 @@
 #include "shape.hpp"
 
 namespace TK {
-    tkAABBf Shape::worldBoundingBox() const {
-        return (*objectToWorld)(objectBoundingBox());
+    AABBf Shape::worldBoundingBox() const {
+        return (*m_ObjectToWorld)(objectBoundingBox());
     }
 
     // Default inefficient intersection test
-    bool Shape::hasIntersect(const Ray &r) const {
+    bool Shape::hasIntersect(const Ray& r) const {
         tkFloat tHit;
-        SurfaceInteraction interaction;
-        return intersect(r, &tHit, &interaction);
+        SurfaceInteraction its;
+        return intersect(r, tHit, its);
     }
 
-    tkFloat Shape::getPdf(const Interaction &ref,
-                          const SurfaceInteraction &surface) const {
-        tkVec3f dir = ref.p - surface.p;
+    tkFloat Shape::getPdf(const Interaction& ref, const SurfaceInteraction& surface) const {
+        Vec3f dir = ref.p - surface.p;
         tkFloat sampleSqrDist = dir.squaredMagnitude();
         tkFloat cosTheta = dot(surface.wo, surface.n);
         if (sampleSqrDist == 0 || cosTheta <= 0)
@@ -23,13 +22,13 @@ namespace TK {
             return sampleSqrDist / (surfaceArea() * cosTheta);
     }
 
-    tkFloat Shape::getPdf(const Interaction &ref, const tkVec3f &wi) const {
+    tkFloat Shape::getPdf(const Interaction& ref, const Vec3f& wi) const {
         Ray r = ref.spawnRayTo(wi);
         tkFloat tHit;
-        SurfaceInteraction interaction;
-        if (!intersect(r, &tHit, &interaction))
+        SurfaceInteraction its;
+        if (!intersect(r, tHit, its))
             return 0;
 
-        return getPdf(ref, interaction);
+        return getPdf(ref, its);
     }
 }  // namespace TK

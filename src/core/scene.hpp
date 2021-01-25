@@ -6,15 +6,25 @@
 namespace TK {
     class Scene {
     public:
-        Scene(std::shared_ptr<Region> region, const std::vector<std::shared_ptr<Light>> &lights);
+        Scene(std::shared_ptr<Region> region, std::vector<std::shared_ptr<Light>> lights,
+              std::shared_ptr<Camera> camera, std::shared_ptr<Integrator> integrator);
 
-        const tkAABBf &worldBoundingBox() const;
-        bool intersect(const Ray &r, SurfaceInteraction *interaction) const;
-        bool hasIntersect(const Ray &r) const;
+        const AABBf& worldBoundingBox() const;
 
-        std::vector<std::shared_ptr<Light>> lights;
+        bool intersect(const Ray& r, SurfaceInteraction& out_its) const;
+
+        bool hasIntersect(const Ray& r) const;
+
+        Camera* getCamera() const;
+
+        Integrator* getIntegrator() const;
+
+        std::vector<std::shared_ptr<Light>> m_Lights;
+
     private:
-        std::shared_ptr<Region> region;
-        tkAABBf worldBB;
+        std::shared_ptr<Region> m_Region;
+        std::shared_ptr<Camera> m_Camera;
+        std::shared_ptr<Integrator> m_Integrator;
+        AABBf m_WorldBB;
     };
-} // namespace TK
+}  // namespace TK

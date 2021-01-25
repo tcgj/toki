@@ -1,7 +1,7 @@
 #include "path.hpp"
 
 #include "core/scene.hpp"
-#include "core/scattering.hpp"
+#include "core/bsdf.hpp"
 #include "core/light.hpp"
 #include "core/interaction.hpp"
 #include "core/spectrum.hpp"
@@ -9,57 +9,54 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    void PathTracingIntegrator::preprocess(const Scene &scene) {
-        switch (strategy) {
+    void PathTracingIntegrator::preprocess(const Scene& scene) {
+        switch (m_Strategy) {
             case POWER:
-                lightDist = lightPowerDistribution(scene);
+                m_LightDist = lightPowerDistribution(scene);
                 break;
             default:
                 break;
         }
     }
 
-    tkSpectrum PathTracingIntegrator::Li(const Scene &scene, const Ray &r,
-                                            Sampler &sampler, tkInt depth) const {
+    tkSpectrum PathTracingIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler,
+                                         int depth) const {
         tkSpectrum li;
         tkSpectrum throughput(1);
         Ray ray(r);
-        SurfaceInteraction interaction;
+        SurfaceInteraction its;
 
-        for (tkInt bounces = 0; ; ++bounces) {
-            bool hit = scene.intersect(ray, &interaction);
+        for (int bounces = 0;; ++bounces) {
+            bool hit = scene.intersect(ray, its);
             // Emission is not included in computation as we compute direct lighting during each bounce
             // and we want to avoid sampling the same surface again if it was reached on the next bounce.
             // However, emission contribution is included for bounce 0 as no direct lighting was done prior.
             if (bounces == 0) {
                 if (hit)
-                    li += throughput * interaction.Le();
+                    li += throughput * its.Le();
                 // else
-                    // li += scene.Le();
+                // li += scene.Le();
             }
 
             // Break at max depth or if we hit nothing
-            if (!hit || bounces >= maxDepth)
+            if (!hit || bounces >= m_MaxDepth)
                 break;
 
-            Scattering scattering;
-            interaction.computeScattering(&scattering);
+            BSDF bsdf = its.getBSDF();
 
             // Add direct lighting contribution with multiple importance sampling
-            tkFloat lightPdf;
-            auto light = getLightByDist(scene, sampler, *lightDist, &lightPdf);
-            li += throughput * miSampleLd(interaction, scene, light, sampler) / lightPdf;
+            if (m_LightDist != nullptr) {
+                tkFloat lightPdf;
+                auto light = getLightByDist(scene, sampler, *m_LightDist, &lightPdf);
+                li += throughput * miSampleLd(its, scene, light, sampler) / lightPdf;
+            }
 
             // Spawn ray for next bounce
-            tkVec3f wi;
-            tkFloat pdf;
-            BxDFType sampledType;
-            tkSpectrum f = scattering.sample(interaction.wo, &wi, sampler.nextVector(),
-                                             &pdf, &sampledType);
-            if (pdf == 0 || f.isBlack())
+            BSDFSample bs = bsdf.sample(its.wo, sampler.nextVector());
+            if (!bs || !bs.f)
                 break;
-            throughput *= f * std::abs(dot(wi, interaction.n)) / pdf;
-            ray = interaction.spawnRayTo(wi);
+            throughput *= bs.f * std::abs(dot(bs.wi, its.n)) / bs.pdf;
+            ray = its.spawnRayTo(bs.wi);
         }
         return li;
     }

@@ -1,7 +1,7 @@
 #include "whitted.hpp"
 
 #include "core/scene.hpp"
-#include "core/scattering.hpp"
+#include "core/bsdf.hpp"
 #include "core/light.hpp"
 #include "core/interaction.hpp"
 #include "core/spectrum.hpp"
@@ -9,48 +9,48 @@
 #include "util/scatteringutil.hpp"
 
 namespace TK {
-    tkSpectrum WhittedIntegrator::Li(const Scene &scene, const Ray &r,
-                                            Sampler &sampler, tkInt depth) const {
+    tkSpectrum WhittedIntegrator::Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const {
         tkSpectrum li;
-        SurfaceInteraction interaction;
-        if (!scene.intersect(r, &interaction)) {
+        SurfaceInteraction its;
+        if (!scene.intersect(r, its)) {
             // TODO: get radiance contribution from
             // light source along the ray if any (sky light etc)
             return li;
         }
 
-        Scattering scattering;
-        interaction.computeScattering(&scattering);
+        BSDF bsdf = its.getBSDF();
 
-        tkVec3f normal = interaction.n;
-        tkVec3f wo = interaction.wo;
+        Vec3f normal = its.n;
+        Vec3f wo = its.wo;
 
         // Add emission contribution if interaction with light
-        li += interaction.Le();
+        li += its.Le();
 
         // Add contribution of lighting on surface point
-        for (const auto &light : scene.lights) {
+        for (const auto& light : scene.m_Lights) {
             // Ignore non-delta light source as whitted integrator does not handle
             // if (!light->isDelta())
-                // continue;
+            // continue;
 
-            tkVec3f wi;
-            tkFloat pdf;
-            OcclusionChecker occCheck;
-            tkSpectrum ld = light->sample(interaction, &wi, sampler.nextVector(), &pdf, &occCheck);
-            if (pdf == 0 || ld.isBlack())
+            LightSample ls = light->sample(its, sampler.nextVector());
+            if (!ls || !ls.l)
                 continue;
 
-            tkSpectrum f = scattering.evaluate(wo, wi);
-            if (!f.isBlack() && occCheck.notOccluded(scene))
-                li += f * ld * std::abs(dot(wi, normal)) / pdf;
+            tkSpectrum f = bsdf.evaluate(wo, ls.wi);
+            if (f && !ls.isOccluded(scene, its))
+                li += f * ls.l * std::abs(dot(ls.wi, normal)) / ls.pdf;
         }
 
         // Spawn secondary rays from intersection point
         // if depth is under max depth
-        if (depth < maxDepth - 1) {
-            li += specularReflectedLi(interaction, scene, r, sampler, depth);
-            li += specularRefractedLi(interaction, scene, r, sampler, depth);
+        if (depth < m_MaxDepth - 1) {
+            BSDFSample bs = bsdf.sample(wo, sampler.nextVector(), BxDFType(BXDF_SPECULAR | BXDF_REFLECTIVE));
+            if (bs && bs.f) {
+                tkFloat cosTheta = std::abs(dot(its.n, bs.wi));
+                Ray reflectedRay = its.spawnRayTo(bs.wi);
+                li += bs.f * Li(scene, reflectedRay, sampler, depth + 1) * cosTheta / bs.pdf;
+            }
+            // li += specularRefractedLi(its, scene, r, sampler, depth);
         }
 
         return li;

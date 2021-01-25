@@ -5,20 +5,22 @@
 namespace TK {
     class Sphere : public Shape {
     public:
-        Sphere(const Transform *objectToWorld, tkFloat radius,
-               bool invertNormals = false)
-            : Shape(objectToWorld, invertNormals), radius(radius) {}
+        Sphere(const Transform* objectToWorld, tkFloat radius, bool invertNormals = false)
+            : Shape(objectToWorld, invertNormals), m_Radius(radius) {}
 
-        tkAABBf objectBoundingBox() const override;
+        AABBf objectBoundingBox() const override;
+
         tkFloat surfaceArea() const override;
-        bool intersect(const Ray &r, tkFloat *tHit,
-                       SurfaceInteraction *interaction) const override;
-        bool hasIntersect(const Ray &r) const override;
-        SurfaceInteraction sample(const Interaction &ref, const tkVec2f &samp,
-                                  tkFloat *pdf) const override;
-        tkFloat getPdf(const Interaction &ref, const tkVec3f &wi) const override;
+
+        bool intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const override;
+
+        bool hasIntersect(const Ray& r) const override;
+
+        SurfaceInteraction sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const override;
+
+        tkFloat getPdf(const Interaction& ref, const Vec3f& wi) const override;
 
     private:
-        tkFloat radius;
+        tkFloat m_Radius;
     };
-} // namespace TK
+}  // namespace TK

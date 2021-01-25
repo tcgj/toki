@@ -5,22 +5,23 @@
 namespace TK {
     class Triangle : public Shape {
     public:
-        Triangle(const Transform *objectToWorld, const std::shared_ptr<Mesh> &mesh,
-                 tkI64 triIndex, bool invertNormals = false)
-            : Shape(objectToWorld, invertNormals),
-              mesh(mesh), triIndex(triIndex) {}
+        Triangle(std::shared_ptr<Mesh> mesh, int64_t triIndex, bool invertNormals = false);
 
-        tkAABBf objectBoundingBox() const override;
-        tkAABBf worldBoundingBox() const override;
+        AABBf objectBoundingBox() const override;
+
+        AABBf worldBoundingBox() const override;
+
         tkFloat surfaceArea() const override;
-        bool intersect(const Ray &r, tkFloat *tHit,
-                       SurfaceInteraction *interaction) const override;
-        bool hasIntersect(const Ray &r) const override;
-        SurfaceInteraction sample(const Interaction &ref, const tkVec2f &samp,
-                                  tkFloat *pdf) const override;
+
+        bool intersect(const Ray& r, tkFloat& out_tHit, SurfaceInteraction& out_its) const override;
+
+        bool hasIntersect(const Ray& r) const override;
+
+        SurfaceInteraction sample(const Interaction& ref, const Vec2f& u, tkFloat& out_pdf) const override;
 
     private:
-        std::shared_ptr<Mesh> mesh;
-        tkI64 triIndex;
+        std::shared_ptr<Mesh> m_Mesh;
+        int64_t* m_Id;
+
     };
-} // namespace TK
+}  // namespace TK

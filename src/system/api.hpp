@@ -1,27 +1,32 @@
 #pragma once
 
-#include "system/toki.hpp"
-#include "math/math.hpp"
-#include "core/parallel.hpp"
+#include "toki.hpp"
+#include "thread.hpp"
+#include "logger.hpp"
 
 namespace TK {
-    struct Options {
-        // Command-line options
-        std::string outFile;
-        tkInt threadCount = -1;
-        bool fastRender = false;
-
-        // File-specific options
-        tkInt tileSize;
-        tkInt samplesPerPixel;
-        tkVec2i resolution;
+    enum InputFileType {
+        TOKI = 0,
+        OBJ = 1
     };
 
-    // Rendering API
-    void tokiConfigure(const Options &cmdLineOptions);
-    void tokiParse(IStream &stream);
-    void tokiRun();
-    void tokiShutdown();
+    struct Options {
+        std::string outfile;
+        int threadCount = -1;
+        bool fastRender = false;
+        bool gui = false;
+        int inputType = TOKI;
+    };
+
+    namespace RenderAPI {
+        void configure(const Options& options);
+
+        void parse(const std::string& inputFile);
+
+        void render();
+
+        void shutdown();
+    }  // namespace RenderAPI
 
     // Serializing API
-} // namespace TK
+}  // namespace TK

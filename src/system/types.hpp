@@ -1,53 +1,58 @@
 #pragma once
 
 namespace TK {
-    template <typename T> class Vec2;
-    template <typename T> class Vec3;
-    template <typename T> class Point2;
-    template <typename T> class Point3;
-    template <typename T> class AABB;
-    struct Matrix44;
+    template <typename T>
+    class Vec2;
+    template <typename T>
+    class Vec3;
+    template <typename T>
+    class Point2;
+    template <typename T>
+    class Point3;
+    template <typename T>
+    class AABB;
     struct Mesh;
-    struct Interaction;
+    class Matrix44;
     class Ray;
     class Transform;
     class Shape;
+    class Interaction;
     class SurfaceInteraction;
     class Region;
     class Primitive;
     class RGBSpectrum;
     class Light;
     class BxDF;
-    class Scattering;
+    class BSDF;
     class Material;
     class Camera;
+    class Image;
     class Scene;
     class Sampler;
+    class Integrator;
     class IStream;
     class OStream;
+    class Appender;
+    class Formatter;
+    class Logger;
+    class Scheduler;
+    class ThreadPool;
+    class Task;
 
-    typedef unsigned char tkUChar;
-    typedef char tkChar;
-    typedef unsigned int tkUInt;
-    typedef int tkInt;
-    typedef int64_t tkI64;
 #ifdef TK_USE_DOUBLE
-    typedef double tkFloat;
+    using tkFloat = double;
 #else
-    typedef float tkFloat;
-#endif // TK_USE_DOUBLE
-    typedef float tkF32;
-    typedef double tkF64;
-    typedef std::string tkString;
-    typedef Vec2<tkFloat> tkVec2f;
-    typedef Vec2<tkInt> tkVec2i;
-    typedef Vec3<tkFloat> tkVec3f;
-    typedef Vec3<tkInt> tkVec3i;
-    typedef Point2<tkFloat> tkPoint2f;
-    typedef Point2<tkInt> tkPoint2i;
-    typedef Point3<tkFloat> tkPoint3f;
-    typedef Point3<tkInt> tkPoint3i;
-    typedef AABB<tkFloat> tkAABBf;
-    typedef AABB<tkInt> tkAABBi;
-    typedef RGBSpectrum tkSpectrum;
-} // namespace TK
+    using tkFloat = float;
+#endif  // TK_USE_DOUBLE
+    using Vec2f = Vec2<tkFloat>;
+    using Vec2i = Vec2<int>;
+    using Vec3f = Vec3<tkFloat>;
+    using Vec3i = Vec3<int>;
+    using Point2f = Point2<tkFloat>;
+    using Point2i = Point2<int>;
+    using Point3f = Point3<tkFloat>;
+    using Point3i = Point3<int>;
+    using AABBf = AABB<tkFloat>;
+    using AABBi = AABB<int>;
+    using tkSpectrum = RGBSpectrum;
+}  // namespace TK

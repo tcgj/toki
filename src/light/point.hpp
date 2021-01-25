@@ -5,19 +5,19 @@
 namespace TK {
     class PointLight : public Light {
     public:
-        PointLight(const Transform &lightToWorld, const tkSpectrum &intensity)
-            : Light(lightToWorld), intensity(intensity) {
+        PointLight(const Transform& lightToWorld, const tkSpectrum& intensity)
+            : Light(lightToWorld), m_Intensity(intensity) {
             // Bypassing transform application, since the light source is defined at (0, 0, 0) in light
             Matrix44 mat = lightToWorld.getMatrix();
-            pos = tkPoint3f(mat.entries[3], mat.entries[7], mat.entries[11]);
+            m_Pos = Point3f(mat.m_Entries[3], mat.m_Entries[7], mat.m_Entries[11]);
         }
 
-        tkSpectrum power() const;
-        tkSpectrum sample(const Interaction &ref, tkVec3f *wi, const tkVec2f &samp,
-                          tkFloat *pdf, OcclusionChecker *occCheck) const;
+        tkSpectrum power() const override;
+
+        LightSample sample(const Interaction& ref, const Vec2f& u) const override;
 
     private:
-        tkSpectrum intensity;
-        tkPoint3f pos;
+        tkSpectrum m_Intensity;
+        Point3f m_Pos;
     };
-} // namespace TK
+}  // namespace TK

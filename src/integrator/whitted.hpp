@@ -3,15 +3,14 @@
 #include "core/integrator.hpp"
 
 namespace TK {
-    class WhittedIntegrator : public SamplerIntegrator {
+    class WhittedIntegrator : public Integrator {
     public:
-        WhittedIntegrator(tkInt maxDepth, std::shared_ptr<Camera> camera, std::shared_ptr<Sampler> sampler)
-            : SamplerIntegrator(camera, sampler), maxDepth(maxDepth) {}
+        WhittedIntegrator(int maxDepth)
+            : m_MaxDepth(maxDepth) {}
 
-        tkSpectrum Li(const Scene &scene, const Ray &r, Sampler &sampler,
-                             tkInt depth) const override;
+        tkSpectrum Li(const Scene& scene, const Ray& r, Sampler& sampler, int depth) const override;
 
     private:
-        tkInt maxDepth;
+        int m_MaxDepth;
     };
-} // namespace TK
+}  // namespace TK

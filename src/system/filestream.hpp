@@ -7,148 +7,109 @@
 namespace TK {
     enum FileStreamMode {
         FSM_IN = std::ios_base::in | std::ios_base::binary,
-        FSM_OUT = std::ios_base::out | std::ios_base::binary,
-        FSM_IO = FSM_IN | FSM_OUT
+        FSM_OUT = std::ios_base::out | std::ios_base::binary
     };
 
     class FileStream : public IOStream {
     public:
         FileStream() = default;
-        FileStream(const std::string filename, FileStreamMode fsm)
-            : file(std::fstream(filename, fsm)), reading(fsm & FSM_IN) {
+
+        FileStream(const std::string filename, FileStreamMode fsm) : m_File(std::fstream(filename, fsm)) {
             // TODO: Setup a proper check for fail
-            tkAssert(!file.is_open());
         }
 
-        bool open(std::string filename, FileStreamMode fsm,
-                  bool forceOpen = false) {
-            if (file.is_open()) {
+        bool open(std::string filename, FileStreamMode fsm, bool forceOpen = false) {
+            if (m_File.is_open()) {
                 if (forceOpen)
-                    file.close();
+                    m_File.close();
                 else
                     return false;
             }
-            file.open(filename, fsm);
-            return file.is_open();
+            m_File.open(filename, fsm);
+            return m_File.is_open();
         }
 
         bool close() {
-            if (!file.is_open())
+            if (!m_File.is_open())
                 return false;
-            file.close();
+            m_File.close();
             return true;
         }
 
         // IStream operators
-        FileStream &operator>>(tkFloat &f) override {
-            if (!reading)
-                switchIO();
-            file.read(reinterpret_cast<char *>(&f), sizeof(f));
+        FileStream& operator>>(tkFloat& f) override {
+            m_File.read(reinterpret_cast<char*>(&f), sizeof(f));
             return *this;
         }
 
-        FileStream &operator>>(tkInt &i) override {
-            if (!reading)
-                switchIO();
-            file.read(reinterpret_cast<char *>(&i), sizeof(i));
+        FileStream& operator>>(int& i) override {
+            m_File.read(reinterpret_cast<char*>(&i), sizeof(i));
             return *this;
         }
 
-        FileStream &operator>>(tkUInt &u) override {
-            if (!reading)
-                switchIO();
-            file.read(reinterpret_cast<char *>(&u), sizeof(u));
+        FileStream& operator>>(unsigned int& u) override {
+            m_File.read(reinterpret_cast<char*>(&u), sizeof(u));
             return *this;
         }
 
-        FileStream &operator>>(std::string &s) override {
-            if (!reading)
-                switchIO();
+        FileStream& operator>>(std::string& s) override {
             s = "";
-            tkChar c;
+            char c;
             do {
-                file.read(&c, sizeof(c));
+                m_File.read(&c, sizeof(c));
                 if (c == 0)
                     break;
                 s += c;
-            } while (file.good());
+            } while (m_File.good());
             return *this;
         }
 
-        FileStream &operator>>(bool &b) override {
-            if (!reading)
-                switchIO();
-            file.read(reinterpret_cast<char *>(&b), sizeof(b));
+        FileStream& operator>>(bool& b) override {
+            m_File.read(reinterpret_cast<char*>(&b), sizeof(b));
             return *this;
         }
 
-        FileStream &read(tkChar *data, tkUInt size) override {
-            if (!reading)
-                switchIO();
-            file.read(data, size);
+        FileStream& read(char* data, unsigned int size) override {
+            m_File.read(data, size);
             return *this;
         }
 
         // OStream operators
-        FileStream &operator<<(tkFloat f) override {
-            if (reading)
-                switchIO();
-            file.write(reinterpret_cast<const char *>(&f), sizeof(f));
+        FileStream& operator<<(tkFloat f) override {
+            m_File.write(reinterpret_cast<const char*>(&f), sizeof(f));
             return *this;
         }
 
-        FileStream &operator<<(tkInt i) override {
-            if (reading)
-                switchIO();
-            file.write(reinterpret_cast<const char *>(&i), sizeof(i));
+        FileStream& operator<<(int i) override {
+            m_File.write(reinterpret_cast<const char*>(&i), sizeof(i));
             return *this;
         }
 
-        FileStream &operator<<(tkUInt u) override {
-            if (reading)
-                switchIO();
-            file.write(reinterpret_cast<const char *>(&u), sizeof(u));
+        FileStream& operator<<(unsigned int u) override {
+            m_File.write(reinterpret_cast<const char*>(&u), sizeof(u));
             return *this;
         }
 
-        FileStream &operator<<(const std::string &s) override {
-            if (reading)
-                switchIO();
-            file.write(s.c_str(), s.size() + 1);
+        FileStream& operator<<(const std::string& s) override {
+            m_File.write(s.c_str(), s.size() + 1);
             return *this;
         }
 
-        FileStream &operator<<(bool b) override {
-            if (reading)
-                switchIO();
-            file.write(reinterpret_cast<const char *>(&b), sizeof(b));
+        FileStream& operator<<(bool b) override {
+            m_File.write(reinterpret_cast<const char*>(&b), sizeof(b));
             return *this;
         }
 
-        FileStream &write(const tkChar *data, tkUInt size) override {
-            if (reading)
-                switchIO();
-            file.write(data, size);
+        FileStream& write(const char* data, unsigned int size) override {
+            m_File.write(data, size);
             return *this;
         }
 
         void flush() override {
-            file.flush();
+            m_File.flush();
         }
 
     private:
-        void switchIO() {
-            if (reading) {
-                readPos = file.tellg();
-                file.seekp(0, std::ios_base::end);
-            } else {
-                file.seekg(readPos);
-            }
-            reading = !reading;
-        }
-
-        bool reading;
-        std::streampos readPos;
-        std::fstream file;
+        std::fstream m_File;
     };
-} // namespace TK
+}  // namespace TK

@@ -4,12 +4,12 @@
 
 namespace TK {
     void PNGImage::write() {
-        tkUChar imageData[3 * resolution.x * resolution.y];
+        unsigned char imageData[3 * m_Resolution.x * m_Resolution.y];
 
-        tkInt offset = 0;
-        for (tkInt y = 0; y < resolution.y; ++y) {
-            for (tkInt x = 0; x < resolution.x; ++x) {
-                tkVec3f color = getPixelColor(tkPoint2i(x, y));
+        int offset = 0;
+        for (int y = 0; y < m_Resolution.y; ++y) {
+            for (int x = 0; x < m_Resolution.x; ++x) {
+                Vec3f color = getPixelColor(x, y);
                 color = gammaCorrect(color) * (tkFloat)255;
 
                 imageData[offset] = clamp(color.r, 0, 255);
@@ -19,6 +19,6 @@ namespace TK {
                 offset += 3;
             }
         }
-        writeToPngFile(filename.c_str(), imageData, resolution.x, resolution.y, 3);
+        writeToPngFile(m_Filename.c_str(), imageData, m_Resolution.x, m_Resolution.y, 3);
     }
-} // namespace TK
+}  // namespace TK
